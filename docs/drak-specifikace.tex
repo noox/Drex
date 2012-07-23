@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{graphicx}
+
+\title{TODONAZEV \\ Specifikace a plán implementace ročníkového projektu}
+\author{Kateřina Nevolová \\ \texttt{katka.nevolova@gmail.com} \\ 73502469}
+
+\begin{document}
+\maketitle
+
+\section{Základní informace}
+Hra TODONAZEV spočívá v ničení a vyhlazování různých produktů lidské civilizace pomocí draka. Hráč může používat běžné dračí schopnosti (oheň, létání) a získávat skóre za destrukci věrné simulace lidského města.
+
+Tento projekt si klade za cíl návrh a implementaci hry, finálním výsledkem bude tradiční herní balíček pro MS Windows i Linux podporující hru jednoho hráče ve volných levelech a hru v kampani.
+
+\subsection{Použité technologie}
+
+\begin{itemize}
+\item OpenGL knihovny a GLUT na vykreslování grafiky
+\item OpenAL pro produkci zvuku
+\item C++
+\item knihovny pro manipulaci s obrázky pro načítání textur
+\end{itemize}
+
+\section{Popis softwarového díla}
+
+\subsection{Motivace}
+Důvodem vzniku byla oblíbenost jednoduchých a fyzikálně realisticky
+vypadajících her, které hráčům umožňují něco ničit -- příkladem budiž známí
+Angry Birds nebo Fruit Ninja. Oblíbený druh ničivé zábavy bohužel ještě nikde
+nebyl dotažen k úplné dokonalosti, hra TODONAZEV je myšlena jako pokus se
+ideálu přiblížit z další strany zpracováním jiného prostředí a jiných myšlenek
+a herních principů.
+
+\subsection{Uživatelské rozhraní}
+
+Protože hra je míněná především pro hráčskou veřejnost, bude kladen důraz na zachování ``tradičního'' a všem známého přístupu k ovládání. Program nabídne hlavní menu s různými volbami (viz. níže), po začátku samotné hry se drak bude ovládat myší a klávesnicí.
+
+\subsubsection{Hlavní menu}
+
+kampan/volna hra/generovane levely
+
+\subsubsection{Herní rozhraní}
+
+ridis draka mysi + space
+esc > menu
+strely - 2 typy - levy cudl - plamenomet X pravy - chvili drzet - load fireboltu
+(+ nejaka extra magie podle pohybu draka pri loadu fireboltu)
+tab na help k nejblizsi veci co se jeste musi znicit
+
+ovladani/prehled o deni
+
+\subsection{Herní prostředí}
+
+snih, dest (ovlivneni delku horeni) 
+
+\subsubsection{Drak}
+
+ovladani - jako letadylko,+ mezernik na boost
+
+\subsubsection{Oheň}
+
+strely - plamen - cara/koule
+
+\subsubsection{Detailní popis mapy}
+
+znicitelne veci na mape bude jeden typ objektu, trida na vec co de znicit (barak, strom, clovek,..) X teren (heightmap)
+
+\subsubsection{Nepřátelé}
+
+domy, strileci domy, lidi, strileci lidi, stromy, lesy
+
+\section{Reference}
+
+\section{Popis implementace}
+
+fonty knihovna oglft, 
+opengl + glut
+vstup glut
+
+format mapoveho souboru: 
+(okraj mapy jako v hillsbradu, mlha houstne, pak neprostupno)
+TODO
+obrazek heightmapy + obrazek terenu + souradnice nepratel
+
+textury v png (steny baraku, strechy, stromy, drak, ale lidi asi uboze)
+modely vseho proceduralne
+prostredi a teren taky proceduralne
+
+navigace jako chcipaci tunel X maso ..
+
+zabavna statistika po misi (zabiti, zapaleni ..)
+
+vsechny zobrazovany objekty - jedna trida odvozeny
+vsechny objekty pripojovat na quadtree
+
+inteligence lidi a kolize s okolim (domy)
+vic typu lidi (clovek se zbrani, clovek s vlastni atomovkou)
+atomic bomber raketa
+
+fyzikalni model draka odzkouset zvlast nejdrif
+
+particle system
+
+kamera!
+
+\end{document}
+
