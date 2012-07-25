@@ -57,11 +57,6 @@ public:
 		return *this;
 	}
 	
-	const vect& operator*=(const vect& a) {
-		*this=(*this)*a;
-		return *this;
-	}
-	
 	vect operator+(const vect& a) const {
 		return vect(x+a.x,y+a.y,z+a.z);
 	}
