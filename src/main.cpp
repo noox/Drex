@@ -2,9 +2,12 @@
 #include <time.h>
 #include <SDL/SDL.h>
 #include <GL/gl.h>
+#include <math.h>
 
 #include <iostream>
 using namespace std;
+
+#include "game.h"
 
 static SDL_Surface *surface;
 
@@ -48,8 +51,6 @@ bool init(){
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 	SDL_ShowCursor(SDL_DISABLE);
 
-	
-	
 	return true;
 }
 
@@ -69,8 +70,16 @@ float timediff(){
 	return diff;
 }
 
+void sleep(float t){
+	struct timespec p;
+	p.tv_sec = (time_t)truncf(t);
+	p.tv_nsec = (long)((t-p.tv_sec)*1000000000);
+	nanosleep(&p,NULL);
+}
+
 static bool space_down = false, tab_down = false, esc_down = false,
 	left_mouse_down = false, right_mouse_down = false;
+game global_game;
 
 bool update(){
 	SDL_Event event;
@@ -106,7 +115,7 @@ bool update(){
 					left_mouse_down=true;
 				if(event.button.button==SDL_BUTTON_RIGHT)
 					right_mouse_down=true;
-				cout << "Mouse button " << (int)event.button.button << " pressed at " << event.button.x << ", " << event.button.y << endl;
+				//cout << "Mouse button " << (int)event.button.button << " pressed at " << event.button.x << ", " << event.button.y << endl;
              			break;
 			default: break;
 		}
@@ -114,25 +123,36 @@ bool update(){
 
 	int mouse_x, mouse_y;
 	SDL_GetRelativeMouseState (&mouse_x, &mouse_y);
-	cout << mouse_x << ", " << mouse_y << endl;
+	//cout << mouse_x << ", " << mouse_y << endl;
 
 	float td = timediff();
-	//cout << td << endl;
+	float min_td = global_game.get_min_timediff();
+	
+	//kdyz chce hra omezovat fps a kdyz je co omezovat
+	if(min_td>0 && td<min_td){
+		sleep(min_td-td);
+		td += timediff();
+	}
 
-	//TODO gameupdate(td), gamerender
+	bool term = global_game.update(td,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y);
+	global_game.render();
+	
+	//dalsi snimek
 	SDL_GL_SwapBuffers();
 	
-	return true;
+	return term;
 }
 
 int main(int argc, char **argv){
 	if(!init()) return 1;
+	global_game.init();
 
 	//reset casovace
 	timediff();
 	
 	while(update());
 	
+	global_game.finish();
 	finish();
 	
 	return 0;
