@@ -64,7 +64,7 @@ static long int lasttime;
 float timediff(){
 	struct timespec newtime;
 	clock_gettime(CLOCK_REALTIME,&newtime);
-	long int t = newtime.tv_sec*1000 + newtime.tv_nsec/1000;
+	long int t = newtime.tv_sec*1000000 + newtime.tv_nsec/1000;
 	float diff = (t - lasttime)/1000000.0;
 	lasttime = t;
 	return diff;
