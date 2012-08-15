@@ -2,7 +2,12 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
+#include "dragon.h"
+#include "camera.h"
+
 class game{
+	dragon dr;
+	camera cam;
 public:
 	void init();
 	void finish();

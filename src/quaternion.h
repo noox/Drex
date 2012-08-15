@@ -40,6 +40,14 @@ public:
 		return *this;
 	}
 
+	const quat& operator+=(const quat& a) {
+		w+=a.w;
+		x+=a.x;
+		y+=a.y;
+		z+=a.z;
+		return *this;
+	}
+
 	const quat& operator*=(float a) {
 		w*=a;
 		x*=a;
@@ -69,6 +77,10 @@ public:
 		return quat(w/a,x/a,y/a,z/a);
 	}
 
+	quat operator+(const quat& a) const {
+		return quat(w+a.w,x+a.x,y+a.y,z+a.z);
+	}
+
 	quat operator*(const quat& a) const {
 		return quat(
 			w*a.w-x*a.x-y*a.y-z*a.z,
@@ -82,7 +94,11 @@ public:
 	}
 
 	quat normal() const {
-		return (*this)*(1/(this->length()));
+		return (*this)*(1/length());
+	}
+	
+	void normalize() {
+		(*this)/=length();
 	}
 	
 	vect vecx() const {
@@ -102,6 +118,8 @@ public:
 			2*y*z-2*w*x,
 			w*w-x*x-y*y+z*z);
 	}
+
+	void gl_rotate();
 };
 
 inline quat operator*(float a, const quat& b) {
