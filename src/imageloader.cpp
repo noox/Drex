@@ -42,6 +42,7 @@ bool imageloader_load_heightmap(const char* fn, vector<int> &h, int &size_x, int
 	for(int i=0;i<size_y;++i)
 		for(int j=0;j<size_x;++j)
 			h[i*size_y+j] = *((unsigned char*)image->pixels + i * image->pitch + j);
+	SDL_FreeSurface(image);
 	return true;
 }
 

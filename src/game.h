@@ -3,11 +3,13 @@
 #define _GAME_H_
 
 #include "dragon.h"
+#include "heightmap.h"
 #include "camera.h"
 
 class game{
 	dragon dr;
 	camera cam;
+	heightmap hm;
 	int texture;
 public:
 	void init();

@@ -12,6 +12,7 @@ using namespace std;
 void game::init(){
 	dr.set(vect(0,0,0),quat(1,0,0,0));
 	cam.set(vect(0,0,0),quat(1,0,0,0));
+	hm.load("data/hm2.png");
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
@@ -49,6 +50,7 @@ void game::render(){
 	glLoadIdentity();
 	cam.set_gl();
 	dr.draw();
+	hm.draw();
 
 	glColor3f(0.1,0.1,0.1);
 	glPushMatrix();
