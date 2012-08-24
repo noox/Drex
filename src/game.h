@@ -8,6 +8,7 @@
 class game{
 	dragon dr;
 	camera cam;
+	int texture;
 public:
 	void init();
 	void finish();

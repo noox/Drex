@@ -22,7 +22,7 @@ void dragon::draw() {
 	ori.gl_rotate();
 	
 	glBegin(GL_TRIANGLES);
-	glColor3f(0,0,0);
+	glColor3f(1,1,1);
 	
 	glVertex3f(1,0,0);
 	glVertex3f(0,0.5,0);
