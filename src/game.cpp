@@ -13,15 +13,19 @@ void game::init(){
 	dr.set(vect(0,0,0),quat(1,0,0,0));
 	cam.set(vect(0,0,0),quat(1,0,0,0));
 	hm.load("data/hm2.png");
+	
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-	texture=imageloader_load("data/hm.png");
+	
+	glEnable(GL_DEPTH_TEST);
+/*	texture=imageloader_load("data/hm.png");
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+*/
 }
 
 void game::finish(){
@@ -56,6 +60,7 @@ void game::render(){
 	glPushMatrix();
 	glScalef(10,10,10);
 	
+/*	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE,GL_ONE);
 	glEnable(GL_TEXTURE_2D);
@@ -70,7 +75,7 @@ void game::render(){
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-/*
+	
 	glBegin(GL_LINES);
 	for(int i=0;i<10;++i) for(int j=0;j<10;++j) {
 		glVertex3f(0,i,j);glVertex3f(9,i,j);

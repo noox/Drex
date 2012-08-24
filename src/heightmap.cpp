@@ -4,14 +4,17 @@
 #include "imageloader.h"
 #include "heightmap.h"
 
+#define hm_vertex(x,y) glColor3ub(16,h[y*size_y+x],16); glVertex3f(y,x,0.1*h[y*size_y+x]);
+
 void heightmap::draw() {
-	glColor3f(0.2,1,0.2);
-	glBegin(GL_LINES);
-	for(int i=0;i<size_y;++i)
+	for(int i=0;i<size_y;++i) {
+		glBegin(GL_TRIANGLE_STRIP);
 		for(int j=0;j<size_x;++j) {
-			glVertex3f(i,j,0.1*h[i*size_y+j]);
+			hm_vertex(i+1,j)
+			hm_vertex(i,j)
 		}
-	glEnd();
+		glEnd();
+	}
 }
 
 void heightmap::load(const char* fn) {
