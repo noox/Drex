@@ -4,6 +4,8 @@
 
 #include <vector>
 
+using namespace std;
+
 class heightmap {
 public:
 	vector<int> h;
