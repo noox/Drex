@@ -46,6 +46,21 @@ bool imageloader_load_heightmap(const char* fn, vector<int> &h, int &size_x, int
 	return true;
 }
 
+bool imageloader_load_color(const char* fn2, vector<unsigned char> &c, int size_x, int size_y) {
+	SDL_Surface *image;
+	image = IMG_Load(fn2);
+	if(!image) return false;
+	size_x = image->w;
+	size_y = image->h;
+	c.resize(size_x*size_y*3);
+	for(int i=0;i<size_y;++i)
+		for(int j=0;j<size_x;++j)
+			for(int k=0;k<3;++k)
+				c[3*(i*size_y+j)+k] = ((unsigned char*)(image->pixels))[3*(i*size_y+j)+k];
+	SDL_FreeSurface(image);
+	return true;
+}
+
 void imageloader_free(GLuint t) {
 	glDeleteTextures(1,&t);
 }
