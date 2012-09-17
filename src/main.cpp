@@ -1,5 +1,4 @@
 
-#include <time.h>
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <math.h>
@@ -62,19 +61,14 @@ static long int lasttime;
 
 //zmeri casovy usek v sekundach od minuleho volani timediff
 float timediff(){
-	struct timespec newtime;
-	clock_gettime(CLOCK_REALTIME,&newtime);
-	long int t = newtime.tv_sec*1000000 + newtime.tv_nsec/1000;
-	float diff = (t - lasttime)/1000000.0;
-	lasttime = t;
+	Uint32 newtime = SDL_GetTicks();
+	float diff = (newtime-lasttime) / 1000.0;
+	lasttime=newtime;
 	return diff;
 }
 
 void sleep(float t){
-	struct timespec p;
-	p.tv_sec = (time_t)truncf(t);
-	p.tv_nsec = (long)((t-p.tv_sec)*1000000000);
-	nanosleep(&p,NULL);
+	SDL_Delay((Uint32)(1000*t));
 }
 
 static bool space_down = false, tab_down = false, esc_down = false,
@@ -143,9 +137,17 @@ bool update(){
 	return term;
 }
 
+#ifndef __WIN32__
 int main(int argc, char **argv){
+#else
+#include <windows.h>
+int WinMain(HINSTANCE hi, HINSTANCE hpi, LPSTR lpcmdline, int nCmdShow) {
+#endif
+	cout << "in game" << endl;
 	if(!init()) return 1;
+	cout << "inited" << endl;
 	global_game.init();
+	cout << "game inited" << endl;
 
 	//reset casovace
 	timediff();

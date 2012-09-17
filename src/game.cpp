@@ -12,7 +12,7 @@ using namespace std;
 void game::init(){
 	dr.set(vect(0,0,0),quat(1,0,0,0));
 	cam.set(vect(0,0,0),quat(1,0,0,0));
-	hm.load("data/hm2.png","data/color.png");
+	hm.load("data/hm3.png","data/color3.png");
 	
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
