@@ -1,0 +1,245 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{graphicx,amsmath}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\vspace*{1cm}
+
+{\huge \bfseries Specifikace softwarového díla \\ a \\ časový plán implementace \\ pro \\ hru Drex \\}
+
+\vspace*{2cm}
+
+Hra Drex vyplňuje mezeru na herním trhu v žánru spalování -- hráč ovládá draka, který si za cíl vybral lidskou civilizaci a v realistickém fyzikálním prostředí ji za bouřlivých efektů nechává shořet. Hra navíc nabízí možnost použít reálné mapové podklady pro tvorbu herního prostředí.
+
+\vspace*{3cm}
+
+0.2
+
+\vspace*{2cm}
+
+Kateřina Nevolová \\
+\texttt{katka.nevolova@gmail.com}
+
+\vfill
+
+\today
+
+\end{center}
+\end{titlepage}
+
+
+\tableofcontents
+\pagebreak
+
+
+\section{Tabulka revizí}
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Jméno & Datum & Důvod změny & Verze \\
+\hline
+\hline
+Kateřina Nevolová & 12/5/2012 & První verze & 0.1 \\
+\hline
+Kateřina Nevolová & 16/9/2012 & Přidán detailní popis funkcionality & 0.2 \\
+\hline
+\end{tabular}
+\end{center}
+\pagebreak
+
+
+\section{Základní informace}
+
+\subsection{Popis a zaměření softwarového díla}
+
+Hra Drex spočívá v ničení a vyhlazování různých produktů lidské civilizace pomocí draka. Hráč může používat běžné dračí schopnosti (oheň, létání) a získávat skóre za destrukci věrné simulace lidského města.
+
+Tento projekt si klade za cíl návrh a implementaci hry, finálním výsledkem bude tradiční herní balíček pro MS Windows i Linux podporující hru jednoho hráče ve volných levelech a hru v kampani.
+
+\subsection{Použité technologie}
+
+\begin{itemize}
+\item OpenGL knihovny a SDL na vykreslování grafiky
+\item OpenAL pro produkci zvuku
+\item C++
+\item Knihovny pro manipulaci s obrázky pro načítání textur -- především SDL\_Image.
+\item Dílčí knihovny potřebné pro získávání dat generátorem map (pravděpodobně Curl).
+\end{itemize}
+
+\renewcommand\refname{\subsection{Odkazy (Reference)}}
+
+\begin{thebibliography}{9}
+\bibitem{SDL,SDLImage}
+	\emph{Knihovna SDL} \\
+	\texttt{http://www.libsdl.org}
+\bibitem{OpenGL}
+	\emph{Knihovna OpenGL} \\
+	\texttt{http://www.opengl.org}
+\bibitem{OpenAL}
+	\emph{Knihovna OpenAL} \\
+	\texttt{http://connect.creativelabs.com/openal/Documentation/Forms/AllItems.aspx}
+\bibitem{SDLImage}
+	\emph{Knihovna SDL\_Image} \\
+	\texttt{http://www.libsdl.org/projects/SDL\_image} 
+\bibitem{OGLFT}
+	\emph{Knihovna na renderování fontů do OpenGL -- OGLFT} \\
+	\texttt{http://oglft.sourceforge.net}
+\bibitem{Heightmap}
+	\emph{Heightmap} \\
+	\texttt{http://en.wikipedia.org/wiki/Heightmap}
+\end{thebibliography}
+
+
+\section{Stručný popis softwarového díla}
+
+\subsection{Důvod vzniku SW díla a jeho základní části a cíle řešení}
+
+Důvodem vzniku byla oblíbenost jednoduchých a fyzikálně realisticky
+vypadajících her, které hráčům umožňují něco ničit -- příkladem budiž známí
+Angry Birds nebo Fruit Ninja. Oblíbený druh ničivé zábavy bohužel ještě nikde
+nebyl dotažen k úplné dokonalosti, hra Drex je myšlena jako pokus se
+ideálu přiblížit z další strany zpracováním jiného prostředí a jiných myšlenek
+a herních principů.
+
+Program obsahuje 2 hlavní části:
+
+\begin{itemize}
+\item Samotnou hru -- klasickou SDL/OpenGL aplikaci, která hráče nechává vybrat mapu v menu, tu poté načte z disku a na závěr nabídne zhodnocení. 
+\item Generátor map -- nástroj na bezpracné vytváření věrohodných prostředí a misí pro hru.
+\end{itemize}
+
+\subsection{Motivační příklad užití}
+
+Uživatel se rozhodne pro hru mimo kampaň, zvolí si tedy v menu mapu, hru v noci, za deště a v prostředí středověku. Volbou hrát se dostává do hry a ovládá myší a mezerníkem draka ke zničení všech budov a obyvatel na mapě. Po chvíli ale nemůže nalézt co ještě zbývá eliminovat a tak po stisku tabulátoru dostává nápovědu. Poslední budova je ale opevněná a její obyvatelé se brání a hráč musí poodlétnout, aby nepřišel o život, nakonec ale i ji s úspěchem zničí. Na závěr je vypsána statistika hry.
+
+\subsection{Prostředí aplikace}
+
+Hra bude fungovat na jakémkoliv operačním systému, na kterém lze provozovat všechny potřebné knihovny (OpenGL, OpenAL, SDL, SDL\_Image). K provozu bude vyžadovat svůj vlastní adresář s mapami. Počítá se s určitou hardwarovou náročností výsledné hry, uživatelé budou pravděpodobně potřebovat relativně výkonnou graficku kartu. Pro generování map podle reálných předloh bude potřeba připojení k online zdrojům.
+
+\subsection{Omezení díla}
+
+Program bude počítat s funkcí standardu OpenGL a krajní případy nebo dílčí nekompatibility s hardwarem nebude řešit.
+
+\section{Vnější rozhraní}
+
+\subsection{Uživatelské rozhraní, vstupy a výstupy}
+
+Protože hra je míněná především pro hráčskou veřejnost, bude kladen důraz na zachování ``tradičního'' a všem známého přístupu k ovládání. Program nabídne hlavní menu s různými volbami, po začátku samotné hry se drak bude ovládat myší a klávesnicí. 
+
+\subsubsection{Vstupy hry}
+
+Ovládání je realizované myší a klávesnicí pomocí rutin knihovny SDL. V menu uživatel myší vybírá položky a klikáním spouští různé funkce hry (kampaň, jednotlivé mapy, apod.), případně hru ukončuje. Ve vlastní hře pak pohyb myši ovládá náklon draka jako v letadle (doprava a doleva je rotace podle předozadní osy, nahoru a dolů poté podle pravolevé osy). Levé tlačítko myši ``střílí'' základní plamen, pravé tlačítko pak poskytuje různé alternativy ohně. Mezerníkem hráč ovládá zrychlení draka, tabulátorem přepíná do navigačního režimu a klávesou escape nabízí herní menu. 
+
+Mapy budou načítané ze souboru s vlastním formátem popsaným v jiné sekci.
+
+\subsubsection{Výstupy hry}
+
+Grafický výstup je realizován pomocí OpenGL. Menu bude sestavené z fontů renderovaných knihovou OGLFT, doplněných jednoduchou grafikou. Grafický výstup ve hře bude simulovat co nejvěrnější pohled do krajiny. Budou použity následující komponenty: 
+
+\begin{itemize}
+\item Terén vykreslený jako texturovaný heightmap.
+\item Prvky civilizace a přírody (domy, stromy, apod.) jako texturované modely.
+\item Částicový systém na oheň, exploze a kouř.
+\item Texturovaný model draka.
+\item Atmosferické efekty (mlha, nebe, déšť, sníh).
+\end{itemize}
+
+Zvukový výstup je realizován knihovnou OpenAL a sestaven převážně ze zvuků boje (výbuchů, křičení lidí a demolic domů), draka (např. mávání křídel) a prostředí (voda, plameny, svištění vzduchu při rychlém letu).
+
+\subsection{Komunikační rozhraní}
+
+Generátor realistických map bude pracovat s reálnými údaji o zemském povrchu dostupnými na internetu. Zpracování metody získání těchto dat je součástí vypracování bakalářské práce, pravděpodobně bude použito OpenStreetMap-u a nějakých veřejně dostupných informací o výšce terénu.
+
+\section{Detailní popis funkcionality}
+
+\subsection{Průběh hry}
+
+Hráč je drak, který má svou úrověň zdraví (to se neustále dobíjí) a pokročilý fyzikální model letu. Úkolem hráče je zničení veškerých nepřátelských objektů na mapě, tj. budov, lidí, vozidel, apod. Mapa je obdélníkový výřez terénu, ze kterého nelze vylétnout. Hráč proti nepřátelům používá zásadně oheň, nepřátelé se brání vlastními prostředky, čímž se pokouší snížit zdraví draka na nulu -- tehdy hráč prohrává.
+
+\subsection{Oheň}
+
+Hráč má k dispozici 2 typy ohnivých útoků. Základní útok vypadá jako tradiční plamenomet, který je vhodný k zapalování. Sekundární útok je multifunkční, kromě zapalování poškozuje i explozí. Podržení pravého tlačítka myši při sekundárním útoku způsobí vyšší efektivitu, případně jiné účinky.
+
+Oheň se samovolně šíří po čemkoliv hořlavém v okolí, v dalším rozšiřování mu může bránit déšť, sníh či obyvatelé města.
+
+\subsection{Nepřátelské objekty}
+
+\begin{itemize}
+\item Budovy, které dobře hoří a občas z nich vyběhne nějaký pohyblivý druh nepřítele.
+\item Lidé, pobíhají a brání se podle obtížnosti hry různými způsoby, případně hasí budovy.
+\item Opevněné budovy po drakovi navíc střílí a je těžší je zničit.
+\end{itemize}
+
+Zničit jde i stromy a podobné přírodní objekty.
+
+\subsection{Formát mapového souboru}
+
+Mapový soubor v jednom ukládá celý popis heightmapy, všech objektů na mapě a informací o prostředí (například jestli sněží nebo kde se objeví drak). Specifikace vnitřního formátu souboru je úkolem bakalářské práce.
+
+\subsection{Menu}
+
+Menu tvoří několik vnořených seznamů, které hráči dávají možnost všech voleb hry. Struktura bude zhruba následující:
+
+\begin{itemize}
+\item Kampaň 
+	\begin{itemize}
+	\item Tutorial
+	\item Mise 1
+	\item Mise 2 (zamčená)
+	\end{itemize}
+\item Jednotlivé mise
+	\begin{itemize}
+	\item Výběr mapy
+	\item Denní doba (den/noc apod.)
+	\item Počasí (déšť/vítr apod.)
+	\item Obtížnost (pravěk/středověk/moderní doba apod.)
+	\item Hrát
+	\end{itemize}
+\item Nastavení
+	\begin{itemize}
+	\item Citlivost myši
+	\item Profil hráče
+	\item ...
+	\end{itemize}
+\item Exit
+\end{itemize}
+
+\subsection{Kampaň a hráčův profil}
+
+Pro účely zábavnosti bude hra ukládat hráčův postup v kampani, pomocí tohoto bude odemykat další featury hry a poskytovat další zábavné statistiky. Profily hráčů budou uloženy podle operačního systému v místě pro uživatelská nastavení aplikací (například adresář ~/.drex v unixech).
+
+\section{Časový plán implementace}
+
+\begin{center}
+\begin{tabular}{|c|l|l|}
+\hline
+Datum & Výsledek & Prezentace \\
+\hline
+\hline
+20/9/2012 & Finální verze specifikace & Existující dokument \\
+\hline
+20/11/2012 & Hratelné demo & Osobní prezentace \\
+\hline
+30/12/2012 & Generátor map & Osobní prezentace \\
+\hline
+20/1/2012 & Finální verze & Předvedením \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Poznámky}
+
+Tato specifikace je více než inspirována těmito šablonami:
+\begin{itemize}
+\item Software Requirements Specification by Karl E. Wiegers
+\item SAFE™ Development System Requirements
+\end{itemize}
+
+\end{document}
+
