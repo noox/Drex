@@ -143,11 +143,8 @@ int main(int argc, char **argv){
 #include <windows.h>
 int WinMain(HINSTANCE hi, HINSTANCE hpi, LPSTR lpcmdline, int nCmdShow) {
 #endif
-	cout << "in game" << endl;
 	if(!init()) return 1;
-	cout << "inited" << endl;
 	global_game.init();
-	cout << "game inited" << endl;
 
 	//reset casovace
 	timediff();
