@@ -1,0 +1,12 @@
+
+Third-person letecká akční hra s generátorem realistických map
+
+Third-person flight action game with realistic map generator
+
+Cílem práce je navrhnout a implementovat third-person leteckou akční hru. Hra bude implementována jazyce C++[1] s pomocí knihoven SDL[2], OpenGL[3] a OpenAL[4]. Grafické rozhraní hry bude ve 3D. Hra bude obsahovat hráče v prostředí s jednoduchou umělou inteligencí. Součástí řešení bude generátor realistických map.
+
+[1] Stroustrup, B. (2000). The C++ Programming Language. ISBN 0-201-70073-5
+[2] Simple DirectMedia Layer, http://www.libsdl.org/
+[3] OpenGL, http://www.glprogramming.com/blue/
+[4] OpenAL 1.1 Specification and Reference, Version 1.1, June 2005
+
