@@ -11,7 +11,6 @@ using namespace std;
 #include "menu.h"
 
 //status hry: 0 menu, 1 hra, 2 vitezstvi, 3 prohra
-int gamestatus=1;
 
 void game::init(){
 	dr.set(vect(0,0,0),quat(1,0,0,0));
@@ -30,6 +29,8 @@ void game::init(){
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 */
+	m.init();
+	gamestatus=0;
 }
 
 void game::finish(){
@@ -39,7 +40,10 @@ void game::finish(){
 bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
 	switch (gamestatus){
 		case 0:
-			update_menu(timediff,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y);
+			if(!m.update(timediff,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y)) return false;
+			if(esc_down) return false;
+			else return true;;
+			return true;
 			break;
 		case 1:
 			dr.update(mouse_x,mouse_y,space_down,timediff);
@@ -62,7 +66,17 @@ float game::get_min_timediff(){
 void game::render(){
 	switch (gamestatus){
 		case 0: 
-			render_menu();
+			glDisable(GL_DEPTH_TEST);
+			glClearColor(0,0,0,0);
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(0,800,0,600,1,-1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			
+			m.render();
+			glEnable(GL_DEPTH_TEST);
 			break;
 		case 1: 
 			glClearColor(0,0,0,0);
@@ -72,6 +86,7 @@ void game::render(){
 			gluPerspective(90,1.33333,0.1,1000);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
+
 			cam.set_gl();
 			dr.draw();
 			hm.draw();
@@ -79,7 +94,6 @@ void game::render(){
 			glColor3f(0.1,0.1,0.1);
 			glPushMatrix();
 			glScalef(10,10,10);
-			
 			glPopMatrix();
 			break;
 		case 2:

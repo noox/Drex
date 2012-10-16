@@ -2,10 +2,10 @@
 
 # simple autogen script that generates basic layout for autotools.
 
-MY_CPPFLAGS="-I/usr/local/include -I\$(srcdir)/include/"
+MY_CPPFLAGS="-I/usr/local/include -I\$(srcdir)/include/ -I/usr/include/freetype2"
 MY_CFLAGS="-Wall"
 MY_LDFLAGS="-L/usr/local/lib"
-MY_LDADD="-lGL -lGLU -lSDL -lSDL_image"
+MY_LDADD="-lGL -lGLU -lSDL -lSDL_image -lfreetype"
 
 OUT=Makefile.am
 touch NEWS AUTHORS ChangeLog
@@ -18,8 +18,8 @@ echo "dist_noinst_SCRIPTS = autogen.sh" `for i in $DISTDIRS ; do find \$i -type 
 
 echo "bin_PROGRAMS = drex" >>$OUT
 echo "drexdir = src/" >>$OUT
-echo "drex_SOURCES = `( find src/ -type f -name \*.c ; find src/ -type f -name \*.cpp ) |tr \"\n\" \" \" ` " >>$OUT
-echo "noinst_HEADERS = `find src/ -type f -name \*.h |tr \"\n\" \" \" `" >>$OUT
+echo "drex_SOURCES = `( find src/ -type f -name \*.c ; find src/ -type f -name \*.cpp ; find vendor/ -type f -name \*.c ; find vendor/ -type f -name \*.cpp) |tr \"\n\" \" \" ` " >>$OUT
+echo "noinst_HEADERS = `( find src/ -type f -name \*.h ; find vendor/ -type f -name \*.h) |tr \"\n\" \" \" `" >>$OUT
 echo "drex_CPPFLAGS = -I\$(srcdir)/$i/ ${MY_CPPFLAGS}" >>$OUT
 echo "drex_CFLAGS = ${MY_CFLAGS}" >>$OUT
 echo "drex_LDFLAGS = ${MY_LDFLAGS}" >>$OUT

@@ -5,12 +5,15 @@
 #include "dragon.h"
 #include "heightmap.h"
 #include "camera.h"
+#include "menu.h"
 
 class game{
 	dragon dr;
 	camera cam;
 	heightmap hm;
+	menu m;
 	int texture;
+	int gamestatus;
 public:
 	void init();
 	void finish();
