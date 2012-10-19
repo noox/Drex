@@ -1,12 +1,13 @@
 
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
 #include "menu.h"
 
 #include "../vendor/OGLFT.h"
-
 
 void menu::init() {
 	face = new OGLFT::TranslucentTexture("data/DK Northumbria.otf",150);
@@ -16,48 +17,89 @@ void menu::init() {
     		cerr << "Could not construct face." << endl;
      		return;
 	}
-	menustatus=0;
+	left_mouse_hit=0;
+	set_menu(0);
 }
 
-int left_mouse_hit=0;
+void menu::set_menu(int newstatus) {
+	menustatus=newstatus;
+	items.clear();
+	switch (newstatus) {
+		case 0:
+			items.push_back("campaign");
+			items.push_back("missions");
+			items.push_back("options");
+			items.push_back("exit");
+			break;
+		case 1:
+			items.push_back("tutorial");
+			items.push_back("mission 1");
+			items.push_back("mission 2");
+			items.push_back("back");
+			break;
+		case 2:
+			items.push_back("choose map");
+			items.push_back("day time");
+			items.push_back("weather");
+			items.push_back("difficulty");
+			items.push_back("back");
+			break;
+		case 3:
+			items.push_back("player");
+			items.push_back("mouse sensitivity");
+			items.push_back("back");
+			break;
+	}
+}
+
+bool menu::handle_menu_click(int item) {
+	switch (menustatus) {
+		case 0:
+			switch (item) {
+				case 0: set_menu(1); break;
+				case 1: set_menu(2); break;
+				case 2: set_menu(3); break;
+				case 3: return false;
+			}
+			break;
+		case 1:
+			switch (item) {
+				case 3: set_menu(0); break;
+			}
+			break;
+		case 2:
+			switch (item) {
+				case 4: set_menu(0); break;
+			}
+			break;
+		case 3:
+			switch (item) {
+				case 2: set_menu(0); break;
+			}
+			break;
+		//TODO zbytek polozek
+
+	}
+	return true;
+}
 
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y) {
 	cursor_pos+=mouse_y;
-	if(cursor_pos>399) cursor_pos=399;
+	if(cursor_pos>=(int)(items.size()*100)) cursor_pos=(int)(items.size()*100-1);
 	if(cursor_pos<0) cursor_pos=0;
-	
+
 	int left_just_pressed=0;
 	//proti sekvencim stisknutych tlacitek
 	if (left_mouse_down) {
-		if (!left_mouse_hit) left_just_pressed=left_mouse_hit=1;
+		if (!left_mouse_hit)
+			left_just_pressed=left_mouse_hit=1;
 	} else left_mouse_hit=0;
 	
-	switch (menustatus) { 
-		case 0:
-			if(cursor_pos/100==0 && left_just_pressed==true) 	
-				menustatus=1;
-			if(cursor_pos/100==1 && left_just_pressed==true) 	
-				menustatus=2;
-			if(cursor_pos/100==2 && left_just_pressed==true) 	
-				menustatus=3;
-			if(cursor_pos/100==3 && left_just_pressed==true) 		
-				return false;
-			return true;
-			break;
-		case 1:
-			if(cursor_pos/100==3 && left_just_pressed==true) 					menustatus=0;
-			return true;
-			break;
-		case 2:
-			if(cursor_pos/100==3 && left_just_pressed==true) 	
-				menustatus=0;
-			return true;
-			break;
-		case 3:
-			if(cursor_pos/100==3 && left_just_pressed==true) 					menustatus=0;
-			return true;
-			break;
-	}
+	if(left_just_pressed)
+		if(!handle_menu_click(cursor_pos/100))
+			return false;
+
+	return true;
 }
 
 void menu::render() {
@@ -81,82 +123,16 @@ void menu::render() {
 	face->draw(0,0,"drex");
 	glPopMatrix();
 
-	switch (menustatus) { 
-		case 0:
-			glPushMatrix();
-			glTranslatef(400,300,0);
-			if(cursor_pos/100==0) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"campaign");
-			glTranslatef(0,-60,0);
-			if(cursor_pos/100==1) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"missions");
-			glTranslatef(0,-60,0);
-			if(cursor_pos/100==2) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"options");
-			glTranslatef(0,-60,0);
-			if(cursor_pos/100==3) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"exit");
-			glPopMatrix();
-			break;
-		case 1:
-			glPushMatrix();
-			glTranslatef(400,300,0);
-			face2->draw(0,0,"campaign");
-			glTranslatef(0,-60,0);
-			if(cursor_pos/100==0) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"tutorial");
-			glTranslatef(0,-30,0);
-			if(cursor_pos/100==1) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"mission 1");
-			glTranslatef(0,-30,0);
-			if(cursor_pos/100==2) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"mission 2");
-			glTranslatef(0,-100,0);
-			if(cursor_pos/100==3) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"back");
-
-			glPopMatrix();
-			break;
-		case 2: 
-			glPushMatrix();
-			glTranslatef(400,300,0);
-			face2->draw(0,0,"missions");
-			glTranslatef(0,-60,0);
-			if(cursor_pos/100==0) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"choose the map");
-			glTranslatef(0,-30,0);
-			if(cursor_pos/100==1) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"day time/weather/difficulty");
-			glTranslatef(0,-30,0);
-			if(cursor_pos/100==2) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"play");
-			glTranslatef(0,-100,0);
-			if(cursor_pos/100==3) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"back");
-
-			glPopMatrix();
-			break;
-		case 3:
-			glPushMatrix();
-			glTranslatef(400,300,0);
-			face2->draw(0,0,"options");
-			glTranslatef(0,-60,0);
-			if(cursor_pos/100==0) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"profile");
-			glTranslatef(0,-30,0);
-			if(cursor_pos/100==1) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"mouse sensitivity");
-			glTranslatef(0,-30,0);
-			if(cursor_pos/100==2) {face3->draw(-150,0,"+"); face3->draw(150,0,"+");}
-			face3->draw(0,0,"...");
-			glTranslatef(0,-100,0);
-			if(cursor_pos/100==3) {face2->draw(-250,0,"+"); face2->draw(250,0,"+");}
-			face2->draw(0,0,"back");
-
-			glPopMatrix();
-
-			break;
+	glPushMatrix();
+	glTranslatef(400,300,0);
+	for(int i=0;i<items.size();++i) {
+		string t=items[i];
+		if(cursor_pos/100==i)
+			t="+ "+t+" +";
+		face2->draw(0,0,t.c_str());
+		glTranslatef(0,-60,0);
 	}
+	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(400,10,0);
