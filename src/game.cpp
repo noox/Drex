@@ -94,15 +94,19 @@ void game::render(){
 			gluPerspective(90,1.33333,0.1,1000);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
+			glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHT0);
+			glEnable(GL_COLOR_MATERIAL);
 
 			cam.set_gl();
+			{
+			float light_direction[]={0.4082,0.4082,0.8165,0};
+			glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
+			}
 			dr.draw();
 			hm.draw();
 
-			glColor3f(0.1,0.1,0.1);
-			glPushMatrix();
-			glScalef(10,10,10);
-			glPopMatrix();
+			glDisable(GL_LIGHTING);
 			break;
 		case 2:
 			break;

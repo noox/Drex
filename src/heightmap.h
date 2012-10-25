@@ -3,10 +3,12 @@
 #define _HEIGHTMAP_H_
 
 #include <vector>
+#include "vector.h"
 
 using namespace std;
 
 class heightmap {
+	vector<vect> normal;
 public:
 	vector<int> h;
 	vector<unsigned char> c;
