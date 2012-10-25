@@ -105,6 +105,15 @@ bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_m
 }
 
 void menu::render() {
+	glDisable(GL_DEPTH_TEST);
+	glClearColor(0,0,0,0);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0,800,0,600,1,-1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
 	face->setBackgroundColor(1,0,0,0);
 	face2->setBackgroundColor(0,0.75,0.75,0);
 	face3->setBackgroundColor(0,1,0.5,0);
@@ -144,5 +153,7 @@ void menu::render() {
 
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
+
+	glEnable(GL_DEPTH_TEST);
 }
 

@@ -58,17 +58,7 @@ float game::get_min_timediff(){
 void game::render(){
 	switch (gamestatus){
 		case 0: 
-			glDisable(GL_DEPTH_TEST);
-			glClearColor(0,0,0,0);
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrtho(0,800,0,600,1,-1);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			
 			m.render();
-			glEnable(GL_DEPTH_TEST);
 			break;
 		case 1: 
 			w.render();
