@@ -31,6 +31,7 @@ void game::init(){
 */
 	m.init();
 	gamestatus=0;
+	esc_hit=0;
 }
 
 void game::finish(){
@@ -38,10 +39,17 @@ void game::finish(){
 }
 
 bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
+	int esc_just_pressed=0;
+	//proti sekvencim stisknutych tlacitek
+	if (esc_down) {
+		if (!esc_hit)
+			esc_just_pressed=esc_hit=1;
+	} else esc_hit=0;
+	
 	switch (gamestatus){
 		case 0:
-			if(!m.update(timediff,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y)) return false;
-			if(esc_down) return false;
+			if(!m.update(timediff,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y,*this)) return false;
+			if(esc_just_pressed) return false;
 			else return true;;
 			return true;
 			break;
@@ -49,7 +57,7 @@ bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,boo
 			dr.update(mouse_x,mouse_y,space_down,timediff);
 			cam.follow_ori(dr.ori,0.01,timediff);
 			cam.follow_pos(dr.camera_pos(),0.3,timediff);
-			if(esc_down) return false;
+			if(esc_just_pressed) go_to_menu();
 			else return true;
 			break;
 		case 2:

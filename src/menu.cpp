@@ -50,21 +50,23 @@ void menu::set_menu(int newstatus) {
 			items.push_back("back");
 			break;
 	}
+	cursor_pos=0;
 }
 
-bool menu::handle_menu_click(int item) {
+bool menu::handle_menu_click(int item,game& g) {
 	switch (menustatus) {
 		case 0:
 			switch (item) {
 				case 0: set_menu(1); break;
 				case 1: set_menu(2); break;
 				case 2: set_menu(3); break;
-				case 3: return false;
+				case 3: return false; 
 			}
 			break;
 		case 1:
 			switch (item) {
-				case 3: set_menu(0); break;
+				case 0: g.go_to_game(); break;
+				case 3: set_menu(0); break; //TODO esc??
 			}
 			break;
 		case 2:
@@ -83,7 +85,7 @@ bool menu::handle_menu_click(int item) {
 	return true;
 }
 
-bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y) {
+bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
 	cursor_pos+=mouse_y;
 	if(cursor_pos>=(int)(items.size()*100)) cursor_pos=(int)(items.size()*100-1);
 	if(cursor_pos<0) cursor_pos=0;
@@ -96,7 +98,7 @@ bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_m
 	} else left_mouse_hit=0;
 	
 	if(left_just_pressed)
-		if(!handle_menu_click(cursor_pos/100))
+		if(!handle_menu_click(cursor_pos/100,g))
 			return false;
 
 	return true;
