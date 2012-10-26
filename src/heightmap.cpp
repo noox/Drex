@@ -10,8 +10,8 @@ void heightmap::draw() {
         for(int i=0;i<size_y;++i) {
                 glBegin(GL_TRIANGLE_STRIP);
                 for(int j=0;j<size_x;++j) {
-                        hm_vertex(i+1,j)
                         hm_vertex(i,j)
+                        hm_vertex(i+1,j)
                 }
                 glEnd();
         }

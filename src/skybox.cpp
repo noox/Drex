@@ -16,43 +16,43 @@ void skybox::draw(vect pos) {
         glBegin(GL_QUADS);
         glColor3fv(bottom_color);
         glVertex3f(-1,-1,-1);
-        glVertex3f(-1,1,-1);
+        glVertex3f(1,-1,-1);
         glVertex3f(1,1,-1);  
-        glVertex3f(1,-1,-1);
- 
-        glColor3fv(top_color);
-        glVertex3f(1,-1,1);
-        glVertex3f(1,1,1);
-        glVertex3f(-1,1,1);
-        glVertex3f(-1,-1,1);
- 
-        glColor3fv(bottom_color);
-        glVertex3f(1,-1,-1);
-        glVertex3f(1,1,-1);
-        glColor3fv(top_color);
-        glVertex3f(1,1,1);
-        glVertex3f(1,-1,1);
- 
-        glColor3fv(top_color);
-        glVertex3f(-1,-1,1);
-        glVertex3f(-1,1,1);
-        glColor3fv(bottom_color);
         glVertex3f(-1,1,-1);
-        glVertex3f(-1,-1,-1);
  
         glColor3fv(top_color);
+        glVertex3f(1,-1,1);
+        glVertex3f(-1,-1,1);
         glVertex3f(-1,1,1);
+        glVertex3f(1,1,1);
+ 
+        glColor3fv(top_color);
+        glVertex3f(1,-1,1);
         glVertex3f(1,1,1);
         glColor3fv(bottom_color);
         glVertex3f(1,1,-1);
-        glVertex3f(-1,1,-1);
+        glVertex3f(1,-1,-1);
  
         glColor3fv(bottom_color);
         glVertex3f(-1,-1,-1);
-        glVertex3f(1,-1,-1);
+        glVertex3f(-1,1,-1);
         glColor3fv(top_color);
-        glVertex3f(1,-1,1);
+        glVertex3f(-1,1,1);
         glVertex3f(-1,-1,1);
+ 
+        glColor3fv(bottom_color);
+        glVertex3f(-1,1,-1);
+        glVertex3f(1,1,-1);
+        glColor3fv(top_color);
+        glVertex3f(1,1,1);
+        glVertex3f(-1,1,1);
+ 
+        glColor3fv(top_color);
+        glVertex3f(-1,-1,1);
+        glVertex3f(1,-1,1);
+        glColor3fv(bottom_color);
+        glVertex3f(1,-1,-1);
+        glVertex3f(-1,-1,-1);
         glEnd();
  
         glPopMatrix();

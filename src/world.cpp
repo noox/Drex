@@ -29,6 +29,12 @@ void world::init(){
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 */
+	
+	//pro nerenderovani veci v pozadi
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+
 	glHint(GL_FOG_HINT,GL_NICEST);
 	f.set_color(0.4,0.6,0.9);
 	f.set_distance(20,100);
