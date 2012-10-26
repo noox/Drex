@@ -29,6 +29,9 @@ void world::init(){
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 */
+	glHint(GL_FOG_HINT,GL_NICEST);
+	f.set_color(0.5,0.5,0.5);
+	f.set_distance(50,150);
 }
 
 void world::finish(){
@@ -59,8 +62,10 @@ void world::render(){
 	float light_direction[]={0.4082,0.4082,0.8165,0};
 	glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
 	}
+	f.turn_on();
 	dr.draw();
 	hm.draw();
+	f.turn_off();
 
 	glDisable(GL_LIGHTING);
 }

@@ -6,12 +6,14 @@
 #include "heightmap.h"
 #include "camera.h"
 #include "skybox.h"
+#include "fog.h"
 
 class world{
 	dragon dr;
 	camera cam;
 	heightmap hm;
 	skybox skyb;
+	fog f;
 	int texture;
 public:
 	void init();
