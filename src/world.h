@@ -1,16 +1,17 @@
 
-
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
 #include "dragon.h"
 #include "heightmap.h"
 #include "camera.h"
+#include "skybox.h"
 
 class world{
 	dragon dr;
 	camera cam;
 	heightmap hm;
+	skybox skyb;
 	int texture;
 public:
 	void init();

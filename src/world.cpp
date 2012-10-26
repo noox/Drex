@@ -54,6 +54,7 @@ void world::render(){
 	glEnable(GL_COLOR_MATERIAL);
 
 	cam.set_gl();
+	skyb.draw(cam.pos);
 	{
 	float light_direction[]={0.4082,0.4082,0.8165,0};
 	glLightfv(GL_LIGHT0, GL_POSITION, light_direction);

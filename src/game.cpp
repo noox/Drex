@@ -5,7 +5,6 @@ using namespace std;
 
 #include "game.h"
 
-#include "imageloader.h"
 #include "world.h"
 #include "menu.h"
 
