@@ -30,8 +30,8 @@ void world::init(){
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 */
 	glHint(GL_FOG_HINT,GL_NICEST);
-	f.set_color(0.5,0.5,0.5);
-	f.set_distance(50,150);
+	f.set_color(0.4,0.6,0.9);
+	f.set_distance(20,100);
 }
 
 void world::finish(){
