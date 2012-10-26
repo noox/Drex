@@ -35,6 +35,7 @@ void world::init(){
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 
+	//inicialni nastaveni pro mlhu
 	glHint(GL_FOG_HINT,GL_NICEST);
 	f.set_color(0.4,0.6,0.9);
 	f.set_distance(20,100);
@@ -58,12 +59,12 @@ void world::render(){
 	gluPerspective(90,1.33333,0.1,1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL);
 
 	cam.set_gl();
 	skyb.draw(cam.pos);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_COLOR_MATERIAL);
 	{
 	float light_direction[]={0.4082,0.4082,0.8165,0};
 	glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
