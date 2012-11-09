@@ -3,12 +3,15 @@
 #define _HEIGHTMAP_H_
 
 #include <vector>
+#include <GL/gl.h>
+
 #include "vector.h"
 
 using namespace std;
 
 class heightmap {
 	vector<vect> normal;
+	GLuint t;
 public:
 	vector<int> h;
 	vector<unsigned char> c;

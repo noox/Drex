@@ -19,14 +19,14 @@ void imageloader_end() {
 }
 
 //loader textur
-GLuint imageloader_load(const char* fn) {
+GLuint imageloader_load(const char* fn, int BPP, GLuint type) {
 	SDL_Surface *image;
 	image = IMG_Load(fn);
 	if(!image) return 0;
 	GLuint t;
 	glGenTextures(1,&t);
 	glBindTexture(GL_TEXTURE_2D,t);
-	glTexImage2D(GL_TEXTURE_2D,0,3,image->w,image->h,0,GL_RGB,
+	glTexImage2D(GL_TEXTURE_2D,0,BPP,image->w,image->h,0,type,
         	GL_UNSIGNED_BYTE,image->pixels);
 	SDL_FreeSurface(image);
 	return t;

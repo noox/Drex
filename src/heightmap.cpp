@@ -1,17 +1,19 @@
 
-#include <GL/gl.h>
- 
 #include "imageloader.h"
 #include "heightmap.h"
  
-#define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glVertex3f(5*(x),5*(y),5*(0.1*h[y*size_x+x]));
- 
+#define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glTexCoord2f(x,y); glVertex3f(5*(x),5*(y),5*(0.1*h[y*size_x+x]));
+
 void heightmap::init() {
-
-
+	t = imageloader_load("data/terrain.png",1,GL_LUMINANCE);
+	glBindTexture(GL_TEXTURE_2D,t);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 }
 
 void heightmap::draw() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,t);
         for(int i=0;i<size_y;++i) {
                 glBegin(GL_TRIANGLE_STRIP);
                 for(int j=0;j<size_x;++j) {
@@ -20,6 +22,7 @@ void heightmap::draw() {
                 }
                 glEnd();
         }
+	glDisable(GL_TEXTURE_2D);	
 }
  
 void heightmap::load(const char* fn,const char* fn2) {
@@ -58,6 +61,6 @@ void heightmap::free() {
 }
 
 void heightmap::finish() {
-
+	imageloader_free(t);
 }
 
