@@ -4,8 +4,13 @@
 #include "imageloader.h"
 #include "heightmap.h"
  
-#define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glVertex3f(x,y,0.1*h[y*size_x+x]);
+#define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glVertex3f(5*(x),5*(y),5*(0.1*h[y*size_x+x]));
  
+void heightmap::init() {
+
+
+}
+
 void heightmap::draw() {
         for(int i=0;i<size_y;++i) {
                 glBegin(GL_TRIANGLE_STRIP);
@@ -51,3 +56,8 @@ void heightmap::free() {
         size_x=0;
         size_y=0;
 }
+
+void heightmap::finish() {
+
+}
+

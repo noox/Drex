@@ -15,6 +15,7 @@ using namespace std;
 void world::init(){
 	dr.set(vect(0,0,0),quat(1,0,0,0));
 	cam.set(vect(0,0,0),quat(1,0,0,0));
+	hm.init();
 	hm.load("data/hm3.png","data/color3.png");
 	
 	glShadeModel(GL_SMOOTH);
@@ -38,11 +39,12 @@ void world::init(){
 	//inicialni nastaveni pro mlhu
 	glHint(GL_FOG_HINT,GL_NICEST);
 	f.set_color(0.4,0.6,0.9);
-	f.set_distance(20,100);
+	f.set_distance(50,200);
 }
 
 void world::finish(){
 	imageloader_free(texture);
+	hm.finish();
 }
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
