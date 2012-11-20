@@ -1,6 +1,7 @@
 
 #include "vector.h"
 #include "quaternion.h"
+#include "heightmap.h"
 
 class dragon {
 public:
@@ -15,7 +16,7 @@ public:
 		mom=quat(0,0,0,0);
 	}
 
-	void update(int mouse_x,int mouse_y,bool space,float timediff);
+	void update(int mouse_x,int mouse_y,bool space,float timediff,heightmap &hm);
 	void draw();
 	vect camera_pos();
 };

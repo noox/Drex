@@ -6,7 +6,7 @@
 
 #include "dragon.h"
 
-void dragon::update(int mouse_x,int mouse_y,bool space,float timediff) {
+void dragon::update(int mouse_x,int mouse_y,bool space,float timediff,heightmap &hm) {
 	if(space) spd-=ori.vecz()*timediff*5;
 	
 	mom+=ori*(0.03*quat(0,mouse_y/2,0,-mouse_x));
@@ -16,6 +16,9 @@ void dragon::update(int mouse_x,int mouse_y,bool space,float timediff) {
 	ori.normalize();
 	spd*=powf(0.5,timediff);
 	mom*=powf(0.2,timediff);
+
+	float hmh=hm.get_height(pos.x,pos.y)+0.1;
+	if(hmh>pos.z) pos.z=hmh;
 }
 
 void dragon::draw() {

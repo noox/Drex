@@ -48,7 +48,7 @@ void world::finish(){
 }
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
-	dr.update(mouse_x,mouse_y,space_down,timediff);
+	dr.update(mouse_x,mouse_y,space_down,timediff,hm);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
 }
