@@ -1,8 +1,15 @@
 
+#include <iostream>
+
+using namespace std;
+
 #include "imageloader.h"
 #include "heightmap.h"
  
-#define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glTexCoord2f(x,y); glVertex3f(5*(x),5*(y),5*(0.1*h[y*size_x+x]));
+#define tilesize 5
+#define tileheight 0.1
+
+#define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glTexCoord2f(x,y); glVertex3f(tilesize*(x),tilesize*(y),tilesize*(tileheight*h[y*size_x+x]));
 
 void heightmap::init() {
 	t = imageloader_load("data/terrain.png",1,GL_LUMINANCE);
@@ -44,12 +51,31 @@ void heightmap::load(const char* fn,const char* fn2) {
                         d=j+1;
                         if(d>=size_y) d=size_y-1;
                        
-                        vect A=vect(0,(d-c),0.1*(h[i+d*size_x]-h[i+c*size_x])),
-                             B=vect((b-a),0,0.1*(h[b+j*size_x]-h[a+j*size_x]));
+                        vect A=vect(0,(d-c),tileheight*(h[i+d*size_x]-h[i+c*size_x])),
+                             B=vect((b-a),0,tileheight*(h[b+j*size_x]-h[a+j*size_x]));
                        
                         normal[i+j*size_x]=(B^A).normal();
                 }
         }
+}
+
+float heightmap::get_height(float x, float y) {
+	int tx = x/tilesize, ty = y/tilesize;
+	if(tx<0 || tx>=size_x-1 || ty<0 || ty>=size_y-1) return 0;
+	float mx = x/tilesize-tx, my = y/tilesize-ty;
+	float h1,h2,h3;
+	h1=h[tx+ty*size_x];
+	h3=h[(tx+1)+(ty+1)*size_x];
+	if(mx>my) h2=h[(tx+1)+ty*size_x];
+	else {
+		h2=h[tx+(ty+1)*size_x];
+		float temp = mx;
+		mx = my;
+		my = temp;
+	}
+	if(my<0.001) return tileheight*tilesize*(mx*h2+(1-mx)*h1);
+	float mxy=my/mx;
+	return tileheight*tilesize*(mx*(h3*mxy+h2*(1-mxy))+(1-mx)*h1);
 }
  
 void heightmap::free() {
