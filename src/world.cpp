@@ -10,15 +10,14 @@ using namespace std;
 #include "imageloader.h"
 #include "world.h"
 
-//status hry: 0 menu, 1 hra, 2 vitezstvi, 3 prohra
-
 void world::init(){
 	dr.init();
 	dr.set(vect(10,10,10),quat(0.7,0.7,0,0));
 	cam.set(vect(0,0,0),quat(1,0,0,0));
 	hm.init();
 	hm.load("data/hm3.png","data/color3.png");
-	
+	es.init();
+
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
@@ -40,10 +39,12 @@ void world::init(){
 void world::finish(){
 	hm.finish();
 	dr.finish();
+	es.finish();
 }
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
 	dr.update(mouse_x,mouse_y,space_down,timediff,hm);
+	es.update(timediff);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
 }
@@ -69,6 +70,7 @@ void world::render(){
 	f.turn_on();
 	dr.draw();
 	hm.draw();
+	es.draw();
 	f.turn_off();
 
 	glDisable(GL_LIGHTING);

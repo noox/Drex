@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "skybox.h"
 #include "fog.h"
+#include "enemy.h"
 
 class world{
 	dragon dr;
@@ -14,6 +15,7 @@ class world{
 	heightmap hm;
 	skybox skyb;
 	fog f;
+	enemy_system es;
 	int texture;
 public:
 	void init();
