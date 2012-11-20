@@ -7,6 +7,7 @@ using namespace std;
 
 #include "game.h"
 
+#include "frand.h"
 #include "imageloader.h"
 #include "world.h"
 
@@ -17,6 +18,8 @@ void world::init(){
 	hm.init();
 	hm.load("data/hm3.png","data/color3.png");
 	es.init();
+	ps.init();
+	ms.init();
 
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
@@ -40,13 +43,26 @@ void world::finish(){
 	hm.finish();
 	dr.finish();
 	es.finish();
+	ps.finish();
+	ms.finish();
 }
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
 	dr.update(mouse_x,mouse_y,space_down,timediff,hm);
 	es.update(timediff);
+	ps.update(timediff);
+	ms.update(timediff);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
+
+	particle &p=ps.add_one();
+	p.pos=dr.pos;
+	p.spd=dr.spd;
+	p.type=part_spark;
+	p.r=FRAND;
+	p.g=FRAND;
+	p.b=FRAND;
+	p.life=10;
 }
 
 void world::render(){
@@ -71,8 +87,10 @@ void world::render(){
 	dr.draw();
 	hm.draw();
 	es.draw();
+	ms.draw();
 	f.turn_off();
 
 	glDisable(GL_LIGHTING);
+	ps.draw();
 }
 

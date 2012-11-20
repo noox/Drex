@@ -263,32 +263,6 @@ void dragon::draw() {
 	glPopMatrix();
 
 	glPopMatrix();
-/*
-	glBegin(GL_TRIANGLES);
-	glColor3f(1,1,1);
-
-	glNormal3f(0,0,1);
-	glVertex3f(1,0,0);
-	glVertex3f(0,0.5,0);
-	glVertex3f(-1,0,0);
-
-	glNormal3f(0,-1,0);
-	glVertex3f(1,0,0);
-	glVertex3f(0,0,-3);
-	glVertex3f(-1,0,0);
-
-	glNormal3f(-0.3,0.6,-0.1);
-	glVertex3f(-1,0,0);
-	glVertex3f(0,0.5,0);
-	glVertex3f(0,0,-3);
-
-	glNormal3f(0.3,0.6,-0.1);
-	glVertex3f(1,0,0);
-	glVertex3f(0,0,-3);
-	glVertex3f(0,0.5,0);
-
-	glEnd();
-*/
 
 	glDisable(GL_TEXTURE_2D);
 

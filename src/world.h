@@ -8,6 +8,8 @@
 #include "skybox.h"
 #include "fog.h"
 #include "enemy.h"
+#include "particles.h"
+#include "missiles.h"
 
 class world{
 	dragon dr;
@@ -16,6 +18,8 @@ class world{
 	skybox skyb;
 	fog f;
 	enemy_system es;
+	particle_system ps;
+	missile_system ms;
 	int texture;
 public:
 	void init();
