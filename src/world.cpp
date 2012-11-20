@@ -13,7 +13,8 @@ using namespace std;
 //status hry: 0 menu, 1 hra, 2 vitezstvi, 3 prohra
 
 void world::init(){
-	dr.set(vect(0,0,0),quat(1,0,0,0));
+	dr.init();
+	dr.set(vect(10,10,10),quat(0.7,0.7,0,0));
 	cam.set(vect(0,0,0),quat(1,0,0,0));
 	hm.init();
 	hm.load("data/hm3.png","data/color3.png");
@@ -24,12 +25,6 @@ void world::init(){
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 	
 	glEnable(GL_DEPTH_TEST);
-/*	texture=imageloader_load("data/hm.png");
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-*/
 	
 	//pro nerenderovani veci v pozadi
 	glFrontFace(GL_CCW);
@@ -43,8 +38,8 @@ void world::init(){
 }
 
 void world::finish(){
-	imageloader_free(texture);
 	hm.finish();
+	dr.finish();
 }
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){

@@ -77,6 +77,11 @@ float heightmap::get_height(float x, float y) {
 	float mxy=my/mx;
 	return tileheight*tilesize*(mx*(h3*mxy+h2*(1-mxy))+(1-mx)*h1);
 }
+
+void heightmap::get_sizes(float &x, float &y) {
+	x=size_x*tilesize;
+	y=size_y*tilesize;
+}
  
 void heightmap::free() {
         h.clear();

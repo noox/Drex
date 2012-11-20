@@ -20,6 +20,7 @@ public:
 	void draw();
 	void load(const char* fn,const char* fn2);
 	float get_height(float x, float y);
+	void get_sizes(float &x,float &y);
 	void free();
 	void finish();
 };

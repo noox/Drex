@@ -3,8 +3,18 @@
 #include <math.h>
 
 #include "vector.h"
+#include "imageloader.h"
 
 #include "dragon.h"
+
+void dragon::init() {
+	texture=imageloader_load("data/drak.png",3,GL_RGB);
+	glBindTexture(GL_TEXTURE_2D,texture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
+}
 
 void dragon::update(int mouse_x,int mouse_y,bool space,float timediff,heightmap &hm) {
 	if(space) spd-=ori.vecz()*timediff*5;
@@ -19,6 +29,15 @@ void dragon::update(int mouse_x,int mouse_y,bool space,float timediff,heightmap 
 
 	float hmh=hm.get_height(pos.x,pos.y)+0.1;
 	if(hmh>pos.z) pos.z=hmh;
+	
+	float maxsx, maxsy;
+	hm.get_sizes(maxsx,maxsy);
+	if(pos.x<0) pos.x=0;
+	if(pos.y<0) pos.y=0;
+	if(pos.x>maxsx) pos.x=maxsx;
+	if(pos.y>maxsy) pos.y=maxsy;
+
+	//TODO maxz
 }
 
 void dragon::draw() {
@@ -59,13 +78,18 @@ void dragon::draw() {
 
 	};
 	
-#define point(x) glNormal3fv(points[x-1][1].v); glVertex3fv(points[x-1][0].v);
+#define point(X) glNormal3fv(points[X-1][1].v); glTexCoord2f(points[X-1][0].x/19,points[X-1][0].y/24); glVertex3fv(points[X-1][0].v);
 
 	glPushMatrix();
 	glScalef(0.2,0.2,0.2);
 	glRotatef(-90,1,0,0);
 	glTranslatef(0,-10,0);
-	glColor3f(0.2,0.5,0.1);
+	glColor3f(1,1,1);
+	//glColor3f(0.2,0.5,0.1);
+	
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,texture);
+
 	//telo zprava shora
 	glBegin(GL_TRIANGLE_FAN);
 		point(3)
@@ -265,6 +289,9 @@ void dragon::draw() {
 
 	glEnd();
 */
+
+	glDisable(GL_TEXTURE_2D);
+
 	glPopMatrix();
 }
 
@@ -272,3 +299,8 @@ void dragon::draw() {
 vect dragon::camera_pos() {
 	return pos+ori.vecz()*10+ori.vecy()*3; 
 }
+
+void dragon::finish() {
+	imageloader_free(texture);
+}
+
