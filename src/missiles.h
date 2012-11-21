@@ -1,9 +1,20 @@
 
+#ifndef _MISSILE_H_
+#define _MISSILE_H_
+
 #include <list>
 
 using namespace std;
 
 #include "vector.h"
+
+enum missile_type {
+	missile_dragon_fire, 
+	missile_dragon_ball
+	//TODO enemies
+};
+
+class world;
 
 class missile {
 public:
@@ -12,10 +23,13 @@ public:
 	float age, power;
 	bool deletable;
 
-	missile() {}
+	missile() {
+		age=0;
+		deletable=false;
+	}
 
 	void create();
-	void update(float time);
+	void update(float time, world& w);
 	void draw();
 };
 
@@ -25,8 +39,10 @@ public:
 
 	void init();
 	missile& add_one();
-	void update(float time);
+	void update(float time, world& w);
 	void draw();
 	void finish();
 };
+
+#endif
 

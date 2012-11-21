@@ -44,7 +44,7 @@ void particle_system::draw() {
 	glBlendFunc(GL_ONE,GL_ONE);
 	glDepthMask(0);
 	for(list<particle>::iterator i=particles.begin();i!=particles.end();++i)
-		i->draw();
+		i->draw(*this);
 	glDepthMask(1);
 	glDisable(GL_BLEND);
 }
@@ -73,12 +73,25 @@ void particle::update(float time) {
 	}
 }
 
-void particle::draw() {
+void particle::draw(particle_system &ps) {
 	glPushMatrix();
 	glTranslatef(pos.x,pos.y,pos.z);
 	glColor3f(r,g,b);
 	switch (type) {
 		case part_fire:
+			glBindTexture(GL_TEXTURE_2D,ps.tex_fire);
+			glEnable(GL_TEXTURE_2D);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0,0);
+			glVertex3f(-0.2,-0.2,0);
+			glTexCoord2f(1,0);
+			glVertex3f(0.2,-0.2,0);
+			glTexCoord2f(1,1);
+			glVertex3f(0.2,0.2,0);
+			glTexCoord2f(0,1);
+			glVertex3f(-0.2,0.2,0);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
 			break;
 		case part_spark:
 			glBegin(GL_LINES);
@@ -88,6 +101,19 @@ void particle::draw() {
 			glEnd();
 			break;
 		case part_smoke:
+			glBindTexture(GL_TEXTURE_2D,ps.tex_smoke);
+			glEnable(GL_TEXTURE_2D);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0,0);
+			glVertex3f(-0.2,-0.2,0);
+			glTexCoord2f(1,0);
+			glVertex3f(0.2,-0.2,0);
+			glTexCoord2f(1,1);
+			glVertex3f(0.2,0.2,0);
+			glTexCoord2f(0,1);
+			glVertex3f(-0.2,0.2,0);
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
 			break;
 	}
 	glPopMatrix();

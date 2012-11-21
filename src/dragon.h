@@ -1,7 +1,13 @@
 
+#ifndef _DRAGON_H_
+#define _DRAGON_H_
+
+#include <GL/gl.h>
+
 #include "vector.h"
 #include "quaternion.h"
-#include "heightmap.h"
+
+class world;
 
 class dragon {
 public:
@@ -18,8 +24,11 @@ public:
 	}
 
 	void init();
-	void update(int mouse_x,int mouse_y,bool space,float timediff,heightmap &hm);
+	void update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mouse_down,bool space,float timediff,world &w);
 	void draw();
 	vect camera_pos();
 	void finish();
 };
+
+#endif
+

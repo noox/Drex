@@ -48,17 +48,17 @@ void world::finish(){
 }
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
-	dr.update(mouse_x,mouse_y,space_down,timediff,hm);
+	dr.update(mouse_x,mouse_y,left_mouse_down,right_mouse_down,space_down,timediff,*this);
 	es.update(timediff);
 	ps.update(timediff);
-	ms.update(timediff);
+	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
 
 	particle &p=ps.add_one();
 	p.pos=dr.pos;
 	p.spd=dr.spd;
-	p.type=part_spark;
+	p.type=part_smoke;
 	p.r=FRAND;
 	p.g=FRAND;
 	p.b=FRAND;

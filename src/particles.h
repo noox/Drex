@@ -9,6 +9,8 @@ enum particle_type {
 	part_fire,part_spark,part_smoke
 };
 
+class particle_system;
+
 class particle {
 public:
 	vect pos, spd;
@@ -20,7 +22,7 @@ public:
 	}
 
 	void update(float time);
-	void draw();
+	void draw(particle_system &ps);
 };
 
 class particle_system {

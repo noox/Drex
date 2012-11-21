@@ -2,10 +2,9 @@
 #include <GL/gl.h>
 #include <math.h>
 
-#include "vector.h"
 #include "imageloader.h"
-
 #include "dragon.h"
+#include "world.h"
 
 void dragon::init() {
 	texture=imageloader_load("data/drak.png",3,GL_RGB);
@@ -16,7 +15,7 @@ void dragon::init() {
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
 }
 
-void dragon::update(int mouse_x,int mouse_y,bool space,float timediff,heightmap &hm) {
+void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mouse_down,bool space,float timediff,world &w) {
 	if(space) spd-=ori.vecz()*timediff*5;
 	
 	mom+=ori*(0.03*quat(0,mouse_y/2,0,-mouse_x));
@@ -27,17 +26,32 @@ void dragon::update(int mouse_x,int mouse_y,bool space,float timediff,heightmap 
 	spd*=powf(0.5,timediff);
 	mom*=powf(0.2,timediff);
 
-	float hmh=hm.get_height(pos.x,pos.y)+0.1;
+	float hmh=w.hm.get_height(pos.x,pos.y)+0.1;
 	if(hmh>pos.z) pos.z=hmh;
 	
 	float maxsx, maxsy;
-	hm.get_sizes(maxsx,maxsy);
+	w.hm.get_sizes(maxsx,maxsy);
 	if(pos.x<0) pos.x=0;
 	if(pos.y<0) pos.y=0;
 	if(pos.x>maxsx) pos.x=maxsx;
 	if(pos.y>maxsy) pos.y=maxsy;
 
 	//TODO maxz
+	
+	if(left_mouse_down) {
+		missile& m = w.ms.add_one();
+		m.pos=pos;
+		m.spd=-20*ori.vecz();
+		m.type=missile_dragon_fire;
+		//TODO m.power;
+	}
+	if(right_mouse_down) {
+		missile& m = w.ms.add_one();
+		m.pos=pos;
+		m.spd=-20*ori.vecz();
+		m.type=missile_dragon_ball;
+		//TODO m.power;
+	}
 }
 
 void dragon::draw() {

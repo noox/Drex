@@ -2,6 +2,8 @@
 #include <GL/gl.h>
 
 #include "missiles.h"
+#include "frand.h"
+#include "world.h"
 
 void missile_system::init() {
 	missiles.clear();
@@ -12,10 +14,10 @@ missile& missile_system::add_one() {
 	return missiles.back();
 }
 
-void missile_system::update(float time) {
+void missile_system::update(float time, world& w) {
 	list<list<missile>::iterator> todel;
 	for(list<missile>::iterator i=missiles.begin();i!=missiles.end();++i) {
-		i->update(time);
+		i->update(time,w);
 		if(i->deletable) todel.push_back(i);
 	}
 	while(!todel.empty()) {
@@ -35,11 +37,24 @@ void missile_system::finish() {
 
 /* =========================================================== */
 
-void missile::update(float time) {
+void missile::update(float time, world& w) {
+	pos+=spd*time;
+	age+=time;
 	switch (type) {
-		case 0:
+		case missile_dragon_fire:
+			if(age>3) deletable=true;
+			{particle& p=w.ps.add_one();
+			p.pos=pos;
+			p.spd=vect(DFRAND,DFRAND,DFRAND);
+			p.type=part_fire;
+			p.life=0.4;
+			p.r=1;
+			p.g=FRAND/2;
+			p.b=0.01;}
+			//TODO particle jednou za cas
 			break;
-		case 1:
+		case missile_dragon_ball:
+			if(age>10) deletable=true;
 			break;
 		default: 
 			break;
@@ -47,10 +62,7 @@ void missile::update(float time) {
 }
 
 void missile::draw() {
-	glPushMatrix();
-	glTranslatef(pos.x,pos.y,pos.z);
-	glColor3f(1,1,1);
-	glPopMatrix();
+
 }
 
 
