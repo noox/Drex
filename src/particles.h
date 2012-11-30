@@ -1,9 +1,14 @@
 
+#ifndef _PARTICLES_H_
+#define _PARTICLES_H_
+
 #include <list>
 
 using namespace std;
 
 #include "vector.h"
+
+class world;
 
 enum particle_type {
 	part_fire,part_spark,part_smoke
@@ -32,7 +37,9 @@ public:
 	void init();
 	particle& add_one();
 	void update(float time);
-	void draw();
+	void draw(world &w);
 	void finish();
 };
+
+#endif
 

@@ -91,6 +91,6 @@ void world::render(){
 	f.turn_off();
 
 	glDisable(GL_LIGHTING);
-	ps.draw();
+	ps.draw(*this);
 }
 

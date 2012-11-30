@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <math.h>
 
+#include "world.h"
 #include "imageloader.h"
 
 #include "particles.h"
@@ -39,9 +40,32 @@ void particle_system::update(float time) {
 	}	
 }
 
-void particle_system::draw() {
+void particle_system::draw(world &w) {
+	//priprava matice pro billboarding
+	float part_face[16];
+	for(int i=0;i<16;++i) part_face[i]=0;
+	vect temp = w.cam.ori.vecx();
+	part_face[0]=temp.x;
+	part_face[1]=temp.y;
+	part_face[2]=temp.z;
+	part_face[3]=0;
+	temp = w.cam.ori.vecy();
+	part_face[4]=temp.x;
+	part_face[5]=temp.y;
+	part_face[6]=temp.z;
+	part_face[7]=0;
+	temp = w.cam.ori.vecz();
+	part_face[8]=temp.x;
+	part_face[9]=temp.y;
+	part_face[10]=temp.z;
+	part_face[11]=0;
+	part_face[12]=0;
+	part_face[13]=0;
+	part_face[14]=0;
+	part_face[15]=1;
+
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE,GL_ONE);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 	glDepthMask(0);
 	for(list<particle>::iterator i=particles.begin();i!=particles.end();++i) {
 		glPushMatrix();
@@ -51,6 +75,7 @@ void particle_system::draw() {
 			case part_fire:
 				glBindTexture(GL_TEXTURE_2D,tex_fire);
 				glEnable(GL_TEXTURE_2D);
+				glMultMatrixf(part_face);
 				glBegin(GL_QUADS);
 				glTexCoord2f(0,0);
 				glVertex3f(-0.2,-0.2,0);
@@ -66,13 +91,14 @@ void particle_system::draw() {
 			case part_spark:
 				glBegin(GL_LINES);
 				glVertex3f(0,0,0);
-				glColor3f(0,0,0);
+				glColor4f(0,0,0,0);
 				glVertex3f(-(i->spd.x),-(i->spd.y),-(i->spd.z));
 				glEnd();
 				break;
 			case part_smoke:
 				glBindTexture(GL_TEXTURE_2D,tex_smoke);
 				glEnable(GL_TEXTURE_2D);
+				glMultMatrixf(part_face);
 				glBegin(GL_QUADS);
 				glTexCoord2f(0,0);
 				glVertex3f(-0.2,-0.2,0);
