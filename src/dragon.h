@@ -14,6 +14,7 @@ public:
 	vect pos,spd;
 	quat ori,mom;
 	GLuint texture;
+	float reload;
 
 	void set(const vect &Pos,const quat &Ori) {
 		pos=Pos;
@@ -21,6 +22,7 @@ public:
 		ori.normalize();
 		spd=vect(0,0,0);
 		mom=quat(0,0,0,0);
+		reload=0;
 	}
 
 	void init();
