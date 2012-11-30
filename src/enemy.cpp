@@ -37,11 +37,11 @@ void enemy_system::finish() {
 
 void enemy::update(float time) {
 	switch (type) {
-		case 0:
+		case enemy_house:
 			break;
-		case 1:
+		case enemy_person:
 			break;
-		default: 
+		case enemy_tree: 
 			break;
 	}
 }
@@ -49,11 +49,42 @@ void enemy::update(float time) {
 void enemy::draw() {
 	glPushMatrix();
 	glTranslatef(pos.x,pos.y,pos.z);
-	glColor3f(1,1,1);
-	glBegin(GL_LINES);
-	glVertex3f(0,0,0);
-	glVertex3f(0,0,1);
-	glEnd();
+	glColor3f(0.3,0.3,0.3);
+	switch (type) {
+		case enemy_house:
+			glBegin(GL_QUADS);
+			glVertex3f(0,0,0);
+			glVertex3f(1,0,0);
+			glVertex3f(1,1,0);
+			glVertex3f(0,1,0);
+
+			glVertex3f(1,0,0);
+			glVertex3f(1,0,2);
+			glVertex3f(1,1,2);
+			glVertex3f(1,1,0);
+			
+			glVertex3f(1,0,2);
+			glVertex3f(0,0,2);
+			glVertex3f(0,1,2);
+			glVertex3f(1,1,2);
+			
+			glVertex3f(0,0,0);
+			glVertex3f(0,1,0);
+			glVertex3f(0,1,2);
+			glVertex3f(0,0,2);
+			
+			glColor3f(1,0.3,0);
+			glVertex3f(0,1,0);
+			glVertex3f(1,1,0);
+			glVertex3f(1,1,2);
+			glVertex3f(0,1,2);
+			glEnd();
+			break;
+		case enemy_person:
+			break;
+		case enemy_tree:
+			break;
+	}
 	glPopMatrix();
 }
 

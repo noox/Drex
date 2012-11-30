@@ -37,6 +37,16 @@ void world::init(){
 	glHint(GL_FOG_HINT,GL_NICEST);
 	f.set_color(0.4,0.6,0.9);
 	f.set_distance(50,200);
+
+	enemy& p = es.add_one();
+	p.spd.x=0;
+	p.spd.y=0;
+	p.spd.z=0;
+	p.pos.x=10;
+	p.pos.y=10;
+	p.pos.z=0;
+	p.type=enemy_house;
+	p.hp=100;
 }
 
 void world::finish(){
@@ -54,15 +64,6 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
-
-	particle &p=ps.add_one();
-	p.pos=dr.pos;
-	p.spd=dr.spd;
-	p.type=part_smoke;
-	p.r=FRAND;
-	p.g=FRAND;
-	p.b=FRAND;
-	p.life=10;
 }
 
 void world::render(){

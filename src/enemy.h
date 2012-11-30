@@ -5,6 +5,12 @@ using namespace std;
 
 #include "vector.h"
 
+enum enemy_type {
+	enemy_house,
+	enemy_person,
+	enemy_tree
+};
+
 class enemy {
 public:
 	vect pos, spd;
@@ -12,7 +18,9 @@ public:
 	float hp;
 	bool burning;
 
-	enemy() {}
+	enemy() {
+		burning=false;
+	}
 
 	void create();
 	void update(float time);
