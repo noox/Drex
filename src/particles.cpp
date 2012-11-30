@@ -46,7 +46,7 @@ void particle_system::draw() {
 	for(list<particle>::iterator i=particles.begin();i!=particles.end();++i) {
 		glPushMatrix();
 		glTranslatef(i->pos.x,i->pos.y,i->pos.z);
-		glColor3f(i->r,i->g,i->b);
+		glColor4f(i->r,i->g,i->b,1-(i->age/i->life));
 		switch (i->type) {
 			case part_fire:
 				glBindTexture(GL_TEXTURE_2D,tex_fire);

@@ -46,7 +46,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 		m.spd=-20*ori.vecz();
 		m.type=missile_dragon_fire;
 		//TODO m.power;
-		reload-=0.3;
+		reload-=0.1;
 	}
 	if(right_mouse_down && reload>=0) {
 		missile& m = w.ms.add_one();
@@ -54,7 +54,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 		m.spd=-20*ori.vecz();
 		m.type=missile_dragon_ball;
 		//TODO m.power;
-		reload-=0.3;
+		reload-=0.1;
 	}
 }
 
