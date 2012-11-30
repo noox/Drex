@@ -40,24 +40,28 @@ void missile_system::finish() {
 void missile::update(float time, world& w) {
 	pos+=spd*time;
 	age+=time;
-	switch (type) {
-		case missile_dragon_fire:
-			if(age>3) deletable=true;
-			{particle& p=w.ps.add_one();
-			p.pos=pos;
-			p.spd=vect(DFRAND,DFRAND,DFRAND);
-			p.type=part_fire;
-			p.life=0.4;
-			p.r=1;
-			p.g=FRAND/2;
-			p.b=0.01;}
-			//TODO particle jednou za cas
-			break;
-		case missile_dragon_ball:
-			if(age>10) deletable=true;
-			break;
-		default: 
-			break;
+	reload+=time;
+	while(reload>=0) { 
+		switch (type) {
+			case missile_dragon_fire:
+				if(age>3) deletable=true;
+				{particle& p=w.ps.add_one();
+				p.pos=pos;
+				p.spd=vect(DFRAND,DFRAND,DFRAND);
+				p.type=part_fire;
+				p.life=0.4;
+				p.r=1;
+				p.g=FRAND/2;
+				p.b=0.01;}
+				//TODO particle jednou za cas
+				break;
+			case missile_dragon_ball:
+				if(age>10) deletable=true;
+				break;
+			default: 
+				break;
+		}
+		reload-=0.01;
 	}
 }
 

@@ -20,12 +20,13 @@ class missile {
 public:
 	vect pos, spd;
 	int type;
-	float age, power;
+	float age, power, reload;
 	bool deletable;
 
 	missile() {
 		age=0;
 		deletable=false;
+		reload=0;
 	}
 
 	void create();

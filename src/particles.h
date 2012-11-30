@@ -22,7 +22,6 @@ public:
 	}
 
 	void update(float time);
-	void draw(particle_system &ps);
 };
 
 class particle_system {
