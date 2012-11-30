@@ -38,7 +38,7 @@ void world::init(){
 	f.set_color(0.4,0.6,0.9);
 	f.set_distance(50,200);
 
-	enemy& p = es.add_one();
+	{enemy& p = es.add_one();
 	p.spd.x=0;
 	p.spd.y=0;
 	p.spd.z=0;
@@ -46,7 +46,7 @@ void world::init(){
 	p.pos.y=10;
 	p.pos.z=0;
 	p.type=enemy_house;
-	p.hp=100;
+	p.hp=100;}
 }
 
 void world::finish(){

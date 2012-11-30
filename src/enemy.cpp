@@ -53,31 +53,37 @@ void enemy::draw() {
 	switch (type) {
 		case enemy_house:
 			glBegin(GL_QUADS);
-			glVertex3f(0,0,0);
-			glVertex3f(1,0,0);
-			glVertex3f(1,1,0);
-			glVertex3f(0,1,0);
+			glColor3f(0.8,0.1,0);
+			glNormal3f(0,0,1);
+			glVertex3f(0,0,2);
+			glVertex3f(1,0,2);
+			glVertex3f(1,1,2);
+			glVertex3f(0,1,2);
 
+			glColor3f(0.8,0.8,0.8);
+			glNormal3f(0,-1,0);
+			glVertex3f(0,0,0);
 			glVertex3f(1,0,0);
 			glVertex3f(1,0,2);
-			glVertex3f(1,1,2);
-			glVertex3f(1,1,0);
-			
-			glVertex3f(1,0,2);
 			glVertex3f(0,0,2);
-			glVertex3f(0,1,2);
-			glVertex3f(1,1,2);
 			
+			glNormal3f(-1,0,0);
 			glVertex3f(0,0,0);
-			glVertex3f(0,1,0);
-			glVertex3f(0,1,2);
 			glVertex3f(0,0,2);
-			
-			glColor3f(1,0.3,0);
+			glVertex3f(0,1,2);
 			glVertex3f(0,1,0);
+			
+			glNormal3f(1,0,0);
+			glVertex3f(1,0,0);
 			glVertex3f(1,1,0);
 			glVertex3f(1,1,2);
+			glVertex3f(1,0,2);
+			
+			glNormal3f(0,1,0);
+			glVertex3f(0,1,0);
 			glVertex3f(0,1,2);
+			glVertex3f(1,1,2);
+			glVertex3f(1,1,0);
 			glEnd();
 			break;
 		case enemy_person:
