@@ -1,6 +1,7 @@
 
 #include "vector.h"
 #include "quaternion.h"
+#include "heightmap.h"
 
 class camera {
 public:
@@ -13,6 +14,7 @@ public:
 	}
 	void follow_pos(const vect &Pos,float speed,float timediff);
 	void follow_ori(const quat &Ori,float speed,float timediff);
+	void collide_with_heightmap(heightmap& hm);
 	void set_gl();
 };
 

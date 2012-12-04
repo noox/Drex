@@ -56,6 +56,38 @@ void world::init(){
 		p.type=enemy_house;
 		p.hp=100;
 	}
+	for(int i=0;i<20;++i) {
+		enemy& p = es.add_one();
+		p.spd.x=0;
+		p.spd.y=0;
+		p.spd.z=0;
+		p.pos.x=(0.3+FRAND*0.03)*hm_x;
+		p.pos.y=(0.3+FRAND*0.03)*hm_y;
+		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
+		p.size_x=1+FRAND;
+		p.size_y=1+FRAND;
+		p.size_z=1+FRAND;
+		p.roof_size=2*FRAND;
+		p.rot=360*FRAND;
+		p.type=enemy_house;
+		p.hp=100;
+	}
+	for(int i=0;i<5;++i) {
+		enemy& p = es.add_one();
+		p.spd.x=0;
+		p.spd.y=0;
+		p.spd.z=0;
+		p.pos.x=(0.13+FRAND*0.02)*hm_x;
+		p.pos.y=(0.3+FRAND*0.02)*hm_y;
+		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
+		p.size_x=1+FRAND;
+		p.size_y=1+FRAND;
+		p.size_z=1+FRAND;
+		p.roof_size=2*FRAND;
+		p.rot=360*FRAND;
+		p.type=enemy_house;
+		p.hp=100;
+	}
 }
 
 void world::finish(){
@@ -73,6 +105,7 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
+	cam.collide_with_heightmap(hm);
 	if(es.all_enemies_dead()) return false;
 	return true;
 }

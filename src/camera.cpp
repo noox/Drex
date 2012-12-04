@@ -5,6 +5,11 @@
 
 #include "camera.h"
 
+void camera::collide_with_heightmap(heightmap& hm) {	
+	float hmh=hm.get_height(pos.x,pos.y)+0.1;
+	if(hmh>pos.z) pos.z=hmh;
+}
+
 void camera::follow_pos(const vect &Pos,float speed,float timediff) {
 	float ratio=powf(speed,timediff);
 	//vazeny prumer ze stare a nove pozice
