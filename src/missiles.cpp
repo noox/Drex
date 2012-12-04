@@ -41,10 +41,15 @@ void missile::update(float time, world& w) {
 	pos+=spd*time;
 	age+=time;
 	reload+=time;
+
 	while(reload>=0) { 
 		switch (type) {
 			case missile_dragon_fire:
 				if(age>3) deletable=true;
+
+				if(w.es.try_to_do_damage(pos,power,10))
+					deletable=true;
+
 				{particle& p=w.ps.add_one();
 				p.pos=pos;
 				p.spd=vect(DFRAND,DFRAND,DFRAND);
@@ -68,5 +73,6 @@ void missile::update(float time, world& w) {
 void missile::draw() {
 
 }
+
 
 

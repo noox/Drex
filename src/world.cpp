@@ -48,8 +48,8 @@ void world::init(){
 		p.pos.x=(0.13+FRAND*0.1)*hm_x;
 		p.pos.y=(0.13+FRAND*0.1)*hm_y;
 		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.size_x=1+3*FRAND;
-		p.size_y=1+3*FRAND;
+		p.size_x=1+FRAND;
+		p.size_y=1+FRAND;
 		p.size_z=1+FRAND;
 		p.roof_size=2*FRAND;
 		p.rot=360*FRAND;
@@ -68,7 +68,7 @@ void world::finish(){
 
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
 	dr.update(mouse_x,mouse_y,left_mouse_down,right_mouse_down,space_down,timediff,*this);
-	es.update(timediff);
+	es.update(timediff,*this);
 	ps.update(timediff);
 	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);

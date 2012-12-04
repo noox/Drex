@@ -45,7 +45,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 		m.pos=pos;
 		m.spd=-20*ori.vecz();
 		m.type=missile_dragon_fire;
-		//TODO m.power;
+		m.power=1;
 		reload-=0.1;
 	}
 	if(right_mouse_down && reload>=0) {
