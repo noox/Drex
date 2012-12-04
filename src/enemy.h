@@ -18,6 +18,9 @@ public:
 	float hp;
 	bool burning;
 
+	//vlastnosti domu
+	float size_x, size_y, size_z, roof_size, rot;
+
 	enemy() {
 		burning=false;
 	}

@@ -47,44 +47,67 @@ void enemy::update(float time) {
 }
 
 void enemy::draw() {
+	float temp;
 	glPushMatrix();
 	glTranslatef(pos.x,pos.y,pos.z);
-	glColor3f(0.3,0.3,0.3);
 	switch (type) {
 		case enemy_house:
+			glRotatef(rot,0,0,1);
+
 			glBegin(GL_QUADS);
 			glColor3f(0.8,0.1,0);
-			glNormal3f(0,0,1);
-			glVertex3f(0,0,2);
-			glVertex3f(1,0,2);
-			glVertex3f(1,1,2);
-			glVertex3f(0,1,2);
+			
+			temp=sqrt(roof_size*roof_size+size_y*size_y/4);
 
-			glColor3f(0.8,0.8,0.8);
+			glNormal3f(-roof_size/temp,0,size_y/(2*temp));
+			glVertex3f(0,0,size_z);
+			glVertex3f(size_x,0,size_z);
+			glVertex3f(size_x,size_y/2,size_z+roof_size);
+			glVertex3f(0,size_y/2,size_z+roof_size);
+			
+			glNormal3f(roof_size/temp,0,size_y/(2*temp));
+			glVertex3f(0,size_y/2,size_z+roof_size);
+			glVertex3f(size_x,size_y/2,size_z+roof_size);
+			glVertex3f(size_x,size_y,size_z);
+			glVertex3f(0,size_y,size_z);
+
+			glColor3f(1,1,1);
 			glNormal3f(0,-1,0);
 			glVertex3f(0,0,0);
-			glVertex3f(1,0,0);
-			glVertex3f(1,0,2);
-			glVertex3f(0,0,2);
+			glVertex3f(size_x,0,0);
+			glVertex3f(size_x,0,size_z);
+			glVertex3f(0,0,size_z);
+			
+			glNormal3f(0,1,0);
+			glVertex3f(0,size_y,0);
+			glVertex3f(0,size_y,size_z);
+			glVertex3f(size_x,size_y,size_z);
+			glVertex3f(size_x,size_y,0);
+			
+			glEnd();
+
+			glBegin(GL_POLYGON);
 			
 			glNormal3f(-1,0,0);
 			glVertex3f(0,0,0);
-			glVertex3f(0,0,2);
-			glVertex3f(0,1,2);
-			glVertex3f(0,1,0);
+			glVertex3f(0,0,size_z);
+			glVertex3f(0,size_y/2,size_z+roof_size);
+			glVertex3f(0,size_y,size_z);
+			glVertex3f(0,size_y,0);
+			
+			glEnd();
+
+			glBegin(GL_POLYGON);
 			
 			glNormal3f(1,0,0);
-			glVertex3f(1,0,0);
-			glVertex3f(1,1,0);
-			glVertex3f(1,1,2);
-			glVertex3f(1,0,2);
+			glVertex3f(size_x,0,0);
+			glVertex3f(size_x,size_y,0);
+			glVertex3f(size_x,size_y,size_z);
+			glVertex3f(size_x,size_y/2,size_z+roof_size);
+			glVertex3f(size_x,0,size_z);
 			
-			glNormal3f(0,1,0);
-			glVertex3f(0,1,0);
-			glVertex3f(0,1,2);
-			glVertex3f(1,1,2);
-			glVertex3f(1,1,0);
 			glEnd();
+		
 			break;
 		case enemy_person:
 			break;

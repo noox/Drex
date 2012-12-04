@@ -38,15 +38,24 @@ void world::init(){
 	f.set_color(0.4,0.6,0.9);
 	f.set_distance(50,200);
 
-	{enemy& p = es.add_one();
-	p.spd.x=0;
-	p.spd.y=0;
-	p.spd.z=0;
-	p.pos.x=10;
-	p.pos.y=10;
-	p.pos.z=0;
-	p.type=enemy_house;
-	p.hp=100;}
+	float hm_x,hm_y;
+	hm.get_sizes(hm_x,hm_y);
+	for(int i=0;i<200;++i) {
+		enemy& p = es.add_one();
+		p.spd.x=0;
+		p.spd.y=0;
+		p.spd.z=0;
+		p.pos.x=(0.13+FRAND*0.1)*hm_x;
+		p.pos.y=(0.13+FRAND*0.1)*hm_y;
+		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
+		p.size_x=1+3*FRAND;
+		p.size_y=1+3*FRAND;
+		p.size_z=1+FRAND;
+		p.roof_size=2*FRAND;
+		p.rot=360*FRAND;
+		p.type=enemy_house;
+		p.hp=100;
+	}
 }
 
 void world::finish(){
