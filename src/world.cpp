@@ -40,13 +40,13 @@ void world::init(){
 
 	float hm_x,hm_y;
 	hm.get_sizes(hm_x,hm_y);
-	for(int i=0;i<200;++i) {
+	for(int i=0;i<8;++i) {
 		enemy& p = es.add_one();
 		p.spd.x=0;
 		p.spd.y=0;
 		p.spd.z=0;
-		p.pos.x=(0.13+FRAND*0.1)*hm_x;
-		p.pos.y=(0.13+FRAND*0.1)*hm_y;
+		p.pos.x=(0.13+FRAND*0.02)*hm_x;
+		p.pos.y=(0.13+FRAND*0.02)*hm_y;
 		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
 		p.size_x=1+FRAND;
 		p.size_y=1+FRAND;
@@ -73,6 +73,8 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
+	if(es.all_enemies_dead()) return false;
+	return true;
 }
 
 void world::render(){

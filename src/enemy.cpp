@@ -44,11 +44,18 @@ void enemy_system::finish() {
 	enemies.clear();
 }	
 
+bool enemy_system::all_enemies_dead() {
+	if(enemies.empty()) return true;
+	return false;
+}
 /* =========================================================== */
 
 void enemy::update(float time, world& w) {
 	switch (type) {
 		case enemy_house:
+			burning-=time;
+			if(burning<0) burning=0;
+			else hp-=time*5;
 			if(burning>0) {
 				particle& p=w.ps.add_one();
 				p.pos=pos+vect(DFRAND*size_x,DFRAND*size_y,size_z+FRAND*roof_size);
@@ -60,15 +67,25 @@ void enemy::update(float time, world& w) {
 				p.b=0.01;
 				//TODO particle jednou za cas
 			}
+			if(deletable()) {
+				for(int i=0;i<100;++i) {
+					particle& p=w.ps.add_one();
+					p.pos=pos;
+					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*5;
+					p.type=part_fire;
+					p.life=1;
+					p.r=1;
+					p.g=FRAND/2;
+					p.b=0.01;
+					//TODO particle jednou za cas
+				}
+			}
 			break;
 		case enemy_person:
 			break;
 		case enemy_tree: 
 			break;
 	}
-	burning-=time;
-	if(burning<0) burning=0;
-	else hp-=time*5;
 }
 
 void enemy::draw() {
@@ -161,4 +178,5 @@ bool enemy::deletable() {
 	if(hp<0) return true;
 	return false;
 }
+
 

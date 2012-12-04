@@ -20,6 +20,7 @@ class menu {
 public:
 	void init();
 	bool update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g);
+	void go_to_winscreen();
 	void render();
 	bool handle_menu_click(int item,game& g);
 	void set_menu(int newstatus);

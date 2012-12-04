@@ -49,6 +49,9 @@ void menu::set_menu(int newstatus) {
 			items.push_back("mouse sensitivity");
 			items.push_back("back");
 			break;
+		case 4:
+			items.push_back("victory");
+			break;
 	}
 	cursor_pos=0;
 }
@@ -79,10 +82,17 @@ bool menu::handle_menu_click(int item,game& g) {
 				case 2: set_menu(0); break;
 			}
 			break;
+		case 4:
+			set_menu(0);
+			break;
 		//TODO zbytek polozek
 
 	}
 	return true;
+}
+
+void menu::go_to_winscreen() {
+	set_menu(4);
 }
 
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
