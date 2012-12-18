@@ -137,7 +137,7 @@ void particle::update(float time) {
 			break;
 		case part_smoke:
 			spd*=powf(0.8,time);
-			spd.z+=time*0.01;
+			spd.z+=time;
 			break;
 	}
 }

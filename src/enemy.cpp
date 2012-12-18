@@ -78,6 +78,15 @@ void enemy::update(float time, world& w) {
 					p.g=FRAND/2;
 					p.b=0.01;
 					//TODO particle jednou za cas
+					p=w.ps.add_one();
+					p.pos=pos+vect(DFRAND,DFRAND,DFRAND);
+					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*0.5;
+					p.type=part_smoke;
+					p.life=3;
+					p.r=0.5;
+					p.g=0.5;
+					p.b=0.5;
+
 				}
 			}
 			break;

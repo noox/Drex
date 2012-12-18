@@ -11,7 +11,7 @@ using namespace std;
 
 class heightmap {
 	vector<vect> normal;
-	GLuint t;
+	GLuint t,dl;
 public:
 	vector<int> h;
 	vector<unsigned char> c;

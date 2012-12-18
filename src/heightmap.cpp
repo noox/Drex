@@ -16,19 +16,13 @@ void heightmap::init() {
 	glBindTexture(GL_TEXTURE_2D,t);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	dl = glGenLists(1);
 }
 
 void heightmap::draw() {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,t);
-        for(int i=0;i<size_y;++i) {
-                glBegin(GL_TRIANGLE_STRIP);
-                for(int j=0;j<size_x;++j) {
-                        hm_vertex(i,j)
-                        hm_vertex(i+1,j)
-                }
-                glEnd();
-        }
+        glCallList(dl);
 	glDisable(GL_TEXTURE_2D);	
 }
  
@@ -39,24 +33,36 @@ void heightmap::load(const char* fn,const char* fn2) {
  
         //spocita normaly
         normal.resize(size_x*size_y);
-        int i,j,a,b,c,d;
+        int i,j,a,b,C,D;
         for(i=0;i<size_x;++i) {
                 a=i-1;
                 if(a<0) a=0;
                 b=i+1;
                 if(b>=size_x) b=size_x-1;
                 for(j=0;j<size_y;++j) {
-                        c=j-1;
-                        if(c<0) c=0;
-                        d=j+1;
-                        if(d>=size_y) d=size_y-1;
+                        C=j-1;
+                        if(C<0) C=0;
+                        D=j+1;
+                        if(D>=size_y) D=size_y-1;
                        
-                        vect A=vect(0,(d-c),tileheight*(h[i+d*size_x]-h[i+c*size_x])),
+                        vect A=vect(0,(D-C),tileheight*(h[i+D*size_x]-h[i+C*size_x])),
                              B=vect((b-a),0,tileheight*(h[b+j*size_x]-h[a+j*size_x]));
                        
                         normal[i+j*size_x]=(B^A).normal();
                 }
         }
+
+	glNewList(dl,GL_COMPILE);
+	for(i=0;i<size_y;++i) {
+                glBegin(GL_TRIANGLE_STRIP);
+                for(j=0;j<size_x;++j) {
+                        hm_vertex(i,j)
+                        hm_vertex(i+1,j)
+                }
+                glEnd();
+        }
+	glEndList();
+
 }
 
 float heightmap::get_height(float x, float y) {
@@ -93,5 +99,6 @@ void heightmap::free() {
 
 void heightmap::finish() {
 	imageloader_free(t);
+	glDeleteLists(dl,1);
 }
 
