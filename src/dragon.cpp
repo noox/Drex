@@ -1,4 +1,7 @@
 
+#include <iostream>
+using namespace std;
+
 #include <GL/gl.h>
 #include <math.h>
 
@@ -16,34 +19,72 @@ void dragon::init() {
 }
 
 void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mouse_down,bool space,float timediff,world &w) {
-	if(space) spd-=ori.vecz()*timediff*5;
+	vect VX,VY,VZ;
+	ori.normalize();
+	VX=ori.vecx();
+	VY=ori.vecy();
+	VZ=ori.vecz();
 	
+	//mavani kridel
+	if(space) spd+=VZ*timediff*-5+VY*timediff*0.8;
+	
+	//otaceni mysi, zaber
 	mom+=ori*(0.03*quat(0,mouse_y/2,0,-mouse_x));
+
+	//gravitace
+	spd.z-=timediff*1.1;
+
+	//vztlak kridel
+	spd+=((spd%VZ)*-timediff*0.3)*VY;
+
+	//odpor plochy kridel
+	spd+=((spd%VY)*-timediff)*VY;
+
+	//odpor strany tela
+	spd+=((spd%VX)*-timediff*0.2)*VX;
 	
+	//otaceni nahoru, aerodynamicka rotace
+	mom+=ori*(((spd%VZ)*-timediff)*quat(0,0.01,0,0));
+
+	//otaceni dolu, aerodynamicka rotace
+	float tmp=VZ%vect(0,0,1);
+	mom+=timediff*quat((1-tmp*tmp)*-timediff,VZ^vect(0,0,1));
+	
+	cout << tmp << endl;
+
+	//fyzika
 	pos+=spd*timediff;
 	ori+=mom*timediff;
-	ori.normalize();
-	spd*=powf(0.5,timediff);
+	
+	//odpory prostredi
+	spd*=powf(0.8,timediff);
 	mom*=powf(0.2,timediff);
 
+	//nabijeni
 	reload+=timediff;
 
+	//kolize s mapou
 	float hmh=w.hm.get_height(pos.x,pos.y)+0.1;
-	if(hmh>pos.z) pos.z=hmh;
-	
+	if(hmh>pos.z) {
+		pos.z=hmh;
+		//na odlepovani od zeme
+		if(spd.z<0) spd.z=0;
+	}
+
+	//okraje mapy
 	float maxsx, maxsy;
 	w.hm.get_sizes(maxsx,maxsy);
 	if(pos.x<0) pos.x=0;
 	if(pos.y<0) pos.y=0;
 	if(pos.x>maxsx) pos.x=maxsx;
 	if(pos.y>maxsy) pos.y=maxsy;
-
 	//TODO maxz
 	
+	//strelba
 	if(left_mouse_down && reload>=0) {
 		missile& m = w.ms.add_one();
 		m.pos=pos;
-		m.spd=-20*ori.vecz();
+		m.spd=-20*VZ;
 		m.type=missile_dragon_fire;
 		m.power=1;
 		reload-=0.1;
@@ -51,7 +92,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 	if(right_mouse_down && reload>=0) {
 		missile& m = w.ms.add_one();
 		m.pos=pos;
-		m.spd=-20*ori.vecz();
+		m.spd=-20*VZ;
 		m.type=missile_dragon_ball;
 		//TODO m.power;
 		reload-=0.1;
