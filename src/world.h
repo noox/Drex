@@ -22,6 +22,8 @@ public:
 	particle_system ps;
 	missile_system ms;
 
+	int tab_hit;
+
 	int texture;
 	void init();
 	void finish();

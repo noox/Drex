@@ -21,6 +21,8 @@ void world::init(){
 	ps.init();
 	ms.init();
 
+	tab_hit=0;
+
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
@@ -106,6 +108,16 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 	cam.follow_ori(dr.ori,0.01,timediff);
 	cam.follow_pos(dr.camera_pos(),0.3,timediff);
 	cam.collide_with_heightmap(hm);
+
+	int tab_just_pressed=0;
+	//proti sekvencim stisknutych tlacitek
+	if (tab_down) {
+		if (!tab_hit)
+			tab_just_pressed=tab_hit=1;
+	} else tab_hit=0;
+	//pro navigaci
+//	if(tab_just_pressed) make_navigation();
+
 	if(es.all_enemies_dead()) return false;
 	return true;
 }

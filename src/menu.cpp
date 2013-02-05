@@ -18,6 +18,7 @@ void menu::init() {
      		return;
 	}
 	left_mouse_hit=0;
+	esc_hit=0;
 	set_menu(0);
 }
 
@@ -25,18 +26,21 @@ void menu::set_menu(int newstatus) {
 	menustatus=newstatus;
 	items.clear();
 	switch (newstatus) {
+		//hlavni menu
 		case 0:
 			items.push_back("campaign");
 			items.push_back("missions");
 			items.push_back("options");
 			items.push_back("exit");
 			break;
+		//kampan
 		case 1:
 			items.push_back("tutorial");
 			items.push_back("mission 1");
 			items.push_back("mission 2");
 			items.push_back("back");
 			break;
+		//jednotlive mise
 		case 2:
 			items.push_back("choose map");
 			items.push_back("day time");
@@ -44,11 +48,13 @@ void menu::set_menu(int newstatus) {
 			items.push_back("difficulty");
 			items.push_back("back");
 			break;
+		//nastaveni
 		case 3:
 			items.push_back("player");
 			items.push_back("mouse sensitivity");
 			items.push_back("back");
 			break;
+		//vitezny screen
 		case 4:
 			items.push_back("victory");
 			break;
@@ -56,34 +62,46 @@ void menu::set_menu(int newstatus) {
 	cursor_pos=0;
 }
 
-bool menu::handle_menu_click(int item,game& g) {
+bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
+	if(esc_just_pressed) item=-1;
+	cout << item << endl;
 	switch (menustatus) {
+		//hlavni menu
 		case 0:
 			switch (item) {
 				case 0: set_menu(1); break;
 				case 1: set_menu(2); break;
 				case 2: set_menu(3); break;
 				case 3: return false; 
+				case -1: return false;
 			}
 			break;
+		//kampan
 		case 1:
 			switch (item) {
 				case 0: g.go_to_game(); break;
 				case 3: set_menu(0); break; //TODO esc??
+				case -1: set_menu(0); break;
 			}
 			break;
+		//jednotlive mise
 		case 2:
 			switch (item) {
 				case 4: set_menu(0); break;
+				case -1: set_menu(0); break;
 			}
 			break;
+		//nastaveni
 		case 3:
 			switch (item) {
 				case 2: set_menu(0); break;
+				case -1: set_menu(0); break;
 			}
 			break;
+		//vitezny screen
 		case 4:
 			set_menu(0);
+			case -1: set_menu(0); break;
 			break;
 		//TODO zbytek polozek
 
@@ -96,19 +114,25 @@ void menu::go_to_winscreen() {
 }
 
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
+	//urceni pozice kurzoru
 	cursor_pos+=mouse_y;
 	if(cursor_pos>=(int)(items.size()*100)) cursor_pos=(int)(items.size()*100-1);
 	if(cursor_pos<0) cursor_pos=0;
 
-	int left_just_pressed=0;
+	int left_just_pressed=0,esc_just_pressed=0;
 	//proti sekvencim stisknutych tlacitek
 	if (left_mouse_down) {
 		if (!left_mouse_hit)
 			left_just_pressed=left_mouse_hit=1;
 	} else left_mouse_hit=0;
-	
-	if(left_just_pressed)
-		if(!handle_menu_click(cursor_pos/100,g))
+	if (esc_down) {
+		if (!esc_hit)
+			esc_just_pressed=esc_hit=1;
+	} else esc_hit=0;
+
+	//vyber submenu
+	if(left_just_pressed||esc_just_pressed)
+		if(!handle_menu_click(cursor_pos/100,g,esc_just_pressed))
 			return false;
 
 	return true;

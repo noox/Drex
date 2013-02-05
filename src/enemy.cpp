@@ -57,6 +57,7 @@ void enemy::update(float time, world& w) {
 			if(burning<0) burning=0;
 			else hp-=time*5;
 			if(burning>0) {
+				//partikly pro horeni poskozenych nepratel
 				particle& p=w.ps.add_one();
 				p.pos=pos+vect(DFRAND*size_x,DFRAND*size_y,size_z+FRAND*roof_size);
 				p.spd=vect(DFRAND*0.2,DFRAND*0.2,2+FRAND);
@@ -68,6 +69,7 @@ void enemy::update(float time, world& w) {
 				//TODO particle jednou za cas
 			}
 			if(deletable()) {
+				//vybuch z partiklu, pokud nepritel ztrati hp
 				for(int i=0;i<100;++i) {
 					particle& p=w.ps.add_one();
 					p.pos=pos;
@@ -171,18 +173,20 @@ void enemy::draw() {
 	glPopMatrix();
 }
 
+//prijeti poskozeni a horeni
 void enemy::accept_damage(float dmg, float fire) {
 	hp-=dmg;
 	burning+=fire;
 }
 
 #define max(a,b) (((a)>(b))?(a):(b))
-
+//kolize se strelami
 bool enemy::collides(vect missile_pos) {
 	if((pos-missile_pos).length() < 0.7*max(max(size_x,size_y),size_z+roof_size)) return true;
 	return false;
 }
 
+//funkce pro overeni smazatelnosti strely
 bool enemy::deletable() {
 	if(hp<0) return true;
 	return false;

@@ -48,7 +48,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 
 	//otaceni dolu, aerodynamicka rotace
 	float tmp=VZ%vect(0,0,1);
-	mom+=timediff*quat((1-tmp*tmp)*-timediff,VZ^vect(0,0,1));
+	mom+=timediff*quat((1-tmp*tmp)*-timediff*0.00001,VZ^vect(0,0,1));
 	
 	cout << tmp << endl;
 
