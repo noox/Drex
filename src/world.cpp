@@ -106,7 +106,7 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 	ps.update(timediff);
 	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);
-	cam.follow_pos(dr.camera_pos(),0.3,timediff);
+	cam.follow_pos(dr.camera_pos(),0.1,timediff);
 	cam.collide_with_heightmap(hm);
 
 	int tab_just_pressed=0;

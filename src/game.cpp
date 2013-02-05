@@ -31,7 +31,6 @@ bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,boo
 	
 	if(gamestatus==0) {
 		if(!m.update(timediff,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y,*this)) return false;
-	//	if(esc_just_pressed) return false;
 		return true;
 	} else {
 		if(!w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y)) {

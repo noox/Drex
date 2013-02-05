@@ -64,7 +64,6 @@ void menu::set_menu(int newstatus) {
 
 bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
 	if(esc_just_pressed) item=-1;
-	cout << item << endl;
 	switch (menustatus) {
 		//hlavni menu
 		case 0:

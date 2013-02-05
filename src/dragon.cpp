@@ -32,23 +32,23 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 	mom+=ori*(0.03*quat(0,mouse_y/2,0,-mouse_x));
 
 	//gravitace
-	spd.z-=timediff*1.1;
+	spd.z-=timediff*2.5;
 
 	//vztlak kridel
 	spd+=((spd%VZ)*-timediff*0.3)*VY;
 
 	//odpor plochy kridel
-	spd+=((spd%VY)*-timediff)*VY;
+	spd+=((spd%VY)*-timediff*1.5)*VY;
 
 	//odpor strany tela
-	spd+=((spd%VX)*-timediff*0.2)*VX;
+	spd+=((spd%VX)*-timediff*0.5)*VX;
 	
 	//otaceni nahoru, aerodynamicka rotace
-	mom+=ori*(((spd%VZ)*-timediff)*quat(0,0.01,0,0));
+	mom+=timediff*(ori*(((spd%VZ)*-timediff)*quat(0,1,0,0)));
 
 	//otaceni dolu, aerodynamicka rotace
-	float tmp=VZ%vect(0,0,1);
-	mom+=timediff*quat((1-tmp*tmp)*-timediff*0.00001,VZ^vect(0,0,1));
+	float tmp=VZ%vect(0,0,1), fwd=powf(0.4,(spd%VZ));
+	mom+=timediff*quat(fwd*(1-tmp)*-timediff,VZ^vect(0,0,1));
 	
 	cout << tmp << endl;
 
@@ -57,7 +57,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 	ori+=mom*timediff;
 	
 	//odpory prostredi
-	spd*=powf(0.8,timediff);
+	spd*=powf(0.98,timediff);
 	mom*=powf(0.2,timediff);
 
 	//nabijeni
