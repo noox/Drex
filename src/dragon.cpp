@@ -50,8 +50,6 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 	float tmp=VZ%vect(0,0,1), fwd=powf(0.4,(spd%VZ));
 	mom+=timediff*quat(fwd*(1-tmp)*-timediff,VZ^vect(0,0,1));
 	
-	cout << tmp << endl;
-
 	//fyzika
 	pos+=spd*timediff;
 	ori+=mom*timediff;
