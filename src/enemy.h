@@ -23,7 +23,12 @@ public:
 	float hp, burning;
 
 	//vlastnosti domu
-	float size_x, size_y, size_z, roof_size, rot;
+	float size_x, size_y, size_z, roof_size, rot, def_h;
+	//vlastnosti lidi
+	float size_p, def_p;
+	vect start_pos;
+	//vlastnosti stromu
+	float size_tr;
 
 	enemy() {
 		burning=0;

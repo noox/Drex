@@ -32,6 +32,7 @@ GLuint imageloader_load(const char* fn, int BPP, GLuint type) {
 	return t;
 }
 
+//loader heightmapy - vysek terenu
 bool imageloader_load_heightmap(const char* fn, vector<int> &h, int &size_x, int &size_y) {
 	SDL_Surface *image;
 	image = IMG_Load(fn);
@@ -46,6 +47,7 @@ bool imageloader_load_heightmap(const char* fn, vector<int> &h, int &size_x, int
 	return true;
 }
 
+//loader barev mapy
 bool imageloader_load_color(const char* fn2, vector<unsigned char> &c, int size_x, int size_y) {
 	SDL_Surface *image;
 	image = IMG_Load(fn2);

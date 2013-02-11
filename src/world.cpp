@@ -42,6 +42,7 @@ void world::init(){
 
 	float hm_x,hm_y;
 	hm.get_sizes(hm_x,hm_y);
+	//domy
 	for(int i=0;i<8;++i) {
 		enemy& p = es.add_one();
 		p.spd.x=0;
@@ -89,6 +90,35 @@ void world::init(){
 		p.rot=360*FRAND;
 		p.type=enemy_house;
 		p.hp=100;
+	}
+	//lide
+	for(int i=0;i<20;++i) {
+		enemy& p = es.add_one();
+		p.spd.x=DFRAND;
+		p.spd.y=DFRAND;
+		p.spd.z=0;
+		p.size_p=FRAND;
+		p.start_pos.x=(0.13+FRAND*0.02)*hm_x;
+		p.start_pos.y=(0.13+FRAND*0.02)*hm_y;
+		p.start_pos.z=hm.get_height(p.pos.x,p.pos.y);
+		p.pos.x=p.start_pos.x;
+		p.pos.y=p.start_pos.y;
+		p.pos.z=p.start_pos.z;
+		p.type=enemy_person;
+		p.hp=50;
+	}
+	//stromy
+	for(int i=0;i<10;++i) {
+		enemy& p = es.add_one();
+		p.spd.x=0;
+		p.spd.y=0;
+		p.spd.z=0;
+		p.size_tr=1.5+FRAND;
+		p.pos.x=(0.13+FRAND*0.02)*hm_x;
+		p.pos.y=(0.13+FRAND*0.02)*hm_y;
+		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
+		p.type=enemy_tree;
+		p.hp=500;
 	}
 }
 

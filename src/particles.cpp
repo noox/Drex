@@ -23,11 +23,13 @@ void particle_system::init() {
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);;
 }
 
+//pridani jednoho particlu do systemu
 particle& particle_system::add_one() {
 	particles.push_back(particle());
 	return particles.back();
 }
 
+//update vsech particlu a smazani nepotrebnych
 void particle_system::update(float time) {
 	list<list<particle>::iterator> todel;
 	for(list<particle>::iterator i=particles.begin();i!=particles.end();++i) {

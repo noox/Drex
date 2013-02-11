@@ -65,6 +65,7 @@ void heightmap::load(const char* fn,const char* fn2) {
 
 }
 
+//zjisti vysku terenu mapy na pozici x,y
 float heightmap::get_height(float x, float y) {
 	int tx = x/tilesize, ty = y/tilesize;
 	if(tx<0 || tx>=size_x-1 || ty<0 || ty>=size_y-1) return 0;
@@ -84,6 +85,7 @@ float heightmap::get_height(float x, float y) {
 	return tileheight*tilesize*(mx*(h3*mxy+h2*(1-mxy))+(1-mx)*h1);
 }
 
+//zjisti velikost mapy
 void heightmap::get_sizes(float &x, float &y) {
 	x=size_x*tilesize;
 	y=size_y*tilesize;
