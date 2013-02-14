@@ -7,13 +7,16 @@ using namespace std;
 
 #include "world.h"
 #include "menu.h"
+#include "userlist.h"
 
 //status hry: 0 menu, 1 hra
 
 void game::init(){
 	w.init();
 	m.init();
+	userlist_init();
 	gamestatus=0;
+	userchosen=0;
 	esc_hit=0;
 }
 
@@ -52,5 +55,13 @@ float game::get_min_timediff(){
 void game::render(){
 	if(gamestatus==0) m.render();
 	else w.render();
+}
+
+void game::change_userchosen(int Userchosen) {
+	userchosen=Userchosen;
+}
+
+int game::get_userchosen() {
+	return userchosen;
 }
 

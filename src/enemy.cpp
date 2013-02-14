@@ -83,23 +83,23 @@ void enemy::update(float time, world& w) {
 			if(deletable()) {
 				//vybuch z partiklu, pokud dum ztrati hp
 				for(int i=0;i<100;++i) {
-					particle& p=w.ps.add_one();
+					{particle& p=w.ps.add_one();
 					p.pos=pos;
 					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*5;
 					p.type=part_fire;
 					p.life=1;
 					p.r=1;
 					p.g=FRAND/2;
-					p.b=0.01;
+					p.b=0.01;}
 					//TODO particle jednou za cas
-					p=w.ps.add_one();
+					{particle& p=w.ps.add_one();
 					p.pos=pos+vect(DFRAND,DFRAND,DFRAND)*3*FRAND;
 					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*0.5;
 					p.type=part_smoke;
 					p.life=3;
 					p.r=0.5;
 					p.g=0.5;
-					p.b=0.5;
+					p.b=0.5;}
 
 				}
 			}
@@ -136,7 +136,7 @@ void enemy::update(float time, world& w) {
 			if(burning>0) {
 				//partikly pro horeni poskozenych nepratel
 				particle& p=w.ps.add_one();
-				p.pos=pos*DFRAND*size_p;
+				p.pos=pos+vect(0,0,DFRAND*size_p);
 				p.spd=vect(DFRAND*0.2,DFRAND*0.2,2+FRAND);
 				p.type=part_fire;
 				p.life=1;
@@ -149,24 +149,23 @@ void enemy::update(float time, world& w) {
 			if(deletable()) {
 				//vybuch z partiklu, pokud nepritel ztrati hp
 				for(int i=0;i<100;++i) {
-					particle& p=w.ps.add_one();
+					{particle& p=w.ps.add_one();
 					p.pos=pos;
 					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*5;
 					p.type=part_fire;
 					p.life=1;
 					p.r=1;
 					p.g=0;
-					p.b=0;
+					p.b=0;}
 					//TODO particle jednou za cas
-					p=w.ps.add_one();
+					{particle& p=w.ps.add_one();
 					p.pos=pos+vect(DFRAND,DFRAND,DFRAND);
 					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*0.5;
 					p.type=part_smoke;
 					p.life=3;
 					p.r=1;
 					p.g=0;
-					p.b=0;
-
+					p.b=0;}
 				}
 			}
 			break;
@@ -180,7 +179,7 @@ void enemy::update(float time, world& w) {
 			if(burning>0) {
 				//partikly pro horeni poskozenych stromu
 				particle& p=w.ps.add_one();
-				p.pos=pos*DFRAND*size_tr;
+				p.pos=pos+vect(0,0,DFRAND*size_tr);
 				p.spd=vect(DFRAND*0.2,DFRAND*0.2,2+FRAND);
 				p.type=part_fire;
 				p.life=1;
@@ -291,6 +290,7 @@ void enemy::draw() {
 			glEnd();
 			glColor3f(1,1,0);
 			glBegin(GL_TRIANGLE_FAN);
+			glNormal3f(0,0,1);
 			glVertex3f(0,0,2*size_p);
 			glVertex3f(0,-size_p/4,size_p+3*size_p/4);
 			glVertex3f(size_p/4,0,size_p+3*size_p/4);
@@ -319,6 +319,7 @@ void enemy::draw() {
 			glEnd();
 			glColor3f(0.2,1,0);
 			glBegin(GL_TRIANGLE_FAN);
+			glNormal3f(0,0,1);
 			glVertex3f(0,0,2*size_tr);
 			glVertex3f(0,-size_tr/2,size_tr+size_tr/4);
 			glVertex3f(size_tr/2,0,size_tr+size_tr/4);

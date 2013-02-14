@@ -58,7 +58,7 @@ void missile::update(float time, world& w) {
 				//pridani particlu do systemu
 				{particle& p=w.ps.add_one();
 				p.pos=pos;
-				p.spd=w.dr.spd+vect(DFRAND,DFRAND,DFRAND);
+				p.spd=vect(DFRAND,DFRAND,DFRAND);
 				p.type=part_fire;
 				p.life=0.4;
 				p.r=1;

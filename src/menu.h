@@ -17,6 +17,7 @@ class menu {
 	int cursor_pos;
 	int left_mouse_hit, esc_hit;
 	vector<string> items;
+	string username,name;
 public:
 	void init();
 	bool update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g);
