@@ -16,6 +16,9 @@ class menu {
 	int menustatus;
 	int cursor_pos;
 	int left_mouse_hit, esc_hit;
+	int sens_id;
+	string sens;
+	vector<float> sensitivities;
 	vector<string> items;
 	string username,name;
 public:

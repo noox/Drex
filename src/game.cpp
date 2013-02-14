@@ -16,8 +16,9 @@ void game::init(){
 	m.init();
 	userlist_init();
 	gamestatus=0;
-	userchosen=0;
 	esc_hit=0;
+	userchosen=0;
+	sensitivity=1;
 }
 
 void game::finish(){
@@ -39,7 +40,7 @@ bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,boo
 		return true;
 	} else {
 		//ve hre
-		if(!w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x,mouse_y)) {
+		if(!w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x/sensitivity,mouse_y/sensitivity)) {
 			go_to_menu();
 			m.go_to_winscreen();
 		}
@@ -57,11 +58,23 @@ void game::render(){
 	else w.render();
 }
 
+//zmeni uzivatelske jmeno, dle volby accountu
 void game::change_userchosen(int Userchosen) {
 	userchosen=Userchosen;
 }
 
+//vrati userid aktualniho uzivatele
 int game::get_userchosen() {
 	return userchosen;
+}
+
+//zmeni citlivost mysi, dle volby uzivatele
+void game::change_sensitivity(float Sensitivity) {
+	sensitivity=Sensitivity;
+}
+
+//vrati aktualni sensitivitu mysi
+float game::get_sensitivity() {
+	return sensitivity;
 }
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -24,6 +25,18 @@ void menu::init() {
 	cursor_pos=0;
 	set_menu(0);
 	name="";
+	sensitivities.push_back(0.01);
+	sensitivities.push_back(0.05);
+	sensitivities.push_back(0.1);
+	sensitivities.push_back(0.5);
+	sensitivities.push_back(1);
+	sensitivities.push_back(5);
+	sensitivities.push_back(10);
+	sensitivities.push_back(50);
+	sensitivities.push_back(100);
+	sensitivities.push_back(500);
+	sens_id=4;
+	sens=sensitivities[sens_id];
 }
 
 void menu::set_menu(int newstatus) {
@@ -94,9 +107,9 @@ void menu::set_menu(int newstatus) {
 			break;
 		//nastaveni mysi
 		case 9:
-			items.push_back("slower");
-			items.push_back("faster");
-			items.push_back("back");
+			items.push_back("lower");
+			items.push_back(sens);
+			items.push_back("higher");
 			break;
 		//novy hrac
 		case 10:
@@ -119,10 +132,11 @@ void menu::set_menu(int newstatus) {
 			items.push_back("failure");
 			break;
 	}
-	if(newstatus!=11) cursor_pos=0;
+	if((newstatus!=11) && (newstatus!=9)) cursor_pos=0;
 }
 
 bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
+	ostringstream ss;
 	int userchosen=g.get_userchosen();
 	if(esc_just_pressed) item=-1;
 	switch (menustatus) {
@@ -210,7 +224,31 @@ bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
 		//nastaveni mysi
 		case 9:
 			switch (item) {
-				case 2: set_menu(3); break;
+				case 0: 
+					//posuvnik nahoru
+					sens_id--;
+					if(sens_id<0) sens_id=0;
+					g.change_sensitivity(sensitivities[sens_id]);
+					ss << sensitivities[sens_id];
+					sens = ss.str();
+					set_menu(9);
+					break;
+				case 1:
+					//sensitivita mysi k vyberu
+					g.change_sensitivity(sensitivities[sens_id]);
+					ss << sensitivities[sens_id];
+					sens = ss.str();
+					set_menu(3);
+					break;
+				case 2:
+					//posuvnik dolu
+					sens_id++;
+					if(sens_id>sensitivities.size()-1) sens_id=sensitivities.size()-1;
+					g.change_sensitivity(sensitivities[sens_id]);
+					ss << sensitivities[sens_id];
+					sens = ss.str();
+					set_menu(9);
+					break;
 				case -1: set_menu(3); break;
 			}
 			break;
