@@ -107,9 +107,9 @@ void menu::set_menu(int newstatus) {
 			break;
 		//nastaveni mysi
 		case 9:
-			items.push_back("lower");
-			items.push_back(sens);
 			items.push_back("higher");
+			items.push_back(sens);
+			items.push_back("lower");
 			break;
 		//novy hrac
 		case 10:
@@ -323,6 +323,7 @@ void menu::go_to_winscreen() {
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
 	//urceni pozice kurzoru
 	username=userlist_get_name(g.get_userchosen());
+	sens="1";
 	cursor_pos+=mouse_y;
 	if(cursor_pos>=(int)(items.size()*100)) cursor_pos=(int)(items.size()*100-1);
 	if(cursor_pos<0) cursor_pos=0;
