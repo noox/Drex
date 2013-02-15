@@ -72,11 +72,26 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 	//okraje mapy
 	float maxsx, maxsy;
 	w.hm.get_sizes(maxsx,maxsy);
-	if(pos.x<0) pos.x=0;
-	if(pos.y<0) pos.y=0;
-	if(pos.x>maxsx) pos.x=maxsx;
-	if(pos.y>maxsy) pos.y=maxsy;
-	//TODO maxz
+	if(pos.x<0) {
+		pos.x=0; 
+		if(spd.x<0) spd.x=0;
+	}
+	if(pos.y<0) {
+		pos.y=0;
+		if(spd.y<0) spd.y=0;
+	}
+	if(pos.x>maxsx) {
+		pos.x=maxsx;
+		if(spd.x>0) spd.x=0;
+	}
+	if(pos.y>maxsy) {
+		pos.y=maxsy;
+		if(spd.y>0) spd.y=0;
+	}
+	if(pos.z>(maxsx+maxsy)) {
+		pos.z=maxsx+maxsy;
+		if(spd.z>0) spd.z=0;
+	}	
 	
 	//strelba
 	if(left_mouse_down && reload>=0) {

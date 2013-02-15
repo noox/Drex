@@ -25,6 +25,7 @@ void menu::init() {
 	cursor_pos=0;
 	set_menu(0);
 	name="";
+
 	sensitivities.push_back(0.01);
 	sensitivities.push_back(0.05);
 	sensitivities.push_back(0.1);
@@ -37,6 +38,23 @@ void menu::init() {
 	sensitivities.push_back(500);
 	sens_id=4;
 	sens=sensitivities[sens_id];
+
+	daytime.push_back("day");
+	daytime.push_back("night");
+	dayt_id=0;
+	dayt=daytime[dayt_id];
+
+	weather.push_back("sunny");
+	weather.push_back("rainy");
+	weather.push_back("snowy");
+	weat_id=0;
+	weat=weather[weat_id];
+
+	difficulty.push_back("easy");
+	difficulty.push_back("medium");
+	difficulty.push_back("hard");
+	diff_id=0;
+	diff=difficulty[diff_id];
 }
 
 void menu::set_menu(int newstatus) {
@@ -81,23 +99,21 @@ void menu::set_menu(int newstatus) {
 			break;
 		//denni doba
 		case 5:
-			items.push_back("day");
-			items.push_back("night");
-			items.push_back("back");
+			items.push_back("previous");
+			items.push_back(dayt);
+			items.push_back("next");
 			break;
 		//pocasi
 		case 6:
-			items.push_back("sunny");
-			items.push_back("rainy");
-			items.push_back("snowy");
-			items.push_back("back");
+			items.push_back("previous");
+			items.push_back(weat);
+			items.push_back("next");
 			break;
 		//obtiznost hry
 		case 7:
-			items.push_back("easy");
-			items.push_back("medium");
-			items.push_back("hard");
-			items.push_back("back");
+			items.push_back("previous");
+			items.push_back(diff);
+			items.push_back("next");
 			break;
 		//hrac
 		case 8:
@@ -132,7 +148,7 @@ void menu::set_menu(int newstatus) {
 			items.push_back("failure");
 			break;
 	}
-	if((newstatus!=11) && (newstatus!=9)) cursor_pos=0;
+	if((newstatus!=11) && (newstatus!=9) && (newstatus!=5) && (newstatus!=6) && (newstatus!=7)) cursor_pos=0;
 }
 
 bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
@@ -190,21 +206,84 @@ bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
 		//denni doba
 		case 5:
 			switch (item) {
-				case 2: set_menu(2); break;
+				case 0: 
+					//posuvnik nahoru
+					dayt_id--;
+					if(dayt_id<0) dayt_id=0;
+					g.change_daytime(dayt_id);
+					dayt=daytime[dayt_id];
+					set_menu(5);
+					break;
+				case 1:
+					//konkretni denni doba k vyberu
+					g.change_daytime(dayt_id);
+					dayt=daytime[dayt_id];
+					set_menu(2);
+					break;
+				case 2:
+					//posuvnik dolu
+					dayt_id++;
+					if(dayt_id>daytime.size()-1) dayt_id=daytime.size()-1;
+					g.change_daytime(dayt_id);
+					dayt=daytime[dayt_id];
+					set_menu(5);
+					break;
 				case -1: set_menu(2); break;
 			}
 			break;
 		//pocasi
 		case 6:
 			switch (item) {
-				case 3: set_menu(2); break;
+				case 0: 
+					//posuvnik nahoru
+					weat_id--;
+					if(weat_id<0) weat_id=0;
+					g.change_weather(weat_id);
+					weat=weather[weat_id];
+					set_menu(6);
+					break;
+				case 1:
+					//konkretni pocasi k vyberu
+					g.change_weather(weat_id);
+					weat=weather[weat_id];
+					set_menu(2);
+					break;
+				case 2:
+					//posuvnik dolu
+					weat_id++;
+					if(weat_id>weather.size()-1) weat_id=weather.size()-1;
+					g.change_weather(weat_id);
+					weat=weather[weat_id];
+					set_menu(6);
+					break;
 				case -1: set_menu(2); break;
 			}
 			break;
 		//obtiznost hry
 		case 7:
 			switch (item) {
-				case 3: set_menu(2); break;
+				case 0: 
+					//posuvnik nahoru
+					diff_id--;
+					if(diff_id<0) diff_id=0;
+					g.change_difficulty(diff_id);
+					diff=difficulty[diff_id];
+					set_menu(7);
+					break;
+				case 1:
+					//konkretni obtiznost k vyberu
+					g.change_difficulty(diff_id);
+					diff=difficulty[diff_id];
+					set_menu(2);
+					break;
+				case 2:
+					//posuvnik dolu
+					diff_id++;
+					if(diff_id>difficulty.size()-1) diff_id=difficulty.size()-1;
+					g.change_difficulty(diff_id);
+					diff=difficulty[diff_id];
+					set_menu(7);
+					break;
 				case -1: set_menu(2); break;
 			}
 			break;
@@ -321,9 +400,13 @@ void menu::go_to_winscreen() {
 }
 
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
-	//urceni pozice kurzoru
+	//aktualni hodnoty pro prichod do podmenu
 	username=userlist_get_name(g.get_userchosen());
-	sens="1";
+	sens=sensitivities[g.get_sensitivity()];
+	dayt=daytime[g.get_daytime()];
+	weat=weather[g.get_weather()];
+	diff=difficulty[g.get_difficulty()];
+	//urceni pozice kurzoru
 	cursor_pos+=mouse_y;
 	if(cursor_pos>=(int)(items.size()*100)) cursor_pos=(int)(items.size()*100-1);
 	if(cursor_pos<0) cursor_pos=0;

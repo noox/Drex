@@ -9,8 +9,6 @@ using namespace std;
 #include "menu.h"
 #include "userlist.h"
 
-//status hry: 0 menu, 1 hra
-
 void game::init(){
 	w.init();
 	m.init();
@@ -19,6 +17,9 @@ void game::init(){
 	esc_hit=0;
 	userchosen=0;
 	sensitivity=1;
+	daytime=0;
+	weather=0;
+	difficulty=0;
 }
 
 void game::finish(){
@@ -76,5 +77,35 @@ void game::change_sensitivity(float Sensitivity) {
 //vrati aktualni sensitivitu mysi
 float game::get_sensitivity() {
 	return sensitivity;
+}
+
+//zmeni denni dobu hry, dle volby uzivatele
+void game::change_daytime(int Daytime) {
+	daytime=Daytime;
+}
+
+//vrati aktualni denni dobu hry
+int game::get_daytime() {
+	return daytime;
+}
+
+//zmeni pocasi hry, dle volby uzivatele
+void game::change_weather(int Weather) {
+	weather=Weather;
+}
+
+//vrati aktualni pocasi hry
+int game::get_weather() {
+	return weather;
+}
+
+//zmeni obtiznost hry, dle volby uzivatele
+void game::change_difficulty(int Difficulty) {
+	difficulty=Difficulty;
+}
+
+//vrati aktualni obtiznost hry
+int game::get_difficulty() {
+	return difficulty;
 }
 
