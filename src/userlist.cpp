@@ -24,7 +24,7 @@ int userlist_count() {
 }
 
 //funkce pro overeni jmena uzivatele a pridani do vectoru
-void process_filename(string n) {
+void process_userfilename(string n) {
 	int l=n.length();
 	if(l<=4) return;
 	if(n.substr(l-4)!=".usr") return;
@@ -52,7 +52,7 @@ void userlist_init() {
 	while (1) {
 		dp=readdir(dirp);
 		if (dp) {
-			process_filename(dp->d_name);
+			process_userfilename(dp->d_name);
 		}
 		else break;
 	}

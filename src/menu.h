@@ -17,7 +17,7 @@ class menu {
 	int cursor_pos;
 	int left_mouse_hit, esc_hit;
 	int sens_id, dayt_id, weat_id, diff_id;
-	string username, name, sens, dayt, weat, diff;
+	string mapname, username, name, sens, dayt, weat, diff;
 	vector<float> sensitivities;
 	vector<string> items, daytime, weather, difficulty;
 public:

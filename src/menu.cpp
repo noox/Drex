@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "menu.h"
+#include "maplist.h"
 #include "userlist.h"
 
 #include "../vendor/OGLFT.h"
@@ -60,7 +61,6 @@ void menu::init() {
 void menu::set_menu(int newstatus) {
 	menustatus=newstatus;
 	items.clear();
-	string u,u1,u2;
 	switch (newstatus) {
 		//hlavni menu
 		case 0:
@@ -92,10 +92,9 @@ void menu::set_menu(int newstatus) {
 			break;
 		//vyber mapy
 		case 4:
-			items.push_back("map 1");
-			items.push_back("map 2");
-			items.push_back("map 3");
-			items.push_back("back");
+			items.push_back("previous");
+			items.push_back(mapname);
+			items.push_back("next");
 			break;
 		//denni doba
 		case 5:
@@ -148,11 +147,12 @@ void menu::set_menu(int newstatus) {
 			items.push_back("failure");
 			break;
 	}
-	if((newstatus!=11) && (newstatus!=9) && (newstatus!=5) && (newstatus!=6) && (newstatus!=7)) cursor_pos=0;
+	if((newstatus!=4) && (newstatus!=5) && (newstatus!=6) && (newstatus!=7) && (newstatus!=9) && (newstatus!=11)) cursor_pos=0;
 }
 
 bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
 	ostringstream ss;
+	int mapchosen=g.get_mapchosen();
 	int userchosen=g.get_userchosen();
 	if(esc_just_pressed) item=-1;
 	switch (menustatus) {
@@ -199,7 +199,28 @@ bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
 		//vyber mapy
 		case 4:
 			switch (item) {
-				case 3: set_menu(2); break;
+				case 0: 
+					//posuvnik nahoru
+					mapchosen--;
+					if(mapchosen<0) mapchosen=0;
+					g.change_mapchosen(mapchosen);
+					mapname=maplist_get_name(mapchosen);
+					set_menu(4);
+					break;
+				case 1:
+					//nazev mapy k vyberu
+					g.change_mapchosen(mapchosen);
+					mapname=maplist_get_name(mapchosen);
+					set_menu(2);
+					break;
+				case 2:
+					//posuvnik dolu
+					mapchosen++;
+					if(mapchosen>maplist_count()-1) mapchosen=maplist_count()-1;
+					g.change_mapchosen(mapchosen);
+					mapname=maplist_get_name(mapchosen);
+					set_menu(4);
+					break;
 				case -1: set_menu(2); break;
 			}
 			break;
@@ -401,6 +422,7 @@ void menu::go_to_winscreen() {
 
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
 	//aktualni hodnoty pro prichod do podmenu
+	mapname=maplist_get_name(g.get_mapchosen());
 	username=userlist_get_name(g.get_userchosen());
 	sens=sensitivities[g.get_sensitivity()];
 	dayt=daytime[g.get_daytime()];

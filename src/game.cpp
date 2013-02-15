@@ -7,14 +7,17 @@ using namespace std;
 
 #include "world.h"
 #include "menu.h"
+#include "maplist.h"
 #include "userlist.h"
 
 void game::init(){
 	w.init();
 	m.init();
+	maplist_init();
 	userlist_init();
 	gamestatus=0;
 	esc_hit=0;
+	mapchosen=0;
 	userchosen=0;
 	sensitivity=1;
 	daytime=0;
@@ -67,6 +70,16 @@ void game::change_userchosen(int Userchosen) {
 //vrati userid aktualniho uzivatele
 int game::get_userchosen() {
 	return userchosen;
+}
+
+//zmeni mapu, dle volby accountu
+void game::change_mapchosen(int Mapchosen) {
+	mapchosen=Mapchosen;
+}
+
+//vrati maprid aktualni mapy
+int game::get_mapchosen() {
+	return mapchosen;
 }
 
 //zmeni citlivost mysi, dle volby uzivatele

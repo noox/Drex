@@ -18,7 +18,7 @@ class game{
 	//0 easy, 1 medium, 2 hard
 	int difficulty;
 	int esc_hit;
-	int userchosen;
+	int mapchosen,userchosen;
 	float sensitivity;
 public:
 	void init();
@@ -27,6 +27,8 @@ public:
 	void render();
 	void change_userchosen(int Userchosen);
 	int get_userchosen();
+	void change_mapchosen(int Mapchosen);
+	int get_mapchosen();
 	void change_sensitivity(float Sensitivity);
 	float get_sensitivity();
 	void change_daytime(int Daytime);
