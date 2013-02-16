@@ -8,7 +8,7 @@ using namespace std;
 #include "game.h"
 #include "frand.h"
 #include "imageloader.h"
-#include "navigation.h"
+#include "health.h"
 #include "world.h"
 
 void world::init(){
@@ -18,6 +18,7 @@ void world::init(){
 	hm.init();
 	hm.load("data/hm3.png","data/color3.png");
 	es.init();
+	ob.init();
 	ps.init();
 	ms.init();
 
@@ -45,9 +46,6 @@ void world::init(){
 	//domy
 	for(int i=0;i<8;++i) {
 		enemy& p = es.add_one();
-		p.spd.x=0;
-		p.spd.y=0;
-		p.spd.z=0;
 		p.pos.x=(0.13+FRAND*0.02)*hm_x;
 		p.pos.y=(0.13+FRAND*0.02)*hm_y;
 		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
@@ -61,9 +59,6 @@ void world::init(){
 	}
 	for(int i=0;i<20;++i) {
 		enemy& p = es.add_one();
-		p.spd.x=0;
-		p.spd.y=0;
-		p.spd.z=0;
 		p.pos.x=(0.3+FRAND*0.03)*hm_x;
 		p.pos.y=(0.3+FRAND*0.03)*hm_y;
 		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
@@ -77,9 +72,6 @@ void world::init(){
 	}
 	for(int i=0;i<5;++i) {
 		enemy& p = es.add_one();
-		p.spd.x=0;
-		p.spd.y=0;
-		p.spd.z=0;
 		p.pos.x=(0.13+FRAND*0.02)*hm_x;
 		p.pos.y=(0.3+FRAND*0.02)*hm_y;
 		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
@@ -93,7 +85,7 @@ void world::init(){
 	}
 	//lide
 	for(int i=0;i<20;++i) {
-		enemy& p = es.add_one();
+		object& p = ob.add_one();
 		p.spd.x=DFRAND;
 		p.spd.y=DFRAND;
 		p.spd.z=0;
@@ -104,12 +96,12 @@ void world::init(){
 		p.pos.x=p.start_pos.x;
 		p.pos.y=p.start_pos.y;
 		p.pos.z=p.start_pos.z;
-		p.type=enemy_person;
+		p.type=object_person;
 		p.hp=50;
 	}
 	//stromy
 	for(int i=0;i<10;++i) {
-		enemy& p = es.add_one();
+		object& p = ob.add_one();
 		p.spd.x=0;
 		p.spd.y=0;
 		p.spd.z=0;
@@ -117,7 +109,7 @@ void world::init(){
 		p.pos.x=(0.13+FRAND*0.02)*hm_x;
 		p.pos.y=(0.13+FRAND*0.02)*hm_y;
 		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.type=enemy_tree;
+		p.type=object_tree;
 		p.hp=500;
 	}
 }
@@ -126,6 +118,7 @@ void world::finish(){
 	hm.finish();
 	dr.finish();
 	es.finish();
+	ob.finish();
 	ps.finish();
 	ms.finish();
 }
@@ -133,6 +126,7 @@ void world::finish(){
 bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
 	dr.update(mouse_x,mouse_y,left_mouse_down,right_mouse_down,space_down,timediff,*this);
 	es.update(timediff,*this);
+	ob.update(timediff,*this);
 	ps.update(timediff);
 	ms.update(timediff,*this);
 	cam.follow_ori(dr.ori,0.01,timediff);
@@ -146,7 +140,7 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 			tab_just_pressed=tab_hit=1;
 	} else tab_hit=0;
 	//pro navigaci po mape
-	if(tab_just_pressed) make_navigation(timediff,*this);
+//	if(tab_just_pressed)
 	
 	//pro ukonceni hry
 	if(es.all_enemies_dead()) return false;
@@ -175,6 +169,7 @@ void world::render(){
 	dr.draw();
 	hm.draw();
 	es.draw();
+	ob.draw();
 	ms.draw();
 	f.turn_off();
 

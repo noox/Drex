@@ -2,14 +2,14 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "navigation.h"
+#include "health.h"
 #include "vector.h"
 #include "world.h"
 
 #include <iostream>
 using namespace std;
 
-void make_navigation(float timediff, world &w) {
+void make_healthstatus(float timediff, world &w) {
 	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
 

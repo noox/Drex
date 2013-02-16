@@ -8,6 +8,7 @@
 #include "skybox.h"
 #include "fog.h"
 #include "enemy.h"
+#include "objects.h"
 #include "particles.h"
 #include "missiles.h"
 
@@ -19,6 +20,7 @@ public:
 	skybox skyb;
 	fog f;
 	enemy_system es;
+	object_system ob;
 	particle_system ps;
 	missile_system ms;
 

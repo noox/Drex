@@ -1,6 +1,6 @@
 
-#ifndef _ENEMY_H_
-#define _ENEMY_H_
+#ifndef _OBJECTS_H_
+#define _OBJECTS_H_
 
 #include <list>
 
@@ -10,21 +10,25 @@ class world;
 
 #include "vector.h"
 
-enum enemy_type {
-	enemy_house,
-	enemy_shooting_house
+enum object_type {
+	object_person,
+	object_shooting_person,
+	object_tree
 };
 
-class enemy {
+class object {
 public:
-	vect pos;
+	vect pos, spd;
 	int type;
 	float hp, burning;
 
-	//vlastnosti domu
-	float size_x, size_y, size_z, roof_size, rot;
+	//vlastnosti lidi
+	float size_p;
+	vect start_pos;
+	//vlastnosti stromu
+	float size_tr;
 
-	enemy() {
+	object() {
 		burning=0;
 	}
 
@@ -36,17 +40,17 @@ public:
 	bool deletable();
 };
 
-class enemy_system {
+class object_system {
 public:
-	list<enemy> enemies;
+	list<object> objects;
 
 	void init();
-	enemy& add_one();
+	object& add_one();
 	void update(float time, world& w);
 	void draw();
 	bool try_to_do_damage(vect missile_pos, float dmg, float fire);
 	void finish();
-	bool all_enemies_dead();
+	bool all_objects_dead();
 };
 
 #endif

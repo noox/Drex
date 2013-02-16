@@ -104,90 +104,8 @@ void enemy::update(float time, world& w) {
 				}
 			}
 			break;
-		
-		//lide
-		case enemy_person:
-			burning-=time;
-			if(burning<0) burning=0;
-			else hp-=time*5;
-			
-			//pohyb lidi
-			pos+=spd*time;
-			pos.z=w.hm.get_height(pos.x,pos.y);
-			//hranice chuze pro lidi
-			border=10*size_p;
-			if(pos.x-start_pos.x >= border) {
-				pos.x=start_pos.x+border;
-				spd.x*=-1;
-			}
-			if(pos.x-start_pos.x <= -border) {
-				pos.x=start_pos.x-border;
-				spd.x*=-1;
-			}
-			if(pos.y-start_pos.y >= border) {
-				pos.y=start_pos.y+border;
-				spd.y*=-1;
-			}
-			if(pos.y-start_pos.y <= -border) {
-				pos.y=start_pos.y-border;
-				spd.y*=-1;
-			}
-
-			if(burning>0) {
-				//partikly pro horeni poskozenych nepratel
-				particle& p=w.ps.add_one();
-				p.pos=pos+vect(0,0,DFRAND*size_p);
-				p.spd=vect(DFRAND*0.2,DFRAND*0.2,2+FRAND);
-				p.type=part_fire;
-				p.life=1;
-				p.r=1;
-				p.g=FRAND/2;
-				p.b=0.01;
-				//TODO particle jednou za cas
-			}
-
-			if(deletable()) {
-				//vybuch z partiklu, pokud nepritel ztrati hp
-				for(int i=0;i<100;++i) {
-					{particle& p=w.ps.add_one();
-					p.pos=pos;
-					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*5;
-					p.type=part_fire;
-					p.life=1;
-					p.r=1;
-					p.g=0;
-					p.b=0;}
-					//TODO particle jednou za cas
-					{particle& p=w.ps.add_one();
-					p.pos=pos+vect(DFRAND,DFRAND,DFRAND);
-					p.spd=vect(DFRAND,DFRAND,DFRAND).normal()*0.5;
-					p.type=part_smoke;
-					p.life=3;
-					p.r=1;
-					p.g=0;
-					p.b=0;}
-				}
-			}
-			break;
-	
-		//stromy
-		case enemy_tree: 
-			burning-=time;
-			if(burning<0) burning=0;
-			else hp-=time*5;
-
-			if(burning>0) {
-				//partikly pro horeni poskozenych stromu
-				particle& p=w.ps.add_one();
-				p.pos=pos+vect(0,0,DFRAND*size_tr);
-				p.spd=vect(DFRAND*0.2,DFRAND*0.2,2+FRAND);
-				p.type=part_fire;
-				p.life=1;
-				p.r=1;
-				p.g=FRAND/2;
-				p.b=0.01;
-				//TODO particle jednou za cas
-			}
+		//branici se domy
+		case enemy_shooting_house:	
 			break;
 	}
 }
@@ -205,7 +123,7 @@ void enemy::draw() {
 			//strecha
 			if(burning>0) glColor3f(0.6,0.06,0);
 			else glColor3f(0.8,0.1,0);
-			
+
 			temp=sqrt(roof_size*roof_size+size_y*size_y);
 
 			glNormal3f(-roof_size/temp,0,size_y/(2*temp));
@@ -213,120 +131,55 @@ void enemy::draw() {
 			glVertex3f(size_x,-size_y,size_z);
 			glVertex3f(size_x,0,size_z+roof_size);
 			glVertex3f(-size_x,0,size_z+roof_size);
-			
+
 			glNormal3f(roof_size/temp,0,size_y/(2*temp));
 			glVertex3f(-size_x,0,size_z+roof_size);
 			glVertex3f(size_x,0,size_z+roof_size);
 			glVertex3f(size_x,size_y,size_z);
 			glVertex3f(-size_x,size_y,size_z);
-			
+
 			//steny
 			if(burning>0) glColor3f(0.8,0.8,0.8);
 			else glColor3f(1,1,1);
-			
+
 			glNormal3f(0,-1,0);
 			glVertex3f(-size_x,-size_y,0);
 			glVertex3f(size_x,-size_y,0);
 			glVertex3f(size_x,-size_y,size_z);
 			glVertex3f(-size_x,-size_y,size_z);
-			
+
 			glNormal3f(0,1,0);
 			glVertex3f(-size_x,size_y,0);
 			glVertex3f(-size_x,size_y,size_z);
 			glVertex3f(size_x,size_y,size_z);
 			glVertex3f(size_x,size_y,0);
-			
+
 			glEnd();
 
 			glBegin(GL_POLYGON);
-			
+
 			glNormal3f(-1,0,0);
 			glVertex3f(-size_x,-size_y,0);
 			glVertex3f(-size_x,-size_y,size_z);
 			glVertex3f(-size_x,0,size_z+roof_size);
 			glVertex3f(-size_x,size_y,size_z);
 			glVertex3f(-size_x,size_y,0);
-			
+
 			glEnd();
 
 			glBegin(GL_POLYGON);
-			
+
 			glNormal3f(1,0,0);
 			glVertex3f(size_x,-size_y,0);
 			glVertex3f(size_x,size_y,0);
 			glVertex3f(size_x,size_y,size_z);
 			glVertex3f(size_x,0,size_z+roof_size);
 			glVertex3f(size_x,-size_y,size_z);
-			
-			glEnd();
-		
-			break;
-		//lide
-		case enemy_person:
-			glColor3f(1,1,1);
-			//telo
-			glBegin(GL_LINE_STRIP);
-			glVertex3f(-size_p/2,0,0);
-			glVertex3f(0,0,size_p/2);
-			glVertex3f(size_p/2,0,0);
-			glVertex3f(0,0,size_p/2);
-			glVertex3f(0,0,size_p);
-			glVertex3f(size_p/2,0,3*size_p/4);
-			glVertex3f(0,0,size_p);
-			glVertex3f(-size_p/2,0,3*size_p/4);
-			glVertex3f(0,0,size_p);
-			glVertex3f(0,0,3*size_p/2);
+
 			glEnd();
 
-			//hlava
-			glColor3f(1,0,0);
-			glBegin(GL_TRIANGLE_FAN);
-			glVertex3f(0,0,3*size_p/2);
-			glVertex3f(0,-size_p/4,size_p+3*size_p/4);
-			glVertex3f(-size_p/4,0,size_p+3*size_p/4);
-			glVertex3f(0,size_p/4,size_p+3*size_p/4);
-			glVertex3f(size_p/4,0,size_p+3*size_p/4);
-			glVertex3f(0,-size_p/4,size_p+3*size_p/4);
-			glEnd();
-			glColor3f(1,1,0);
-			glBegin(GL_TRIANGLE_FAN);
-			glNormal3f(0,0,1);
-			glVertex3f(0,0,2*size_p);
-			glVertex3f(0,-size_p/4,size_p+3*size_p/4);
-			glVertex3f(size_p/4,0,size_p+3*size_p/4);
-			glVertex3f(0,size_p/4,size_p+3*size_p/4);
-			glVertex3f(-size_p/4,0,size_p+3*size_p/4);
-			glVertex3f(0,-size_p/4,size_p+3*size_p/4);
-			glEnd();
 			break;
-		//stromy
-		case enemy_tree:
-			//kmen
-			glColor3f(1,0.5,0);
-			glBegin(GL_LINES);
-			glVertex3f(0,0,0);
-			glVertex3f(0,0,size_tr/2);
-			glEnd();
-			//koruna
-			glColor3f(0.5,1,0.5);
-			glBegin(GL_TRIANGLE_FAN);
-			glVertex3f(0,0,size_tr/2);
-			glVertex3f(0,-size_tr/2,size_tr+size_tr/4);
-			glVertex3f(-size_tr/2,0,size_tr+size_tr/4);
-			glVertex3f(0,size_tr/2,size_tr+size_tr/4);
-			glVertex3f(size_tr/2,0,size_tr+size_tr/4);
-			glVertex3f(0,-size_tr/2,size_tr+size_tr/4);
-			glEnd();
-			glColor3f(0.2,1,0);
-			glBegin(GL_TRIANGLE_FAN);
-			glNormal3f(0,0,1);
-			glVertex3f(0,0,2*size_tr);
-			glVertex3f(0,-size_tr/2,size_tr+size_tr/4);
-			glVertex3f(size_tr/2,0,size_tr+size_tr/4);
-			glVertex3f(0,size_tr/2,size_tr+size_tr/4);
-			glVertex3f(-size_tr/2,0,size_tr+size_tr/4);
-			glVertex3f(0,-size_tr/2,size_tr+size_tr/4);
-			glEnd();
+		case enemy_shooting_house:
 			break;
 	}
 	glPopMatrix();
