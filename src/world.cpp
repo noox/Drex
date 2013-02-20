@@ -140,8 +140,26 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 			tab_just_pressed=tab_hit=1;
 	} else tab_hit=0;
 	//pro navigaci po mape
-//	if(tab_just_pressed)
-	
+	if(tab_just_pressed) {
+		float tabtime=2;
+		vect en=es.one_enemy();
+		cout << en.x << " " << en.y << " " << en.z << endl;
+
+		while(tabtime>0) {
+			dr.update(0/tabtime,0/tabtime,0,0,space_down,timediff,*this);
+			es.update(timediff,*this);
+			ob.update(timediff,*this);
+			ps.update(timediff);
+			ms.update(timediff,*this);
+			cam.follow_ori(dr.ori,0.01,timediff);
+			vect tmp=vect(en.x-cam.pos.x,en.y-cam.pos.y,en.z-cam.pos.z);
+			cam.follow_pos(en,0.1,timediff);
+			cam.collide_with_heightmap(hm);
+
+			tabtime-=timediff;
+		}
+	}
+
 	//pro ukonceni hry
 	if(es.all_enemies_dead()) return false;
 	return true;

@@ -56,6 +56,12 @@ bool enemy_system::all_enemies_dead() {
 	if(enemies.empty()) return true;
 	return false;
 }
+
+//pozice nejakeho nepritele - pro navigaci
+vect enemy_system::one_enemy() {
+	return enemies.front().pos;
+}
+
 /* =========================================================== */
 
 void enemy::update(float time, world& w) {
@@ -203,5 +209,4 @@ bool enemy::deletable() {
 	if(hp<0) return true;
 	return false;
 }
-
 

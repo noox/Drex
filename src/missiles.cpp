@@ -52,9 +52,9 @@ void missile::update(float time, world& w) {
 				if(age>3) deletable=true;
 				
 				//pokud zasahla cil
-				if(w.es.try_to_do_damage(pos,power,10))
+				if(w.es.try_to_do_damage(pos,power,10) || w.ob.try_to_do_damage(pos,power,10))
 					deletable=true;
-				
+
 				//pridani particlu do systemu
 				{particle& p=w.ps.add_one();
 				p.pos=pos;
@@ -69,6 +69,10 @@ void missile::update(float time, world& w) {
 			//pokrocily draci utok
 			case missile_dragon_ball:
 				if(age>10) deletable=true;
+
+				//pokud zasahla cil
+				if(w.es.try_to_do_damage(pos,power,20) || w.ob.try_to_do_damage(pos,power,20))
+					deletable=true;
 				break;
 			default: 
 				break;

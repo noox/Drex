@@ -8,6 +8,7 @@ using namespace std;
 #include "imageloader.h"
 #include "dragon.h"
 #include "world.h"
+#include "wings.h"
 
 void dragon::init() {
 	texture=imageloader_load("data/drak.png",3,GL_RGB);
@@ -16,6 +17,7 @@ void dragon::init() {
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
+	wings=0;
 }
 
 void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mouse_down,bool space,float timediff,world &w) {
@@ -107,7 +109,7 @@ void dragon::update(int mouse_x,int mouse_y,bool left_mouse_down,bool right_mous
 		m.pos=pos;
 		m.spd=-20*VZ;
 		m.type=missile_dragon_ball;
-		//TODO m.power;
+		m.power=10;
 		reload-=0.1;
 	}
 }
@@ -117,6 +119,8 @@ void dragon::draw() {
 	glTranslatef(pos.x,pos.y,pos.z);
 	ori.gl_rotate();
 
+	wings++;
+	//zakladni tvar draka
 	vect points[][2] = {
 		// hlava
 		{vect(0,19,0),vect(0,1,0)}, 
@@ -147,8 +151,9 @@ void dragon::draw() {
 		{vect(0,11,-1.5),vect(0,0,-1)},
 		{vect(0,7,-1),vect(0,0,-1)},
 		{vect(0,4,-0.5),vect(0,0,-1)},
-
 	};
+
+	wings_movement(points,wings);
 	
 #define point(X) glNormal3fv(points[X-1][1].v); glTexCoord2f(points[X-1][0].x/19,points[X-1][0].y/24); glVertex3fv(points[X-1][0].v);
 
@@ -230,7 +235,7 @@ void dragon::draw() {
 	//prave kridlo zdola
 	glPushMatrix();
 	glRotatef(180,0,1,0);
-	glScalef(-1,1,1);
+	glScalef(-1,1,-1);
 	glBegin(GL_TRIANGLE_FAN);
 		point(19)
 		point(18)
@@ -317,7 +322,7 @@ void dragon::draw() {
 	//leve kridlo zdola
 	glPushMatrix();
 	glRotatef(180,0,1,0);
-	glScalef(-1,1,1);
+	glScalef(-1,1,-1);
 	glBegin(GL_TRIANGLE_FAN);
 		point(19)
 		point(20)

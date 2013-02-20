@@ -15,6 +15,7 @@ public:
 	quat ori,mom;
 	GLuint texture;
 	float reload;
+	int wings;
 
 	void set(const vect &Pos,const quat &Ori) {
 		pos=Pos;

@@ -47,6 +47,7 @@ public:
 	bool try_to_do_damage(vect missile_pos, float dmg, float fire);
 	void finish();
 	bool all_enemies_dead();
+	vect one_enemy();
 };
 
 #endif
