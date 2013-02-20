@@ -23,6 +23,7 @@ void world::init(){
 	ms.init();
 
 	tab_hit=0;
+	help_on=0;
 
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
@@ -140,25 +141,7 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 			tab_just_pressed=tab_hit=1;
 	} else tab_hit=0;
 	//pro navigaci po mape
-	if(tab_just_pressed) {
-		float tabtime=2;
-		vect en=es.one_enemy();
-		cout << en.x << " " << en.y << " " << en.z << endl;
-
-		while(tabtime>0) {
-			dr.update(0/tabtime,0/tabtime,0,0,space_down,timediff,*this);
-			es.update(timediff,*this);
-			ob.update(timediff,*this);
-			ps.update(timediff);
-			ms.update(timediff,*this);
-			cam.follow_ori(dr.ori,0.01,timediff);
-			vect tmp=vect(en.x-cam.pos.x,en.y-cam.pos.y,en.z-cam.pos.z);
-			cam.follow_pos(en,0.1,timediff);
-			cam.collide_with_heightmap(hm);
-
-			tabtime-=timediff;
-		}
-	}
+	if(tab_just_pressed) help_on=1;
 
 	//pro ukonceni hry
 	if(es.all_enemies_dead()) return false;
@@ -176,6 +159,7 @@ void world::render(){
 
 	cam.set_gl();
 	skyb.draw(cam.pos);
+
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
@@ -190,39 +174,23 @@ void world::render(){
 	ob.draw();
 	ms.draw();
 	f.turn_off();
+		
+	if(help_on>0) {
+		vect en=es.one_enemy();
 
+		glPushMatrix();
+		glColor3f(1,1,1);
+		glBegin(GL_LINES);
+		glVertex3f(dr.pos.x,dr.pos.y,dr.pos.z);
+		glVertex3f(en.x,en.y,en.z);
+		glEnd();
+		glPopMatrix;
+		help_on-=1;
+	}
+
+	
 	glDisable(GL_LIGHTING);
 	ps.draw(*this);
 
-
-	glDepthMask(GL_FALSE);
-	glDisable(GL_DEPTH_TEST);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(0,800,600,0,-1,1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glEnable(GL_BLEND);
-	glColor4f(0.5,0.5,0.5,0.2);
-	glBegin(GL_QUADS);
-	glVertex2f(50,50);
-	glVertex2f(50,100);
-	glVertex2f(100,100);
-	glVertex2f(100,50);
-	glEnd();
-	glDisable(GL_BLEND);
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
 }
 

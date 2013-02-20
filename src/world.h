@@ -25,6 +25,7 @@ public:
 	missile_system ms;
 
 	int tab_hit;
+	int help_on;
 
 	int texture;
 	void init();

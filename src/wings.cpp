@@ -1,7 +1,4 @@
 
-#include <iostream>
-using namespace std;
-
 #include "wings.h"
 
 //zmeny tvaru pro mavani kridel
@@ -197,7 +194,5 @@ void wings_movement(vect points[][2], int &wings) {
 		if(wings>=619) wings=0;
 		wings++;
 	}
-
-	cout << wings << endl;
 }
 
