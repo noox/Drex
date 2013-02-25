@@ -29,6 +29,7 @@ public:
 	int tab_hit;
 	bool help_on;
 	int weather;
+	int daytime;
 
 	int texture;
 	void init();

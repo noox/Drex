@@ -4,7 +4,7 @@
 
 class skybox{
 public:
-	void draw(vect pos);
+	void draw(vect pos,bool night);
 };
 
 #endif

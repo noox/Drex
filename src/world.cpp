@@ -25,6 +25,7 @@ void world::init(){
 	tab_hit=0;
 	help_on=false;
 	weather=0;
+	daytime=0;
 
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
@@ -144,9 +145,20 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 	//pro navigaci po mape k nepriteli
 	if(tab_just_pressed) help_on=true;
 
-	//zjisteni pocasi (dest, snih)
+	//zjisteni pocasi (dest, snih) // TODO update?
+	if(g.get_weather()==0) weather=0;
 	if(g.get_weather()==1) weather=1;
 	if(g.get_weather()==2) weather=2;
+
+	//zjisteni denni doby
+	if(g.get_daytime()==0) {
+		daytime=0;
+		f.set_color(0.4,0.6,0.9);
+	}
+	if(g.get_daytime()==1) {
+		daytime=1;
+		f.set_color(0,0,0);
+	}
 
 	//pro ukonceni hry
 	if(es.all_enemies_dead()) return false;
@@ -163,14 +175,21 @@ void world::render(){
 	glLoadIdentity();
 
 	cam.set_gl();
-	skyb.draw(cam.pos);
+
+	//noc X den
+	if(daytime==1) skyb.draw(cam.pos,true);
+	else skyb.draw(cam.pos,false);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
 	{
-	float light_direction[]={0.4082,0.4082,0.8165,0};
-	glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
+		float light_direction[]={0.4082,0.4082,0.8165,0};
+		glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
+		if(daytime==1) {
+			light_direction={0.4082,0.4082,0.8165,0.7};
+			glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
+		}
 	}
 	f.turn_on();
 	dr.draw();
