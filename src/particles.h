@@ -14,7 +14,8 @@ enum particle_type {
 	part_fire,
 	part_spark,
 	part_smoke,
-	part_rain
+	part_rain,
+	part_snow
 };
 
 class particle_system;

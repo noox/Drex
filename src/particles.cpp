@@ -120,6 +120,22 @@ void particle_system::draw(world &w) {
 				glVertex3f(0,0,0);
 				glEnd();
 				break;
+			case part_snow:
+				glBindTexture(GL_TEXTURE_2D,tex_smoke);
+				glEnable(GL_TEXTURE_2D);
+				glMultMatrixf(part_face);
+				glBegin(GL_QUADS);
+				glTexCoord2f(0,0);
+				glVertex3f(-0.2,-0.2,0);
+				glTexCoord2f(1,0);
+				glVertex3f(0.2,-0.2,0);
+				glTexCoord2f(1,1);
+				glVertex3f(0.2,0.2,0);
+				glTexCoord2f(0,1);
+				glVertex3f(-0.2,0.2,0);
+				glEnd();
+				glDisable(GL_TEXTURE_2D);
+				break;
 		}
 		glPopMatrix();
 	}
