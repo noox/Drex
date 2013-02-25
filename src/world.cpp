@@ -187,7 +187,7 @@ void world::render(){
 		float light_direction[]={0.4082,0.4082,0.8165,0};
 		glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
 		if(daytime==1) {
-			light_direction={0.4082,0.4082,0.8165,0.7};
+			light_direction={0.4082,0.4082,0.8165,0.5};
 			glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
 		}
 	}
@@ -196,13 +196,16 @@ void world::render(){
 	hm.draw();
 	es.draw();
 	ob.draw();
-
+	
 	if(weather==1) make_rain(*this);
 	if(weather==2) make_snow(*this);
 
 	ms.draw();
 	f.turn_off();
 	
+	glDisable(GL_LIGHTING);
+	ps.draw(*this);
+
 	//navigace k nepriteli
 	if(help_on) {
 		vect en=es.one_enemy();
@@ -217,9 +220,5 @@ void world::render(){
 		glPopMatrix;
 		help_on=false;
 	}
-
-	glDisable(GL_LIGHTING);
-	ps.draw(*this);
-
 }
 
