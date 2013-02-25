@@ -113,6 +113,13 @@ void particle_system::draw(world &w) {
 				glEnd();
 				glDisable(GL_TEXTURE_2D);
 				break;
+			case part_rain:
+				glBegin(GL_LINES);
+				glVertex3f(0,0,-2);
+				glColor4f(0,0,0,0);
+				glVertex3f(0,0,0);
+				glEnd();
+				break;
 		}
 		glPopMatrix();
 	}
@@ -140,6 +147,9 @@ void particle::update(float time) {
 		case part_smoke:
 			spd*=powf(0.8,time);
 			spd.z+=time;
+			break;
+		case part_rain:
+			spd.z-=time;
 			break;
 	}
 }

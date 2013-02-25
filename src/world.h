@@ -1,4 +1,6 @@
 
+#include "game.h"
+
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
@@ -25,12 +27,13 @@ public:
 	missile_system ms;
 
 	int tab_hit;
-	int help_on;
+	bool help_on;
+	int weather;
 
 	int texture;
 	void init();
 	void finish();
-	bool update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y);
+	bool update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game &g);
 	void render();
 };
 

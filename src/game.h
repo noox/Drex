@@ -2,8 +2,8 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "world.h"
 class game;
+#include "world.h"
 #include "menu.h"
 
 class game{

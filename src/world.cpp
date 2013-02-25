@@ -5,10 +5,10 @@
 
 using namespace std;
 
-#include "game.h"
 #include "frand.h"
 #include "imageloader.h"
 #include "health.h"
+#include "weather.h"
 #include "world.h"
 
 void world::init(){
@@ -23,7 +23,8 @@ void world::init(){
 	ms.init();
 
 	tab_hit=0;
-	help_on=0;
+	help_on=false;
+	weather=0;
 
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
@@ -124,7 +125,7 @@ void world::finish(){
 	ms.finish();
 }
 
-bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y){
+bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game &g){
 	dr.update(mouse_x,mouse_y,left_mouse_down,right_mouse_down,space_down,timediff,*this);
 	es.update(timediff,*this);
 	ob.update(timediff,*this);
@@ -140,8 +141,12 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 		if (!tab_hit)
 			tab_just_pressed=tab_hit=1;
 	} else tab_hit=0;
-	//pro navigaci po mape
-	if(tab_just_pressed) help_on=1;
+	//pro navigaci po mape k nepriteli
+	if(tab_just_pressed) help_on=true;
+
+	//zjisteni pocasi (dest, snih)
+	if(g.get_weather()==1) weather=1;
+	if(g.get_weather()==2) weather=2;
 
 	//pro ukonceni hry
 	if(es.all_enemies_dead()) return false;
@@ -172,12 +177,18 @@ void world::render(){
 	hm.draw();
 	es.draw();
 	ob.draw();
+
+	if(weather==1) make_rain(*this);
+	if(weather==2) make_snow(*this);
+
 	ms.draw();
 	f.turn_off();
-		
-	if(help_on>0) {
+	
+	//navigace k nepriteli
+	if(help_on) {
 		vect en=es.one_enemy();
-
+		
+		//nakresleni bile cary k nepriteli
 		glPushMatrix();
 		glColor3f(1,1,1);
 		glBegin(GL_LINES);
@@ -185,10 +196,9 @@ void world::render(){
 		glVertex3f(en.x,en.y,en.z);
 		glEnd();
 		glPopMatrix;
-		help_on-=1;
+		help_on=false;
 	}
 
-	
 	glDisable(GL_LIGHTING);
 	ps.draw(*this);
 

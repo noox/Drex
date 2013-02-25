@@ -44,7 +44,7 @@ bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,boo
 		return true;
 	} else {
 		//ve hre
-		if(!w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x/sensitivity,mouse_y/sensitivity)) {
+		if(!w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x/sensitivity,mouse_y/sensitivity,*this)) {
 			go_to_menu();
 			m.go_to_winscreen();
 		}

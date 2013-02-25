@@ -11,7 +11,10 @@ using namespace std;
 class world;
 
 enum particle_type {
-	part_fire,part_spark,part_smoke
+	part_fire,
+	part_spark,
+	part_smoke,
+	part_rain
 };
 
 class particle_system;
