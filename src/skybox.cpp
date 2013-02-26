@@ -14,8 +14,12 @@ void skybox::draw(vect pos,bool night) {
 	float top_color[]={0.1,0.4,1};
 
 	if(night){
-		bottom_color={0,0.3,1};
-		top_color={0,0,0};
+		bottom_color[0]=0;
+		bottom_color[1]=0.3;
+		bottom_color[2]=1;
+		top_color[0]=0;
+		top_color[1]=0;
+		top_color[2]=0;
 	}
  
         glBegin(GL_QUADS);
