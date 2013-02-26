@@ -346,9 +346,40 @@ void dragon::draw() {
 	glPopMatrix();
 }
 
+//zajistuje kolizi strel nepratel s drakem
+bool dragon::try_to_damage_dragon(vect missile_pos, float dmg) {
+	if(collides(missile_pos)) {
+		accept_damage(dmg);
+		return true;
+	}
+	return false;
+}
+
 //vraci vhodou pozici kamery vuci drakovi
 vect dragon::camera_pos() {
 	return pos+ori.vecz()*10+ori.vecy()*3; 
+}
+
+//zjisteni, zda je drak na dostrel nepratelum
+bool dragon::in_range(vect e_pos) {
+	if((pos-e_pos).length() < 100) return true;
+	return false;	
+}
+
+//kolize draka se strelami
+bool dragon::collides(vect missile_pos) {
+	if((pos-missile_pos).length() < 12) return true;
+	return false;
+}
+
+//prijeti poskozeni a horeni
+void dragon::accept_damage(float dmg) {
+	hp-=dmg;
+}
+
+bool dragon::dead() {
+	if(hp<=0) return true;
+	return false;
 }
 
 void dragon::finish() {

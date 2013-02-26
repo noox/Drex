@@ -44,7 +44,7 @@ public:
 	enemy& add_one();
 	void update(float time, world& w);
 	void draw();
-	bool try_to_do_damage(vect missile_pos, float dmg, float fire);
+	bool try_to_damage_enemy(vect missile_pos, float dmg, float fire);
 	void finish();
 	bool all_enemies_dead();
 	vect one_enemy();

@@ -44,11 +44,15 @@ bool game::update(float timediff,bool space_down,bool tab_down,bool esc_down,boo
 		return true;
 	} else {
 		//ve hre
-		if(!w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x/sensitivity,mouse_y/sensitivity,*this)) {
+		if(w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x/sensitivity,mouse_y/sensitivity,*this)==1) {
 			go_to_menu();
 			m.go_to_winscreen();
-		}
-		else if(esc_just_pressed) go_to_menu();
+			w.init();
+		} else if(w.update(timediff,space_down,tab_down,esc_down,left_mouse_down,right_mouse_down,mouse_x/sensitivity,mouse_y/sensitivity,*this)==2) {
+			go_to_menu();
+			m.go_to_failscreen();
+			w.init();
+		} else if(esc_just_pressed) go_to_menu();
 		return true;
 	}
 }

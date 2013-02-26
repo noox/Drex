@@ -10,8 +10,8 @@ using namespace std;
 
 enum missile_type {
 	missile_dragon_fire, 
-	missile_dragon_ball
-	//TODO enemies
+	missile_dragon_ball,
+	missile_human_shot
 };
 
 class world;

@@ -20,7 +20,7 @@ class object {
 public:
 	vect pos, spd;
 	int type;
-	float hp, burning;
+	float hp, burning, reload;
 
 	//vlastnosti lidi
 	float size_p;
@@ -30,6 +30,7 @@ public:
 
 	object() {
 		burning=0;
+		reload=0;
 	}
 
 	void create();
@@ -48,7 +49,7 @@ public:
 	object& add_one();
 	void update(float time, world& w);
 	void draw();
-	bool try_to_do_damage(vect missile_pos, float dmg, float fire);
+	bool try_to_damage_object(vect missile_pos, float dmg, float fire);
 	void finish();
 	bool all_objects_dead();
 };

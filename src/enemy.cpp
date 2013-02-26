@@ -38,7 +38,7 @@ void enemy_system::draw() {
 }
 
 //zajistuje kolize a ztratu hp nepratel
-bool enemy_system::try_to_do_damage(vect missile_pos, float dmg, float fire) {
+bool enemy_system::try_to_damage_enemy(vect missile_pos, float dmg, float fire) {
 	for(list<enemy>::iterator i=enemies.begin();i!=enemies.end();++i) 
 		if(i->collides(missile_pos)) {
 			i->accept_damage(dmg,fire);

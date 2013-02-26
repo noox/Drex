@@ -38,7 +38,7 @@ void object_system::draw() {
 }
 
 //zajistuje kolize a ztratu hp objektu
-bool object_system::try_to_do_damage(vect missile_pos, float dmg, float fire) {
+bool object_system::try_to_damage_object(vect missile_pos, float dmg, float fire) {
 	for(list<object>::iterator i=objects.begin();i!=objects.end();++i) 
 		if(i->collides(missile_pos)) {
 			i->accept_damage(dmg,fire);
@@ -87,6 +87,16 @@ void object::update(float time, world& w) {
 			if(pos.y-start_pos.y <= -border) {
 				pos.y=start_pos.y-border;
 				spd.y*=-1;
+			}
+
+			reload+=time;
+			if(w.dr.in_range(pos) && (reload>0)) {
+				missile& m = w.ms.add_one();
+				m.pos=pos;
+				m.spd=vect(0,0,20);
+				m.type=missile_human_shot;
+				m.power=1;
+				reload-=0.1*w.ob.objects.size();
 			}
 
 			if(burning>0) {
@@ -230,7 +240,6 @@ void object::accept_damage(float dmg, float fire) {
 	burning+=fire;
 }
 
-#define max(a,b) (((a)>(b))?(a):(b))
 //kolize objektu se strelami
 bool object::collides(vect missile_pos) {
 	if(type==object_person || type==object_shooting_person) {

@@ -52,7 +52,7 @@ void missile::update(float time, world& w) {
 				if(age>3) deletable=true;
 				
 				//pokud zasahla cil
-				if(w.es.try_to_do_damage(pos,power,10) || w.ob.try_to_do_damage(pos,power,10))
+				if(w.es.try_to_damage_enemy(pos,power,10) || w.ob.try_to_damage_object(pos,power,10))
 					deletable=true;
 
 				//pridani particlu do systemu
@@ -71,10 +71,26 @@ void missile::update(float time, world& w) {
 				if(age>10) deletable=true;
 
 				//pokud zasahla cil
-				if(w.es.try_to_do_damage(pos,power,20) || w.ob.try_to_do_damage(pos,power,20))
+				if(w.es.try_to_damage_enemy(pos,power,20) || w.ob.try_to_damage_object(pos,power,20))
 					deletable=true;
 				break;
-			default: 
+			case missile_human_shot:
+				if(age>5) deletable=true;
+
+				if(w.dr.try_to_damage_dragon(pos,power))
+					deletable=true;
+					
+				//pridani particlu do systemu
+				{particle& p=w.ps.add_one();
+				p.pos=pos;
+				p.spd=vect(DFRAND,DFRAND,DFRAND);
+				p.type=part_fire;
+				p.life=0.4;
+				p.r=1;
+				p.g=0.01;
+				p.b=0.01;}
+				//TODO particle jednou za cas
+
 				break;
 		}
 		reload-=0.01;

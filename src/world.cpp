@@ -126,7 +126,7 @@ void world::finish(){
 	ms.finish();
 }
 
-bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game &g){
+int world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game &g){
 	dr.update(mouse_x,mouse_y,left_mouse_down,right_mouse_down,space_down,timediff,*this);
 	es.update(timediff,*this);
 	ob.update(timediff,*this);
@@ -160,9 +160,13 @@ bool world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bo
 		f.set_color(0,0,0);
 	}
 
-	//pro ukonceni hry
-	if(es.all_enemies_dead()) return false;
-	return true;
+	//pro ukonceni hry vyhrou
+	if(es.all_enemies_dead()) return 1;
+
+	//pro ukonceni hry prohrou
+	if(dr.dead()) return 2;
+
+	return 0;
 }
 
 void world::render(){
@@ -185,11 +189,8 @@ void world::render(){
 	glEnable(GL_COLOR_MATERIAL);
 	{
 		float light_direction[]={0.4082,0.4082,0.8165,0};
+		if(daytime==1) light_direction[3]=0.5;
 		glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
-		if(daytime==1) {
-			light_direction={0.4082,0.4082,0.8165,0.5};
-			glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
-		}
 	}
 	f.turn_on();
 	dr.draw();

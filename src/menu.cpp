@@ -140,10 +140,12 @@ void menu::set_menu(int newstatus) {
 			break;
 		//vitezny screen
 		case 12:
+			items.push_back("");
 			items.push_back("victory");
 			break;
 		//prohrany screen
 		case 13:
+			items.push_back("");
 			items.push_back("failure");
 			break;
 	}
@@ -419,6 +421,11 @@ bool menu::handle_menu_click(int item,game& g,int esc_just_pressed) {
 void menu::go_to_winscreen() {
 	set_menu(12);
 }
+
+void menu::go_to_failscreen() {
+	set_menu(13);
+}
+
 
 bool menu::update(float timediff,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game& g) {
 	//aktualni hodnoty pro prichod do podmenu
