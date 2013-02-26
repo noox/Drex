@@ -11,16 +11,16 @@ using namespace std;
 
 class heightmap {
 	vector<vect> normal;
-	GLuint t,dl;
+	GLuint t, dl;
 public:
 	vector<int> h;
 	vector<unsigned char> c;
 	int size_x, size_y;
 	void init();
 	void draw();
-	void load(const char* fn,const char* fn2);
-	float get_height(float x, float y);
-	void get_sizes(float &x,float &y);
+	void load (const char* fn, const char* fn2);
+	float get_height (float x, float y);
+	void get_sizes (float &x, float &y);
 	void free();
 	void finish();
 };

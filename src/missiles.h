@@ -9,7 +9,7 @@ using namespace std;
 #include "vector.h"
 
 enum missile_type {
-	missile_dragon_fire, 
+	missile_dragon_fire,
 	missile_dragon_ball,
 	missile_human_shot
 };
@@ -24,13 +24,13 @@ public:
 	bool deletable;
 
 	missile() {
-		age=0;
-		deletable=false;
-		reload=0;
+		age = 0;
+		deletable = false;
+		reload = 0;
 	}
 
 	void create();
-	void update(float time, world& w);
+	void update (float time, world& w);
 	void draw();
 };
 
@@ -40,7 +40,7 @@ public:
 
 	void init();
 	missile& add_one();
-	void update(float time, world& w);
+	void update (float time, world& w);
 	void draw();
 	void finish();
 };

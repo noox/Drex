@@ -22,22 +22,22 @@ int maplist_count() {
 }
 
 //funkce pro overeni jmena mapy a pridani do vectoru
-void process_mapfilename(string n) {
-	int l=n.length();
-	if(l<=4) return;
-	if(n.substr(l-4)!=".map") return;
-	maps.push_back(n);
+void process_mapfilename (string n) {
+	int l = n.length();
+	if (l <= 4) return;
+	if (n.substr (l -4) != ".map") return;
+	maps.push_back (n);
 }
 
 //funkce pro zjisteni nazvu mapy s priponou a cestou
-string maplist_get_file_name(int mapid) {
-	if(maps.size()>0) return "maps/"+maps[mapid];
+string maplist_get_file_name (int mapid) {
+	if (maps.size() > 0) return "maps/" + maps[mapid];
 	else return "";
 }
 
 //funkce pro zjisteni nazvu mapy samotneho
-string maplist_get_name(int mapid) {
-	if(maps.size()>0) return maps[mapid].substr(0,maps[mapid].length()-4);
+string maplist_get_name (int mapid) {
+	if (maps.size() > 0) return maps[mapid].substr (0, maps[mapid].length() - 4);
 	else return "";
 }
 
@@ -45,15 +45,14 @@ string maplist_get_name(int mapid) {
 void maplist_init() {
 	DIR* dirp;
 	struct dirent* dp;
-	dirp = opendir("maps/");
-	if(!dirp) return;
+	dirp = opendir ("maps/");
+	if (!dirp) return;
 	while (1) {
-		dp=readdir(dirp);
+		dp = readdir (dirp);
 		if (dp) {
-			process_mapfilename(dp->d_name);
-		}
-		else break;
+			process_mapfilename (dp->d_name);
+		} else break;
 	}
-	closedir(dirp);
+	closedir (dirp);
 }
 

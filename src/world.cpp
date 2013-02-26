@@ -11,113 +11,113 @@ using namespace std;
 #include "weather.h"
 #include "world.h"
 
-void world::init(){
+void world::init() {
 	dr.init();
-	dr.set(vect(10,10,10),quat(0.7,0.7,0,0));
-	cam.set(vect(0,0,0),quat(1,0,0,0));
+	dr.set (vect (10, 10, 10), quat (0.7, 0.7, 0, 0) );
+	cam.set (vect (0, 0, 0), quat (1, 0, 0, 0) );
 	hm.init();
-	hm.load("data/hm3.png","data/color3.png");
+	hm.load ("data/hm3.png", "data/color3.png");
 	es.init();
 	ob.init();
 	ps.init();
 	ms.init();
 
-	tab_hit=0;
-	help_on=false;
-	weather=0;
-	daytime=0;
+	tab_hit = 0;
+	help_on = false;
+	weather = sunny;
+	daytime = day;
 
-	glShadeModel(GL_SMOOTH);
-	glFrontFace(GL_CCW);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-	
-	glEnable(GL_DEPTH_TEST);
-	
+	glShadeModel (GL_SMOOTH);
+	glFrontFace (GL_CCW);
+	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	glEnable (GL_DEPTH_TEST);
+
 	//pro nerenderovani veci v pozadi
-	glFrontFace(GL_CCW);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	glFrontFace (GL_CCW);
+	glCullFace (GL_BACK);
+	glEnable (GL_CULL_FACE);
 
 	//inicialni nastaveni pro mlhu
-	glHint(GL_FOG_HINT,GL_NICEST);
-	f.set_color(0.4,0.6,0.9);
-	f.set_distance(50,200);
+	glHint (GL_FOG_HINT, GL_NICEST);
+	f.set_color (0.4, 0.6, 0.9);
+	f.set_distance (50, 200);
 
-	float hm_x,hm_y;
-	hm.get_sizes(hm_x,hm_y);
+	float hm_x, hm_y;
+	hm.get_sizes (hm_x, hm_y);
 	//domy
-	for(int i=0;i<8;++i) {
+	for (int i = 0;i < 8;++i) {
 		enemy& p = es.add_one();
-		p.pos.x=(0.13+FRAND*0.02)*hm_x;
-		p.pos.y=(0.13+FRAND*0.02)*hm_y;
-		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.size_x=1+FRAND;
-		p.size_y=1+FRAND;
-		p.size_z=1+FRAND;
-		p.roof_size=2*FRAND;
-		p.rot=360*FRAND;
-		p.type=enemy_house;
-		p.hp=100;
+		p.pos.x = (0.13 + FRAND * 0.02) * hm_x;
+		p.pos.y = (0.13 + FRAND * 0.02) * hm_y;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.size_x = 1 + FRAND;
+		p.size_y = 1 + FRAND;
+		p.size_z = 1 + FRAND;
+		p.roof_size = 2 * FRAND;
+		p.rot = 360 * FRAND;
+		p.type = enemy_house;
+		p.hp = 100;
 	}
-	for(int i=0;i<20;++i) {
+	for (int i = 0;i < 20;++i) {
 		enemy& p = es.add_one();
-		p.pos.x=(0.3+FRAND*0.03)*hm_x;
-		p.pos.y=(0.3+FRAND*0.03)*hm_y;
-		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.size_x=1+FRAND;
-		p.size_y=1+FRAND;
-		p.size_z=1+FRAND;
-		p.roof_size=2*FRAND;
-		p.rot=360*FRAND;
-		p.type=enemy_house;
-		p.hp=100;
+		p.pos.x = (0.3 + FRAND * 0.03) * hm_x;
+		p.pos.y = (0.3 + FRAND * 0.03) * hm_y;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.size_x = 1 + FRAND;
+		p.size_y = 1 + FRAND;
+		p.size_z = 1 + FRAND;
+		p.roof_size = 2 * FRAND;
+		p.rot = 360 * FRAND;
+		p.type = enemy_house;
+		p.hp = 100;
 	}
-	for(int i=0;i<5;++i) {
+	for (int i = 0;i < 5;++i) {
 		enemy& p = es.add_one();
-		p.pos.x=(0.13+FRAND*0.02)*hm_x;
-		p.pos.y=(0.3+FRAND*0.02)*hm_y;
-		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.size_x=1+FRAND;
-		p.size_y=1+FRAND;
-		p.size_z=1+FRAND;
-		p.roof_size=2*FRAND;
-		p.rot=360*FRAND;
-		p.type=enemy_house;
-		p.hp=100;
+		p.pos.x = (0.13 + FRAND * 0.02) * hm_x;
+		p.pos.y = (0.3 + FRAND * 0.02) * hm_y;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.size_x = 1 + FRAND;
+		p.size_y = 1 + FRAND;
+		p.size_z = 1 + FRAND;
+		p.roof_size = 2 * FRAND;
+		p.rot = 360 * FRAND;
+		p.type = enemy_house;
+		p.hp = 100;
 	}
 	//lide
-	for(int i=0;i<20;++i) {
+	for (int i = 0;i < 20;++i) {
 		object& p = ob.add_one();
-		p.spd.x=DFRAND;
-		p.spd.y=DFRAND;
-		p.spd.z=0;
-		p.size_p=FRAND;
-		p.start_pos.x=(0.13+FRAND*0.02)*hm_x;
-		p.start_pos.y=(0.13+FRAND*0.02)*hm_y;
-		p.start_pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.pos.x=p.start_pos.x;
-		p.pos.y=p.start_pos.y;
-		p.pos.z=p.start_pos.z;
-		p.type=object_person;
-		p.hp=50;
+		p.spd.x = DFRAND;
+		p.spd.y = DFRAND;
+		p.spd.z = 0;
+		p.size_p = FRAND;
+		p.start_pos.x = (0.13 + FRAND * 0.02) * hm_x;
+		p.start_pos.y = (0.13 + FRAND * 0.02) * hm_y;
+		p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.pos.x = p.start_pos.x;
+		p.pos.y = p.start_pos.y;
+		p.pos.z = p.start_pos.z;
+		p.type = object_person;
+		p.hp = 50;
 	}
 	//stromy
-	for(int i=0;i<10;++i) {
+	for (int i = 0;i < 10;++i) {
 		object& p = ob.add_one();
-		p.spd.x=0;
-		p.spd.y=0;
-		p.spd.z=0;
-		p.size_tr=1.5+FRAND;
-		p.pos.x=(0.13+FRAND*0.02)*hm_x;
-		p.pos.y=(0.13+FRAND*0.02)*hm_y;
-		p.pos.z=hm.get_height(p.pos.x,p.pos.y);
-		p.type=object_tree;
-		p.hp=500;
+		p.spd.x = 0;
+		p.spd.y = 0;
+		p.spd.z = 0;
+		p.size_tr = 1.5 + FRAND;
+		p.pos.x = (0.13 + FRAND * 0.02) * hm_x;
+		p.pos.y = (0.13 + FRAND * 0.02) * hm_y;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.type = object_tree;
+		p.hp = 500;
 	}
 }
 
-void world::finish(){
+void world::finish() {
 	hm.finish();
 	dr.finish();
 	es.finish();
@@ -126,100 +126,99 @@ void world::finish(){
 	ms.finish();
 }
 
-int world::update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game &g){
-	dr.update(mouse_x,mouse_y,left_mouse_down,right_mouse_down,space_down,timediff,*this);
-	es.update(timediff,*this);
-	ob.update(timediff,*this);
-	ps.update(timediff);
-	ms.update(timediff,*this);
-	cam.follow_ori(dr.ori,0.01,timediff);
-	cam.follow_pos(dr.camera_pos(),0.1,timediff);
-	cam.collide_with_heightmap(hm);
+int world::update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, game &g) {
+	dr.update (mouse_x, mouse_y, left_mouse_down, right_mouse_down, space_down, timediff, *this);
+	es.update (timediff, *this);
+	ob.update (timediff, *this);
+	ps.update (timediff);
+	ms.update (timediff, *this);
+	cam.follow_ori (dr.ori, 0.01, timediff);
+	cam.follow_pos (dr.camera_pos(), 0.1, timediff);
+	cam.collide_with_heightmap (hm);
 
-	int tab_just_pressed=0;
+	int tab_just_pressed = 0;
 	//proti sekvencim stisknutych tlacitek
 	if (tab_down) {
 		if (!tab_hit)
-			tab_just_pressed=tab_hit=1;
-	} else tab_hit=0;
+			tab_just_pressed = tab_hit = 1;
+	} else tab_hit = 0;
 	//pro navigaci po mape k nepriteli
-	if(tab_just_pressed) help_on=true;
+	if (tab_just_pressed) help_on = true;
 
 	//zjisteni pocasi (dest, snih) // TODO update?
-	if(g.get_weather()==0) weather=0;
-	if(g.get_weather()==1) weather=1;
-	if(g.get_weather()==2) weather=2;
+	if (g.get_weather() == sunny) weather = sunny;
+	if (g.get_weather() == rainy) weather = rainy;
+	if (g.get_weather() == snowy) weather = snowy;
 
 	//zjisteni denni doby
-	if(g.get_daytime()==0) {
-		daytime=0;
-		f.set_color(0.4,0.6,0.9);
+	if (g.get_daytime() == day) {
+		daytime = day;
+		f.set_color (0.4, 0.6, 0.9);
 	}
-	if(g.get_daytime()==1) {
-		daytime=1;
-		f.set_color(0,0,0);
+	if (g.get_daytime() == night) {
+		daytime = night;
+		f.set_color (0, 0, 0);
 	}
 
 	//pro ukonceni hry vyhrou
-	if(es.all_enemies_dead()) return 1;
-
+	if (es.all_enemies_dead() ) return win;
 	//pro ukonceni hry prohrou
-	if(dr.dead()) return 2;
+	if (dr.dead() ) return fail;
 
-	return 0;
+	return playing;
 }
 
-void world::render(){
-	glClearColor(0,0,0,0);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_PROJECTION);
+void world::render() {
+	glClearColor (0, 0, 0, 0);
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(90,1.33333,0.1,1000);
-	glMatrixMode(GL_MODELVIEW);
+	gluPerspective (90, 1.33333, 0.1, 1000);
+	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity();
 
 	cam.set_gl();
 
 	//noc X den
-	if(daytime==1) skyb.draw(cam.pos,true);
-	else skyb.draw(cam.pos,false);
+	if (daytime == night) skyb.draw (cam.pos, true);
+	else skyb.draw (cam.pos, false);
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL);
+	glEnable (GL_LIGHTING);
+	glEnable (GL_LIGHT0);
+	glEnable (GL_COLOR_MATERIAL);
 	{
-		float light_direction[]={0.4082,0.4082,0.8165,0};
-		if(daytime==1) light_direction[3]=0.5;
-		glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
+		float light_direction[] = {0.4082, 0.4082, 0.8165, 0};
+		if (daytime == 1) light_direction[3] = 0.5;
+		glLightfv (GL_LIGHT0, GL_POSITION, light_direction);
 	}
 	f.turn_on();
 	dr.draw();
 	hm.draw();
 	es.draw();
 	ob.draw();
-	
-	if(weather==1) make_rain(*this);
-	if(weather==2) make_snow(*this);
+
+	if (weather == rainy) make_rain (*this);
+	if (weather == snowy) make_snow (*this);
 
 	ms.draw();
 	f.turn_off();
-	
-	glDisable(GL_LIGHTING);
-	ps.draw(*this);
+
+	glDisable (GL_LIGHTING);
+	ps.draw (*this);
 
 	//navigace k nepriteli
-	if(help_on) {
-		vect en=es.one_enemy();
-		
+	if (help_on) {
+		vect en = es.one_enemy();
+
 		//nakresleni bile cary k nepriteli
 		glPushMatrix();
-		glColor3f(1,1,1);
-		glBegin(GL_LINES);
-		glVertex3f(dr.pos.x,dr.pos.y,dr.pos.z);
-		glVertex3f(en.x,en.y,en.z);
+		glColor3f (1, 1, 1);
+		glBegin (GL_LINES);
+		glVertex3f (dr.pos.x, dr.pos.y, dr.pos.z);
+		glVertex3f (en.x, en.y, en.z);
 		glEnd();
 		glPopMatrix;
-		help_on=false;
+		help_on = false;
 	}
 }
 

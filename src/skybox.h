@@ -2,9 +2,9 @@
 #ifndef _SKYBOX_H_
 #define _SKYBOX_H_
 
-class skybox{
+class skybox {
 public:
-	void draw(vect pos,bool night);
+	void draw (vect pos, bool night);
 };
 
 #endif

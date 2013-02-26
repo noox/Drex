@@ -27,10 +27,10 @@ public:
 	float r, g, b, life, age;
 
 	particle() {
-		age=0;
+		age = 0;
 	}
 
-	void update(float time);
+	void update (float time);
 };
 
 class particle_system {
@@ -40,8 +40,8 @@ public:
 
 	void init();
 	particle& add_one();
-	void update(float time);
-	void draw(world &w);
+	void update (float time);
+	void draw (world &w);
 	void finish();
 };
 

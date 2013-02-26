@@ -14,7 +14,7 @@
 #include "particles.h"
 #include "missiles.h"
 
-class world{
+class world {
 public:
 	dragon dr;
 	camera cam;
@@ -34,7 +34,7 @@ public:
 	int texture;
 	void init();
 	void finish();
-	int update(float timediff,bool space_down,bool tab_down,bool esc_down,bool left_mouse_down,bool right_mouse_down,int mouse_x,int mouse_y,game &g);
+	int update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, game &g);
 	void render();
 };
 
