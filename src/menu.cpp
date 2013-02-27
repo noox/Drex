@@ -533,7 +533,6 @@ void menu::render() {
 	face->setForegroundColor (1, 0, 0, 1);
 	face2->setForegroundColor (0, 0.75, 0.75, 1);
 	face3->setForegroundColor (0, 1, 0.5, 1);
-	face->setHorizontalJustification (OGLFT::Face::CENTER);
 	face2->setHorizontalJustification (OGLFT::Face::CENTER);
 	face3->setHorizontalJustification (OGLFT::Face::CENTER);
 	glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
@@ -544,8 +543,9 @@ void menu::render() {
 
 	if(username!="") {
 		glPushMatrix();
-		glTranslatef (300, 545, 0);
+		glTranslatef (250, 545, 0);
 		glScalef (0.15, 0.15, 1);
+		face->setHorizontalJustification (OGLFT::Face::LEFT);
 		face->setForegroundColor (1, 0, 0, 0.95);
 		face->draw (0, 0, (username + "'s").c_str() );
 		face->setForegroundColor (1, 0, 0, 1);
@@ -554,6 +554,7 @@ void menu::render() {
 
 	glPushMatrix();
 	glTranslatef (400, 415, 0);
+	face->setHorizontalJustification (OGLFT::Face::CENTER);
 	face->draw (0, 0, "drex");
 	glPopMatrix();
 
