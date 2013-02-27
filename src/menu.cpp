@@ -64,88 +64,88 @@ void menu::set_menu (int newstatus) {
 	switch (newstatus) {
 		//hlavni menu
 	case 0:
-		items.push_back ("campaign", 0);
-		items.push_back ("missions", 0);
-		items.push_back ("options", 0);
-		items.push_back ("exit", 0);
+		items.push_back (make_pair("campaign", 0));
+		items.push_back (make_pair("missions", 0));
+		items.push_back (make_pair("options", 0));
+		items.push_back (make_pair("exit", 0));
 		break;
 		//kampan
 	case 1:
-		items.push_back ("tutorial", 0);
-		items.push_back ("mission 1", 0);
-		items.push_back ("mission 2", 0);
-		items.push_back ("back", 0);
+		items.push_back (make_pair("tutorial", 0));
+		items.push_back (make_pair("mission 1", 0));
+		items.push_back (make_pair("mission 2", 0));
+		items.push_back (make_pair("back", 0));
 		break;
 		//jednotlive mise
 	case 2:
-		items.push_back ("choose map", 0);
-		items.push_back ("day time", 0);
-		items.push_back ("weather", 0);
-		items.push_back ("difficulty", 0);
-		items.push_back ("play", 0);
-		items.push_back ("back", 0);
+		items.push_back (make_pair("choose map", 0));
+		items.push_back (make_pair("daytime", 0));
+		items.push_back (make_pair("weather", 0));
+		items.push_back (make_pair("difficulty", 0));
+		items.push_back (make_pair("play", 0));
+		items.push_back (make_pair("back", 0));
 		break;
 		//nastaveni
 	case 3:
-		items.push_back ("player", 0);
-		items.push_back ("mouse sensitivity", 0);
-		items.push_back ("back", 0);
+		items.push_back (make_pair("player", 0));
+		items.push_back (make_pair("mouse sensitivity", 0));
+		items.push_back (make_pair("back", 0));
 		break;
 		//vyber mapy
 	case 4:
-		items.push_back ("previous", 1);
-		items.push_back (mapname, 0);
-		items.push_back ("next", 1);
+		items.push_back (make_pair("previous", 1));
+		items.push_back (make_pair(mapname, 0));
+		items.push_back (make_pair("next", 1));
 		break;
 		//denni doba
 	case 5:
-		items.push_back ("previous", 1);
-		items.push_back (dayt, 0);
-		items.push_back ("next", 1);
+		items.push_back (make_pair("previous", 1));
+		items.push_back (make_pair(dayt, 0));
+		items.push_back (make_pair("next", 1));
 		break;
 		//pocasi
 	case 6:
-		items.push_back ("previous", 1);
-		items.push_back (weat, 0);
-		items.push_back ("next", 1);
+		items.push_back (make_pair("previous", 1));
+		items.push_back (make_pair(weat, 0));
+		items.push_back (make_pair("next", 1));
 		break;
 		//obtiznost hry
 	case 7:
-		items.push_back ("previous", 1);
-		items.push_back (diff, 0);
-		items.push_back ("next", 1);
+		items.push_back (make_pair("previous", 1));
+		items.push_back (make_pair(diff, 0));
+		items.push_back (make_pair("next", 1));
 		break;
 		//hrac
 	case 8:
-		items.push_back ("new player", 0);
-		items.push_back ("choose account", 0);
-		items.push_back ("back", 0);
+		items.push_back (make_pair("new player", 0));
+		items.push_back (make_pair("choose account", 0));
+		items.push_back (make_pair("back", 0));
 		break;
 		//nastaveni mysi
 	case 9:
-		items.push_back ("higher", 1);
-		items.push_back (sens, 0);
-		items.push_back ("lower", 1);
+		items.push_back (make_pair("higher", 1));
+		items.push_back (make_pair(sens, 0));
+		items.push_back (make_pair("lower", 1));
 		break;
 		//novy hrac
 	case 10:
-		items.push_back ("get name", 0);
-		items.push_back (name, 0);
-		items.push_back ("ok", 0);
+		items.push_back (make_pair("get name", 0));
+		items.push_back (make_pair(name, 0));
+		items.push_back (make_pair("ok", 0));
 		break;
 		//vyber accountu
 	case 11:
-		items.push_back ("previous", 1);
-		items.push_back (username, 0);
-		items.push_back ("next", 1);
+		items.push_back (make_pair("previous", 1));
+		items.push_back (make_pair(username, 0));
+		items.push_back (make_pair("next", 1));
 		break;
 		//vitezny screen
 	case 12:
-		items.push_back ("victory", 0);
+		items.push_back (make_pair("victory", 0));
 		break;
 		//prohrany screen
 	case 13:
-		items.push_back ("failure", 0);
+		items.push_back (make_pair("failure", 0));
 		break;
 	}
 	if ( (newstatus != 4) && (newstatus != 5) && (newstatus != 6) && (newstatus != 7) && (newstatus != 9) && (newstatus != 11) ) cursor_pos = 0;
@@ -542,34 +542,36 @@ void menu::render() {
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	if(username!="") {
+		glPushMatrix();
+		glTranslatef (300, 545, 0);
+		glScalef (0.15, 0.15, 1);
+		face->setForegroundColor (1, 0, 0, 0.95);
+		face->draw (0, 0, (username + "'s").c_str() );
+		face->setForegroundColor (1, 0, 0, 1);
+		glPopMatrix();
+	}
+
 	glPushMatrix();
 	glTranslatef (400, 415, 0);
 	face->draw (0, 0, "drex");
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef (400, 330, 0);
+	glTranslatef (400, 325, 0);
 	for (int i = 0;i < items.size();++i) {
-		string t = items[i][0];
+		string t = items[i].first;
 		if (cursor_pos / 100 == i)
 			t = "+ " + t + " +";
-		if (items[i][1] == 0) {
+		if (items[i].second == 1) {
 			face2->setBackgroundColor (0, 0.75, 0.75, 0);
-			face2->setForegroundColor (0, 0.75, 0.75, 1);
-		} else {
-			face2->setBackgroundColor (0, 0.75, 1, 0);
-			face2->setForegroundColor (0, 0.75, 1, 1);
+			face2->setForegroundColor (0, 0.75, 0.75, 0.75);
 		}
 		face2->draw (0, 0, t.c_str() );
+		face2->setBackgroundColor (0, 0.75, 0.75, 0);
+		face2->setForegroundColor (0, 0.75, 0.75, 1);
 		glTranslatef (0, -60, 0);
 	}
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef (400, 10, 0);
-	glScalef (0.3, 0.3, 1);
-
-	face2->draw (0, 0, ("player: " + username).c_str() );
 	glPopMatrix();
 
 	glDisable (GL_BLEND);
