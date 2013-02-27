@@ -62,7 +62,7 @@ public:
 	}
 
 	vect operator- (const vect& a) const {
-		return vect (x -a.x, y - a.y, z - a.z);
+		return vect (x - a.x, y - a.y, z - a.z);
 	}
 
 	vect operator* (float a) const {
@@ -105,4 +105,6 @@ inline vect operator* (float a, const vect& b) {
 }
 
 #endif
+
+
 

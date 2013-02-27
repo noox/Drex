@@ -16,7 +16,7 @@ void menu::init() {
 	face = new OGLFT::TranslucentTexture ("data/DK Northumbria.otf", 150);
 	face2 = new OGLFT::TranslucentTexture ("data/DK Northumbria.otf", 50);
 	face3 = new OGLFT::TranslucentTexture ("data/DK Northumbria.otf", 30);
-	if (face == 0 || face2 == 0 || !face->isValid() || !face->isValid() ) {
+	if (face == 0 || face2 == 0 || face3 == 0 || !face->isValid() || !face2->isValid() || !face3->isValid() ) {
 		cerr << "Could not construct face." << endl;
 		return;
 	}
@@ -64,88 +64,88 @@ void menu::set_menu (int newstatus) {
 	switch (newstatus) {
 		//hlavni menu
 	case 0:
-		items.push_back ("campaign");
-		items.push_back ("missions");
-		items.push_back ("options");
-		items.push_back ("exit");
+		items.push_back ("campaign", 0);
+		items.push_back ("missions", 0);
+		items.push_back ("options", 0);
+		items.push_back ("exit", 0);
 		break;
 		//kampan
 	case 1:
-		items.push_back ("tutorial");
-		items.push_back ("mission 1");
-		items.push_back ("mission 2");
-		items.push_back ("back");
+		items.push_back ("tutorial", 0);
+		items.push_back ("mission 1", 0);
+		items.push_back ("mission 2", 0);
+		items.push_back ("back", 0);
 		break;
 		//jednotlive mise
 	case 2:
-		items.push_back ("choose map");
-		items.push_back ("day time");
-		items.push_back ("weather");
-		items.push_back ("difficulty");
-		items.push_back ("play");
-		items.push_back ("back");
+		items.push_back ("choose map", 0);
+		items.push_back ("day time", 0);
+		items.push_back ("weather", 0);
+		items.push_back ("difficulty", 0);
+		items.push_back ("play", 0);
+		items.push_back ("back", 0);
 		break;
 		//nastaveni
 	case 3:
-		items.push_back ("player");
-		items.push_back ("mouse sensitivity");
-		items.push_back ("back");
+		items.push_back ("player", 0);
+		items.push_back ("mouse sensitivity", 0);
+		items.push_back ("back", 0);
 		break;
 		//vyber mapy
 	case 4:
-		items.push_back ("previous");
-		items.push_back (mapname);
-		items.push_back ("next");
+		items.push_back ("previous", 1);
+		items.push_back (mapname, 0);
+		items.push_back ("next", 1);
 		break;
 		//denni doba
 	case 5:
-		items.push_back ("previous");
-		items.push_back (dayt);
-		items.push_back ("next");
+		items.push_back ("previous", 1);
+		items.push_back (dayt, 0);
+		items.push_back ("next", 1);
 		break;
 		//pocasi
 	case 6:
-		items.push_back ("previous");
-		items.push_back (weat);
-		items.push_back ("next");
+		items.push_back ("previous", 1);
+		items.push_back (weat, 0);
+		items.push_back ("next", 1);
 		break;
 		//obtiznost hry
 	case 7:
-		items.push_back ("previous");
-		items.push_back (diff);
-		items.push_back ("next");
+		items.push_back ("previous", 1);
+		items.push_back (diff, 0);
+		items.push_back ("next", 1);
 		break;
 		//hrac
 	case 8:
-		items.push_back ("new player");
-		items.push_back ("choose account");
-		items.push_back ("back");
+		items.push_back ("new player", 0);
+		items.push_back ("choose account", 0);
+		items.push_back ("back", 0);
 		break;
 		//nastaveni mysi
 	case 9:
-		items.push_back ("higher");
-		items.push_back (sens);
-		items.push_back ("lower");
+		items.push_back ("higher", 1);
+		items.push_back (sens, 0);
+		items.push_back ("lower", 1);
 		break;
 		//novy hrac
 	case 10:
-		items.push_back ("get name");
-		items.push_back (name);
-		items.push_back ("ok");
+		items.push_back ("get name", 0);
+		items.push_back (name, 0);
+		items.push_back ("ok", 0);
 		break;
 		//vyber accountu
 	case 11:
-		items.push_back ("previous");
-		items.push_back (username);
-		items.push_back ("next");
+		items.push_back ("previous", 1);
+		items.push_back (username, 0);
+		items.push_back ("next", 1);
 		break;
 		//vitezny screen
 	case 12:
-		items.push_back ("victory");
+		items.push_back ("victory", 0);
 		break;
 		//prohrany screen
 	case 13:
-		items.push_back ("failure");
+		items.push_back ("failure", 0);
 		break;
 	}
 	if ( (newstatus != 4) && (newstatus != 5) && (newstatus != 6) && (newstatus != 7) && (newstatus != 9) && (newstatus != 11) ) cursor_pos = 0;
@@ -550,9 +550,16 @@ void menu::render() {
 	glPushMatrix();
 	glTranslatef (400, 330, 0);
 	for (int i = 0;i < items.size();++i) {
-		string t = items[i];
+		string t = items[i][0];
 		if (cursor_pos / 100 == i)
 			t = "+ " + t + " +";
+		if (items[i][1] == 0) {
+			face2->setBackgroundColor (0, 0.75, 0.75, 0);
+			face2->setForegroundColor (0, 0.75, 0.75, 1);
+		} else {
+			face2->setBackgroundColor (0, 0.75, 1, 0);
+			face2->setForegroundColor (0, 0.75, 1, 1);
+		}
 		face2->draw (0, 0, t.c_str() );
 		glTranslatef (0, -60, 0);
 	}

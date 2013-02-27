@@ -18,7 +18,7 @@ class menu {
 	int left_mouse_hit, esc_hit;
 	int sens_id, dayt_id, weat_id, diff_id;
 	string mapname, username, name, sens, dayt, weat, diff;
-	vector<string> items;
+	vector<string, int> items;
 	vector<string> daytime, weather, difficulty, sensitivities;
 public:
 	void init();
