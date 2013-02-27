@@ -11,10 +11,6 @@ using namespace std;
 #include "userlist.h"
 
 void game::init() {
-	w.init();
-	m.init();
-	maplist_init();
-	userlist_init();
 	gamestatus = in_menu;
 	esc_hit = 0;
 	mapchosen = 0;
@@ -23,6 +19,10 @@ void game::init() {
 	daytime = day;
 	weather = sunny;
 	difficulty = easy;
+	w.init(daytime, weather, difficulty);
+	m.init();
+	maplist_init();
+	userlist_init();
 }
 
 void game::finish() {
@@ -44,16 +44,14 @@ bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down
 		if (!m.update (timediff, esc_down, left_mouse_down, right_mouse_down, mouse_x, mouse_y, *this) ) return false;
 		return true;
 	} else {
-		state = w.update (timediff, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x / sensitivity, mouse_y / sensitivity, *this);
+		state = w.update (timediff, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x / sensitivity, mouse_y / sensitivity);
 		//ve hre
 		if (state == win) {
 			go_to_menu();
 			m.go_to_winscreen();
-			w.init();
 		} else if (state == fail) {
 			go_to_menu();
 			m.go_to_failscreen();
-			w.init();
 		} else if (esc_just_pressed) go_to_menu();
 		return true;
 	}

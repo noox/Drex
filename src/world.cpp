@@ -11,7 +11,7 @@ using namespace std;
 #include "weather.h"
 #include "world.h"
 
-void world::init() {
+void world::init(int Daytime, int Weather, int Difficulty) {
 	dr.init();
 	dr.set (vect (10, 10, 10), quat (0.7, 0.7, 0, 0) );
 	cam.set (vect (0, 0, 0), quat (1, 0, 0, 0) );
@@ -24,8 +24,9 @@ void world::init() {
 
 	tab_hit = 0;
 	help_on = false;
-	weather = sunny;
-	daytime = day;
+	weather = Weather;
+	daytime = Daytime;
+	difficulty = Difficulty;
 
 	glShadeModel (GL_SMOOTH);
 	glFrontFace (GL_CCW);
@@ -49,39 +50,39 @@ void world::init() {
 	//domy
 	for (int i = 0;i < 8;++i) {
 		enemy& p = es.add_one();
-		p.pos.x = (0.13 + FRAND * 0.02) * hm_x;
-		p.pos.y = (0.13 + FRAND * 0.02) * hm_y;
+		p.pos.x = (0.13 + FRAND * 0.05) * hm_x;
+		p.pos.y = (0.13 + FRAND * 0.05) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.size_x = 1 + FRAND;
-		p.size_y = 1 + FRAND;
-		p.size_z = 1 + FRAND;
-		p.roof_size = 2 * FRAND;
+		p.size_x = 3 + FRAND;
+		p.size_y = 3 + FRAND;
+		p.size_z = 3 + FRAND;
+		p.roof_size = 4 * FRAND;
 		p.rot = 360 * FRAND;
 		p.type = enemy_house;
 		p.hp = 100;
 	}
 	for (int i = 0;i < 20;++i) {
 		enemy& p = es.add_one();
-		p.pos.x = (0.3 + FRAND * 0.03) * hm_x;
-		p.pos.y = (0.3 + FRAND * 0.03) * hm_y;
+		p.pos.x = (0.3 + FRAND * 0.07) * hm_x;
+		p.pos.y = (0.3 + FRAND * 0.07) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.size_x = 1 + FRAND;
-		p.size_y = 1 + FRAND;
-		p.size_z = 1 + FRAND;
-		p.roof_size = 2 * FRAND;
+		p.size_x = 3 + FRAND;
+		p.size_y = 3 + FRAND;
+		p.size_z = 3 + FRAND;
+		p.roof_size = 4 * FRAND;
 		p.rot = 360 * FRAND;
 		p.type = enemy_house;
 		p.hp = 100;
 	}
 	for (int i = 0;i < 5;++i) {
 		enemy& p = es.add_one();
-		p.pos.x = (0.13 + FRAND * 0.02) * hm_x;
-		p.pos.y = (0.3 + FRAND * 0.02) * hm_y;
+		p.pos.x = (0.13 + FRAND * 0.05) * hm_x;
+		p.pos.y = (0.3 + FRAND * 0.05) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.size_x = 1 + FRAND;
-		p.size_y = 1 + FRAND;
-		p.size_z = 1 + FRAND;
-		p.roof_size = 2 * FRAND;
+		p.size_x = 3 + FRAND;
+		p.size_y = 3 + FRAND;
+		p.size_z = 3 + FRAND;
+		p.roof_size = 4 * FRAND;
 		p.rot = 360 * FRAND;
 		p.type = enemy_house;
 		p.hp = 100;
@@ -93,8 +94,8 @@ void world::init() {
 		p.spd.y = DFRAND;
 		p.spd.z = 0;
 		p.size_p = FRAND;
-		p.start_pos.x = (0.13 + FRAND * 0.02) * hm_x;
-		p.start_pos.y = (0.13 + FRAND * 0.02) * hm_y;
+		p.start_pos.x = (0.13 + FRAND * 0.05) * hm_x;
+		p.start_pos.y = (0.13 + FRAND * 0.05) * hm_y;
 		p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
 		p.pos.x = p.start_pos.x;
 		p.pos.y = p.start_pos.y;
@@ -108,9 +109,9 @@ void world::init() {
 		p.spd.x = 0;
 		p.spd.y = 0;
 		p.spd.z = 0;
-		p.size_tr = 1.5 + FRAND;
-		p.pos.x = (0.13 + FRAND * 0.02) * hm_x;
-		p.pos.y = (0.13 + FRAND * 0.02) * hm_y;
+		p.size_tr = 4 + FRAND;
+		p.pos.x = (0.13 + FRAND * 0.05) * hm_x;
+		p.pos.y = (0.13 + FRAND * 0.05) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
 		p.type = object_tree;
 		p.hp = 500;
@@ -126,7 +127,7 @@ void world::finish() {
 	ms.finish();
 }
 
-int world::update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, game &g) {
+int world::update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y) {
 	dr.update (mouse_x, mouse_y, left_mouse_down, right_mouse_down, space_down, timediff, *this);
 	es.update (timediff, *this);
 	ob.update (timediff, *this);
@@ -144,21 +145,8 @@ int world::update (float timediff, bool space_down, bool tab_down, bool esc_down
 	} else tab_hit = 0;
 	//pro navigaci po mape k nepriteli
 	if (tab_just_pressed) help_on = true;
-
-	//zjisteni pocasi (dest, snih) // TODO update?
-	if (g.get_weather() == sunny) weather = sunny;
-	if (g.get_weather() == rainy) weather = rainy;
-	if (g.get_weather() == snowy) weather = snowy;
-
-	//zjisteni denni doby
-	if (g.get_daytime() == day) {
-		daytime = day;
-		f.set_color (0.4, 0.6, 0.9);
-	}
-	if (g.get_daytime() == night) {
-		daytime = night;
-		f.set_color (0, 0, 0);
-	}
+	
+	if (daytime == night) f.set_color (0, 0, 0);
 
 	//pro ukonceni hry vyhrou
 	if (es.all_enemies_dead() ) return win;
@@ -188,7 +176,7 @@ void world::render() {
 	glEnable (GL_COLOR_MATERIAL);
 	{
 		float light_direction[] = {0.4082, 0.4082, 0.8165, 0};
-		if (daytime == 1) light_direction[3] = 0.5;
+		if (daytime == night) light_direction[3] = 0.5;
 		glLightfv (GL_LIGHT0, GL_POSITION, light_direction);
 	}
 	f.turn_on();

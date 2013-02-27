@@ -82,6 +82,7 @@ void menu::set_menu (int newstatus) {
 		items.push_back ("day time");
 		items.push_back ("weather");
 		items.push_back ("difficulty");
+		items.push_back ("play");
 		items.push_back ("back");
 		break;
 		//nastaveni
@@ -210,6 +211,9 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			set_menu (7);
 			break;
 		case 4:
+			g.go_to_game();
+			break;
+		case 5:
 			set_menu (0);
 			break;
 		case -1:
@@ -541,12 +545,12 @@ void menu::render() {
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glPushMatrix();
-	glTranslatef (400, 410, 0);
+	glTranslatef (400, 415, 0);
 	face->draw (0, 0, "drex");
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef (400, 300, 0);
+	glTranslatef (400, 330, 0);
 	for (int i = 0;i < items.size();++i) {
 		string t = items[i];
 		if (cursor_pos / 100 == i)

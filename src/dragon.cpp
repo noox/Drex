@@ -153,12 +153,12 @@ void dragon::draw() {
 		{vect (0, 4, -0.5), vect (0, 0, -1) },
 	};
 
-	wings_movement (points, wings);
+	wings_movement (points, wings, pos.z);
 
 #define point(X) glNormal3fv(points[X-1][1].v); glTexCoord2f(points[X-1][0].x/19,points[X-1][0].y/24); glVertex3fv(points[X-1][0].v);
 
 	glPushMatrix();
-	glScalef (0.2, 0.2, 0.2);
+	glScalef (0.4, 0.4, 0.4);
 	glRotatef (-90, 1, 0, 0);
 	glTranslatef (0, -10, 0);
 	glColor3f (1, 1, 1);

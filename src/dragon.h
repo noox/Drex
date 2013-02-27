@@ -25,7 +25,7 @@ public:
 		spd = vect (0, 0, 0);
 		mom = quat (0, 0, 0, 0);
 		reload = 0;
-		hp = 10;
+		hp = 100;
 	}
 
 	void init();

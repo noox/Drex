@@ -204,7 +204,7 @@ void enemy::accept_damage (float dmg, float fire) {
 #define max(a,b) (((a)>(b))?(a):(b))
 //kolize nepratel se strelami
 bool enemy::collides (vect missile_pos) {
-	if ( (pos - missile_pos).length() < 0.7*max (max (size_x, size_y), size_z + roof_size) ) return true;
+	if ( (pos - missile_pos).length() < 1.5*max (max (size_x, size_y), size_z + roof_size) ) return true;
 	return false;
 }
 

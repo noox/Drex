@@ -97,7 +97,7 @@ void object::update (float time, world& w) {
 			m.spd = (target - pos) | 10;
 			m.type = missile_human_shot;
 			m.power = 1;
-			reload -= 0.1 * w.ob.objects.size();
+			reload -= 15*FRAND/((w.difficulty+1)+0.5*w.difficulty*w.difficulty);
 		}
 
 		if (burning > 0) {
@@ -250,7 +250,7 @@ bool object::collides (vect missile_pos) {
 	if (type == object_person || type == object_shooting_person) {
 		if ( (pos - missile_pos).length() < size_p) return true;
 	} else if (type == object_tree) {
-		if ( (pos - missile_pos).length() < 0.7*size_tr) return true;
+		if ( (pos - missile_pos).length() < 1.5*size_tr) return true;
 	}
 	return false;
 }

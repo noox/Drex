@@ -42,6 +42,7 @@ public:
 	}
 	void go_to_game() {
 		gamestatus = 1;
+		w.init(daytime,weather,difficulty);
 	}
 };
 
