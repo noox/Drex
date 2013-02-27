@@ -1,14 +1,14 @@
 
 #include "wings.h"
 
-float past_posz=-10;
+float past_posz = -10;
 
 //zmeny tvaru pro mavani kridel
 void wings_movement (vect points[][2], int &wings, float posz) {
 	int x, jump = 4;
-	if(posz>=past_posz) x=5; 
-	else x=1000;
-	past_posz=posz;
+	if (posz >= past_posz) x = 5;
+	else x = 1000;
+	past_posz = posz;
 
 	if ( (wings >= x) && (wings < x + jump) ) {
 		points[14][0] = vect (4, 12, -0.5);
@@ -19,7 +19,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (8, 6, -2);
 		wings++;
 	}
-	if ( (wings >= x + jump) && (wings < x + 2*jump)) {
+	if ( (wings >= x + jump) && (wings < x + 2*jump) ) {
 		points[14][0] = vect (4, 12, -0.25);
 		points[15][0] = vect (6.5, 11, -0.75);
 		points[16][0] = vect (8, 9, -1.4);
@@ -28,7 +28,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (8, 6, -2);
 		wings++;
 	}
-	if ( (wings >= x + 2*jump) && (wings < x + 3*jump)) {
+	if ( (wings >= x + 2*jump) && (wings < x + 3*jump) ) {
 		points[14][0] = vect (4, 12, 0);
 		points[15][0] = vect (6.5, 11, -0.5);
 		points[16][0] = vect (8, 9, -1.25);
@@ -37,7 +37,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (8, 6, -2);
 		wings++;
 	}
-	if ( (wings >= x + 3*jump) && (wings < x + 4*jump)) {
+	if ( (wings >= x + 3*jump) && (wings < x + 4*jump) ) {
 		points[14][0] = vect (4, 12, 0.5);
 		points[15][0] = vect (6.5, 11, -0.25);
 		points[16][0] = vect (8, 9, -1.1);
@@ -46,7 +46,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (8, 6, -2);
 		wings++;
 	}
-	if ( (wings >= x + 4*jump) && (wings < x + 5*jump)) {
+	if ( (wings >= x + 4*jump) && (wings < x + 5*jump) ) {
 		points[14][0] = vect (4, 12, 0.75);
 		points[15][0] = vect (6.5, 11, 0);
 		points[16][0] = vect (8, 9, -1);
@@ -55,7 +55,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (8, 6, -2);
 		wings++;
 	}
-	if ( (wings >= x + 5*jump) && (wings < x + 6*jump)) {
+	if ( (wings >= x + 5*jump) && (wings < x + 6*jump) ) {
 		points[14][0] = vect (4, 12, 1.1);
 		points[15][0] = vect (6.6, 11, 0.25);
 		points[16][0] = vect (8.25, 9, -0.6);
@@ -82,7 +82,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (9.1, 6, -0.5);
 		wings++;
 	}
-	if ( (wings >= x + 8*jump) && (wings < x + 9*jump)) {
+	if ( (wings >= x + 8*jump) && (wings < x + 9*jump) ) {
 		points[14][0] = vect (4, 12, 1.5);
 		points[15][0] = vect (7, 11, 1);
 		points[16][0] = vect (9, 9, 0.5);
@@ -118,7 +118,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (10.6, 6, 1.5);
 		wings++;
 	}
-	if ( (wings >= x + 12*jump) && (wings < x + 13*jump)) {
+	if ( (wings >= x + 12*jump) && (wings < x + 13*jump) ) {
 		points[14][0] = vect (4.9, 12, 0.6);
 		points[15][0] = vect (7.9, 11, 1);
 		points[16][0] = vect (9.9, 9, 1.4);
@@ -154,7 +154,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (11, 6, 1.9);
 		wings++;
 	}
-	if ( (wings >= x + 16*jump) && (wings < x + 17*jump)) {
+	if ( (wings >= x + 16*jump) && (wings < x + 17*jump) ) {
 		points[14][0] = vect (5, 12, 0.3);
 		points[15][0] = vect (8, 11, 0.6);
 		points[16][0] = vect (10, 9, 1.4);
@@ -172,7 +172,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (11, 6, 1.25);
 		wings++;
 	}
-	if ( (wings >= x + 18*jump) && (wings < x + 19*jump)) {
+	if ( (wings >= x + 18*jump) && (wings < x + 19*jump) ) {
 		points[14][0] = vect (5, 12, 0.15);
 		points[15][0] = vect (8, 11, 0.4);
 		points[16][0] = vect (10, 9, 0.6);
@@ -181,7 +181,7 @@ void wings_movement (vect points[][2], int &wings, float posz) {
 		points[19][0] = vect (11, 6, 0.9);
 		wings++;
 	}
-	if ( (wings >= x + 19*jump) && (wings < x + 20*jump)) {
+	if ( (wings >= x + 19*jump) && (wings < x + 20*jump) ) {
 		points[14][0] = vect (5, 12, 0.1);
 		points[15][0] = vect (8, 11, 0.25);
 		points[16][0] = vect (10, 9, 0.4);

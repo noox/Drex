@@ -15,10 +15,9 @@ enum game_difficulty {easy, medium, hard};
 class game {
 	world w;
 	menu m;
-	int gamestatus, daytime, weather, difficulty;
+	int gamestatus, daytime, weather, difficulty, sensitivity;
 	int esc_hit;
 	int mapchosen, userchosen;
-	float sensitivity;
 public:
 	void init();
 	void finish();
@@ -28,8 +27,8 @@ public:
 	int get_userchosen();
 	void change_mapchosen (int Mapchosen);
 	int get_mapchosen();
-	void change_sensitivity (float Sensitivity);
-	float get_sensitivity();
+	void change_sensitivity (int Sensitivity);
+	int get_sensitivity();
 	void change_daytime (int Daytime);
 	int get_daytime();
 	void change_weather (int Weather);
@@ -42,7 +41,7 @@ public:
 	}
 	void go_to_game() {
 		gamestatus = 1;
-		w.init(daytime,weather,difficulty);
+		w.init (daytime, weather, difficulty);
 	}
 };
 

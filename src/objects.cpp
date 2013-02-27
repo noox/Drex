@@ -97,7 +97,7 @@ void object::update (float time, world& w) {
 			m.spd = (target - pos) | 10;
 			m.type = missile_human_shot;
 			m.power = 1;
-			reload -= 15*FRAND/((w.difficulty+1)+0.5*w.difficulty*w.difficulty);
+			reload -= 15 * FRAND / ( (w.difficulty + 1) + 0.5 * w.difficulty * w.difficulty);
 		}
 
 		if (burning > 0) {

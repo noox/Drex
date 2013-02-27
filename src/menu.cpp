@@ -27,34 +27,34 @@ void menu::init() {
 	set_menu (0);
 	name = "";
 
-	sensitivities.push_back (0.01);
-	sensitivities.push_back (0.05);
-	sensitivities.push_back (0.1);
-	sensitivities.push_back (0.5);
-	sensitivities.push_back (1);
-	sensitivities.push_back (5);
-	sensitivities.push_back (10);
-	sensitivities.push_back (50);
-	sensitivities.push_back (100);
-	sensitivities.push_back (500);
+	sensitivities.push_back ("0.01");
+	sensitivities.push_back ("0.05");
+	sensitivities.push_back ("0.1");
+	sensitivities.push_back ("0.5");
+	sensitivities.push_back ("1");
+	sensitivities.push_back ("5");
+	sensitivities.push_back ("10");
+	sensitivities.push_back ("50");
+	sensitivities.push_back ("100");
+	sensitivities.push_back ("500");
 	sens_id = 4;
 	sens = sensitivities[sens_id];
 
 	daytime.push_back ("day");
 	daytime.push_back ("night");
-	dayt_id = 0;
+	dayt_id = day;
 	dayt = daytime[dayt_id];
 
 	weather.push_back ("sunny");
 	weather.push_back ("rainy");
 	weather.push_back ("snowy");
-	weat_id = 0;
+	weat_id = sunny;
 	weat = weather[weat_id];
 
 	difficulty.push_back ("easy");
 	difficulty.push_back ("medium");
 	difficulty.push_back ("hard");
-	diff_id = 0;
+	diff_id = easy;
 	diff = difficulty[diff_id];
 }
 
@@ -384,25 +384,22 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			//posuvnik nahoru
 			sens_id--;
 			if (sens_id < 0) sens_id = 0;
-			g.change_sensitivity (sensitivities[sens_id]);
-			ss << sensitivities[sens_id];
-			sens = ss.str();
+			g.change_sensitivity (sens_id);
+			sens = sensitivities[sens_id];
 			set_menu (9);
 			break;
 		case 1:
 			//sensitivita mysi k vyberu
-			g.change_sensitivity (sensitivities[sens_id]);
-			ss << sensitivities[sens_id];
-			sens = ss.str();
+			g.change_sensitivity (sens_id);
+			sens = sensitivities[sens_id];
 			set_menu (3);
 			break;
 		case 2:
 			//posuvnik dolu
 			sens_id++;
 			if (sens_id > sensitivities.size() - 1) sens_id = sensitivities.size() - 1;
-			g.change_sensitivity (sensitivities[sens_id]);
-			ss << sensitivities[sens_id];
-			sens = ss.str();
+			g.change_sensitivity (sens_id);
+			sens = sensitivities[sens_id];
 			set_menu (9);
 			break;
 		case -1:
@@ -449,7 +446,8 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			//jmeno uctu k vyberu
 			g.change_userchosen (userchosen);
 			username = userlist_get_name (userchosen);
-			set_menu (8);
+			if (username == "") set_menu (11);
+			else set_menu (8);
 			break;
 		case 2:
 			//posuvnik dolu

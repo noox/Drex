@@ -15,11 +15,11 @@ void game::init() {
 	esc_hit = 0;
 	mapchosen = 0;
 	userchosen = 0;
-	sensitivity = 1;
+	sensitivity = 4;
 	daytime = day;
 	weather = sunny;
 	difficulty = easy;
-	w.init(daytime, weather, difficulty);
+	w.init (daytime, weather, difficulty);
 	m.init();
 	maplist_init();
 	userlist_init();
@@ -87,12 +87,12 @@ int game::get_mapchosen() {
 }
 
 //zmeni citlivost mysi, dle volby uzivatele
-void game::change_sensitivity (float Sensitivity) {
+void game::change_sensitivity (int Sensitivity) {
 	sensitivity = Sensitivity;
 }
 
 //vrati aktualni sensitivitu mysi
-float game::get_sensitivity() {
+int game::get_sensitivity() {
 	return sensitivity;
 }
 

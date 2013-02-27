@@ -18,8 +18,8 @@ class menu {
 	int left_mouse_hit, esc_hit;
 	int sens_id, dayt_id, weat_id, diff_id;
 	string mapname, username, name, sens, dayt, weat, diff;
-	vector<float> sensitivities;
-	vector<string> items, daytime, weather, difficulty;
+	vector<string> items;
+	vector<string> daytime, weather, difficulty, sensitivities;
 public:
 	void init();
 	bool update (float timediff, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, game& g);

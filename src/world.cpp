@@ -11,7 +11,7 @@ using namespace std;
 #include "weather.h"
 #include "world.h"
 
-void world::init(int Daytime, int Weather, int Difficulty) {
+void world::init (int Daytime, int Weather, int Difficulty) {
 	dr.init();
 	dr.set (vect (10, 10, 10), quat (0.7, 0.7, 0, 0) );
 	cam.set (vect (0, 0, 0), quat (1, 0, 0, 0) );
@@ -145,7 +145,7 @@ int world::update (float timediff, bool space_down, bool tab_down, bool esc_down
 	} else tab_hit = 0;
 	//pro navigaci po mape k nepriteli
 	if (tab_just_pressed) help_on = true;
-	
+
 	if (daytime == night) f.set_color (0, 0, 0);
 
 	//pro ukonceni hry vyhrou
