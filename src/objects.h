@@ -12,30 +12,27 @@ class world;
 
 enum object_type {
 	object_person,
-	object_shooting_person,
-	object_tree
+	object_tree1,
+	object_tree2,
+	object_tree3
 };
 
 class object {
 public:
 	vect pos, spd;
 	int type;
-	float hp, burning, reload;
+	float size, hp, burning;
 
-	//vlastnosti lidi
-	float size_p;
+	//vlastnost lidi
 	vect start_pos;
-	//vlastnosti stromu
-	float size_tr;
 
 	object() {
 		burning = 0;
-		reload = 0;
 	}
 
 	void create();
-	void update (float time, world& w);
-	void draw();
+	void update (float time, world& w, float &reload);
+	void draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3);
 	void accept_damage (float dmg, float fire);
 	bool collides (vect missile_pos);
 	bool deletable();
@@ -44,6 +41,8 @@ public:
 class object_system {
 public:
 	list<object> objects;
+	GLuint tex_tree1, tex_tree2, tex_tree3;
+	float reload;
 
 	void init();
 	object& add_one();

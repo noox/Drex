@@ -66,6 +66,8 @@ vect enemy_system::one_enemy() {
 
 void enemy::update (float time, world& w) {
 	float border;
+	if (w.weather == rainy) burning = 0;
+	if (w.weather == snowy) burning *= 0.75;
 	switch (type) {
 		//domy
 	case enemy_house:

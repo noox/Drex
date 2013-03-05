@@ -64,7 +64,7 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 	reload += timediff;
 
 	//kolize s mapou
-	float hmh = w.hm.get_height (pos.x, pos.y) + 0.1;
+	float hmh = w.hm.get_height (pos.x, pos.y) + 3;
 	if (hmh > pos.z) {
 		pos.z = hmh;
 		//na odlepovani od zeme

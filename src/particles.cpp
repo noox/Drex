@@ -9,12 +9,14 @@
 
 void particle_system::init() {
 	particles.clear();
+
 	tex_fire = imageloader_load ("data/particle.png", 1, GL_LUMINANCE);
 	glBindTexture (GL_TEXTURE_2D, tex_fire);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);;
+
 	tex_smoke = imageloader_load ("data/particle_smoke.png", 1, GL_LUMINANCE);
 	glBindTexture (GL_TEXTURE_2D, tex_smoke);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

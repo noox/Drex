@@ -3,13 +3,38 @@
 using namespace std;
 
 #include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "objects.h"
 #include "world.h"
 #include "frand.h"
+#include "imageloader.h"
 
 void object_system::init() {
 	objects.clear();
+
+	tex_tree1 = imageloader_load ("data/tree1.png", 4, GL_RGBA);
+	glBindTexture (GL_TEXTURE_2D, tex_tree1);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	tex_tree2 = imageloader_load ("data/tree2.png", 4, GL_RGBA);
+	glBindTexture (GL_TEXTURE_2D, tex_tree2);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	tex_tree3 = imageloader_load ("data/tree3.png", 4, GL_RGBA);
+	glBindTexture (GL_TEXTURE_2D, tex_tree3);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	reload = 0;
 }
 
 //pridani jednoho objektu
@@ -22,7 +47,8 @@ object& object_system::add_one() {
 void object_system::update (float time, world& w) {
 	list<list<object>::iterator> todel;
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i) {
-		i->update (time, w);
+		reload += time;
+		i->update (time, w, reload);
 		if (i->deletable() ) todel.push_back (i);
 	}
 	while (!todel.empty() ) {
@@ -34,7 +60,7 @@ void object_system::update (float time, world& w) {
 //nakresleni vsech objektu v case
 void object_system::draw() {
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i)
-		i->draw();
+		i->draw (tex_tree1, tex_tree2, tex_tree3);
 }
 
 //zajistuje kolize a ztratu hp objektu
@@ -49,6 +75,8 @@ bool object_system::try_to_damage_object (vect missile_pos, float dmg, float fir
 
 void object_system::finish() {
 	objects.clear();
+	imageloader_free (tex_tree1);
+	imageloader_free (tex_tree2);
 }
 
 //funkce pro zjisteni zbytku objektu
@@ -58,20 +86,22 @@ bool object_system::all_objects_dead() {
 }
 /* =========================================================== */
 
-void object::update (float time, world& w) {
+void object::update (float time, world& w, float &reload) {
 	float border;
+	if (w.weather == rainy) burning = 0;
+	if (w.weather == snowy) burning *= 0.75;
+	burning -= time;
 	switch (type) {
 		//lide
 	case object_person:
-		burning -= time;
 		if (burning < 0) burning = 0;
-		else hp -= time * 5;
+		else hp -= time;
 
 		//pohyb lidi
 		pos += spd * time;
 		pos.z = w.hm.get_height (pos.x, pos.y);
 		//hranice chuze pro lidi
-		border = 10 * size_p;
+		border = 10 * size;
 		if (pos.x - start_pos.x >= border) {
 			pos.x = start_pos.x + border;
 			spd.x *= -1;
@@ -89,21 +119,22 @@ void object::update (float time, world& w) {
 			spd.y *= -1;
 		}
 
-		reload += time;
+		//obrana lidi - strelba
 		if (w.dr.in_range (pos) && (reload > 0) ) {
 			missile& m = w.ms.add_one();
 			m.pos = pos;
-			vect target = w.dr.pos + w.dr.spd * ( (w.dr.pos - pos).length() ) / 10;
-			m.spd = (target - pos) | 10;
+			//vypocet pozice draka v okamziku, kdy k nemu doletne strela
+			vect target = w.dr.pos + w.dr.spd * ( (w.dr.pos - pos).length() ) / (10 + 5 * w.difficulty);
+			m.spd = (target - pos) | (10 + 5 * w.difficulty);
 			m.type = missile_human_shot;
 			m.power = 1;
-			reload -= 15 * FRAND / ( (w.difficulty + 1) + 0.5 * w.difficulty * w.difficulty);
+			reload -= 15 * FRAND;
 		}
 
 		if (burning > 0) {
 			//partikly pro horeni poskozenych nepratel
 			particle& p = w.ps.add_one();
-			p.pos = pos + vect (0, 0, DFRAND * size_p);
+			p.pos = pos + vect (0, 0, DFRAND * size);
 			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 			p.type = part_fire;
 			p.life = 1;
@@ -142,15 +173,16 @@ void object::update (float time, world& w) {
 		break;
 
 		//stromy
-	case object_tree:
-		burning -= time;
+	case object_tree1:
+	case object_tree2:
+	case object_tree3:
 		if (burning < 0) burning = 0;
-		else hp -= time * 5;
+		else hp -= time;
 
 		if (burning > 0) {
 			//partikly pro horeni poskozenych stromu
 			particle& p = w.ps.add_one();
-			p.pos = pos + vect (0, 0, DFRAND * size_tr);
+			p.pos = pos + vect (0, 0, DFRAND * size);
 			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 			p.type = part_fire;
 			p.life = 1;
@@ -163,8 +195,12 @@ void object::update (float time, world& w) {
 	}
 }
 
-void object::draw() {
+void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3) {
 	float temp;
+
+	glEnable (GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glPushMatrix();
 	glTranslatef (pos.x, pos.y, pos.z);
 	switch (type) {
@@ -173,70 +209,129 @@ void object::draw() {
 		glColor3f (1, 1, 1);
 		//telo
 		glBegin (GL_LINE_STRIP);
-		glVertex3f (-size_p / 2, 0, 0);
-		glVertex3f (0, 0, size_p / 2);
-		glVertex3f (size_p / 2, 0, 0);
-		glVertex3f (0, 0, size_p / 2);
-		glVertex3f (0, 0, size_p);
-		glVertex3f (size_p / 2, 0, 3*size_p / 4);
-		glVertex3f (0, 0, size_p);
-		glVertex3f (-size_p / 2, 0, 3*size_p / 4);
-		glVertex3f (0, 0, size_p);
-		glVertex3f (0, 0, 3*size_p / 2);
+		glVertex3f (-size / 2, 0, 0);
+		glVertex3f (0, 0, size / 2);
+		glVertex3f (size / 2, 0, 0);
+		glVertex3f (0, 0, size / 2);
+		glVertex3f (0, 0, size);
+		glVertex3f (size / 2, 0, 3*size / 4);
+		glVertex3f (0, 0, size);
+		glVertex3f (-size / 2, 0, 3*size / 4);
+		glVertex3f (0, 0, size);
+		glVertex3f (0, 0, 3*size / 2);
 		glEnd();
 
 		//hlava
 		glColor3f (1, 0, 0);
 		glBegin (GL_TRIANGLE_FAN);
-		glVertex3f (0, 0, 3*size_p / 2);
-		glVertex3f (0, -size_p / 4, size_p + 3*size_p / 4);
-		glVertex3f (-size_p / 4, 0, size_p + 3*size_p / 4);
-		glVertex3f (0, size_p / 4, size_p + 3*size_p / 4);
-		glVertex3f (size_p / 4, 0, size_p + 3*size_p / 4);
-		glVertex3f (0, -size_p / 4, size_p + 3*size_p / 4);
+		glVertex3f (0, 0, 3*size / 2);
+		glVertex3f (0, -size / 4, size + 3*size / 4);
+		glVertex3f (-size / 4, 0, size + 3*size / 4);
+		glVertex3f (0, size / 4, size + 3*size / 4);
+		glVertex3f (size / 4, 0, size + 3*size / 4);
+		glVertex3f (0, -size / 4, size + 3*size / 4);
 		glEnd();
 		glColor3f (1, 1, 0);
 		glBegin (GL_TRIANGLE_FAN);
 		glNormal3f (0, 0, 1);
-		glVertex3f (0, 0, 2*size_p);
-		glVertex3f (0, -size_p / 4, size_p + 3*size_p / 4);
-		glVertex3f (size_p / 4, 0, size_p + 3*size_p / 4);
-		glVertex3f (0, size_p / 4, size_p + 3*size_p / 4);
-		glVertex3f (-size_p / 4, 0, size_p + 3*size_p / 4);
-		glVertex3f (0, -size_p / 4, size_p + 3*size_p / 4);
+		glVertex3f (0, 0, 2*size);
+		glVertex3f (0, -size / 4, size + 3*size / 4);
+		glVertex3f (size / 4, 0, size + 3*size / 4);
+		glVertex3f (0, size / 4, size + 3*size / 4);
+		glVertex3f (-size / 4, 0, size + 3*size / 4);
+		glVertex3f (0, -size / 4, size + 3*size / 4);
 		glEnd();
 		break;
 		//stromy
-	case object_tree:
-		//kmen
-		glColor3f (1, 0.5, 0);
-		glBegin (GL_LINES);
-		glVertex3f (0, 0, 0);
-		glVertex3f (0, 0, size_tr / 2);
+		/*	case object_tree:
+				//kmen
+				glColor3f (1, 0.5, 0);
+				glBegin (GL_LINES);
+				glVertex3f (0, 0, 0);
+				glVertex3f (0, 0, size / 2);
+				glEnd();
+				//koruna
+				glColor3f (0.5, 1, 0.5);
+				glBegin (GL_TRIANGLE_FAN);
+				glVertex3f (0, 0, size / 2);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glVertex3f (-size / 2, 0, size + size / 4);
+				glVertex3f (0, size / 2, size + size / 4);
+				glVertex3f (size / 2, 0, size + size / 4);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glEnd();
+				glColor3f (0.2, 1, 0);
+				glBegin (GL_TRIANGLE_FAN);
+				glNormal3f (0, 0, 1);
+				glVertex3f (0, 0, 2*size);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glVertex3f (size / 2, 0, size + size / 4);
+				glVertex3f (0, size / 2, size + size / 4);
+				glVertex3f (-size / 2, 0, size + size / 4);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glEnd();
+				break;
+		*/
+	case object_tree1:
+	case object_tree2:
+	case object_tree3:
+		glEnable (GL_TEXTURE_2D);
+		if (type == object_tree1) glBindTexture (GL_TEXTURE_2D, tex_tree1);
+		if (type == object_tree2) glBindTexture (GL_TEXTURE_2D, tex_tree2);
+		if (type == object_tree3) glBindTexture (GL_TEXTURE_2D, tex_tree3);
+
+		glDepthMask (0);
+		glBegin (GL_QUADS);
+		//prvni stena
+		glNormal3f (0, 1, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (-size, 0, 0);
+		glTexCoord2f (0, 1);
+		glVertex3f (size, 0, 0);
+		glTexCoord2f (0, 0);
+		glVertex3f (size, 0, 2*size);
+		glTexCoord2f (1, 0);
+		glVertex3f (-size, 0, 2*size);
+
+		glNormal3f (0, -1, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (-size, 0, 0);
+		glTexCoord2f (1, 0);
+		glVertex3f (-size, 0, 2*size);
+		glTexCoord2f (0, 0);
+		glVertex3f (size, 0, 2*size);
+		glTexCoord2f (0, 1);
+		glVertex3f (size, 0, 0);
+
+		//druha stena
+		glNormal3f (1, 0, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (0, -size, 0);
+		glTexCoord2f (0, 1);
+		glVertex3f (0, size, 0);
+		glTexCoord2f (0, 0);
+		glVertex3f (0, size, 2*size);
+		glTexCoord2f (1, 0);
+		glVertex3f (0, -size, 2*size);
+
+		glNormal3f (-1, 0, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (0, -size, 0);
+		glTexCoord2f (1, 0);
+		glVertex3f (0, -size, 2*size);
+		glTexCoord2f (0, 0);
+		glVertex3f (0, size, 2*size);
+		glTexCoord2f (0, 1);
+		glVertex3f (0, size, 0);
 		glEnd();
-		//koruna
-		glColor3f (0.5, 1, 0.5);
-		glBegin (GL_TRIANGLE_FAN);
-		glVertex3f (0, 0, size_tr / 2);
-		glVertex3f (0, -size_tr / 2, size_tr + size_tr / 4);
-		glVertex3f (-size_tr / 2, 0, size_tr + size_tr / 4);
-		glVertex3f (0, size_tr / 2, size_tr + size_tr / 4);
-		glVertex3f (size_tr / 2, 0, size_tr + size_tr / 4);
-		glVertex3f (0, -size_tr / 2, size_tr + size_tr / 4);
-		glEnd();
-		glColor3f (0.2, 1, 0);
-		glBegin (GL_TRIANGLE_FAN);
-		glNormal3f (0, 0, 1);
-		glVertex3f (0, 0, 2*size_tr);
-		glVertex3f (0, -size_tr / 2, size_tr + size_tr / 4);
-		glVertex3f (size_tr / 2, 0, size_tr + size_tr / 4);
-		glVertex3f (0, size_tr / 2, size_tr + size_tr / 4);
-		glVertex3f (-size_tr / 2, 0, size_tr + size_tr / 4);
-		glVertex3f (0, -size_tr / 2, size_tr + size_tr / 4);
-		glEnd();
+		glDepthMask (1);
+
+		glDisable (GL_TEXTURE_2D);
 		break;
 	}
 	glPopMatrix();
+
+	glDisable (GL_BLEND);
 }
 
 //prijeti poskozeni a horeni
@@ -247,10 +342,12 @@ void object::accept_damage (float dmg, float fire) {
 
 //kolize objektu se strelami
 bool object::collides (vect missile_pos) {
-	if (type == object_person || type == object_shooting_person) {
-		if ( (pos - missile_pos).length() < size_p) return true;
-	} else if (type == object_tree) {
-		if ( (pos - missile_pos).length() < 1.5*size_tr) return true;
+	if (type == object_person) {
+		if ( (pos - missile_pos).length() < size) return true;
+	} else if (type == object_tree1 || type == object_tree2) {
+		if ( (pos - missile_pos).length() < 1.5*size) return true;
+	} else if (type == object_tree3) {
+		if ( (pos - missile_pos).length() < size) return true;
 	}
 	return false;
 }
