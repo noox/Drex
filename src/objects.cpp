@@ -3,7 +3,6 @@
 using namespace std;
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #include "objects.h"
 #include "world.h"
@@ -17,18 +16,25 @@ void object_system::init() {
 	glBindTexture (GL_TEXTURE_2D, tex_tree1);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	tex_tree2 = imageloader_load ("data/tree2.png", 4, GL_RGBA);
 	glBindTexture (GL_TEXTURE_2D, tex_tree2);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	tex_tree3 = imageloader_load ("data/tree3.png", 4, GL_RGBA);
 	glBindTexture (GL_TEXTURE_2D, tex_tree3);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	tex_person = imageloader_load ("data/catarcher.png", 4, GL_RGBA);
+	glBindTexture (GL_TEXTURE_2D, tex_person);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -60,7 +66,7 @@ void object_system::update (float time, world& w) {
 //nakresleni vsech objektu v case
 void object_system::draw() {
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i)
-		i->draw (tex_tree1, tex_tree2, tex_tree3);
+		i->draw (tex_tree1, tex_tree2, tex_tree3, tex_person);
 }
 
 //zajistuje kolize a ztratu hp objektu
@@ -77,6 +83,8 @@ void object_system::finish() {
 	objects.clear();
 	imageloader_free (tex_tree1);
 	imageloader_free (tex_tree2);
+	imageloader_free (tex_tree3);
+	imageloader_free (tex_person);
 }
 
 //funkce pro zjisteni zbytku objektu
@@ -195,92 +203,21 @@ void object::update (float time, world& w, float &reload) {
 	}
 }
 
-void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3) {
+void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint tex_person) {
 	float temp;
 
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable (GL_TEXTURE_2D);
+	glDepthMask (0);
 
 	glPushMatrix();
 	glTranslatef (pos.x, pos.y, pos.z);
 	switch (type) {
 		//lide
 	case object_person:
-		glColor3f (1, 1, 1);
-		//telo
-		glBegin (GL_LINE_STRIP);
-		glVertex3f (-size / 2, 0, 0);
-		glVertex3f (0, 0, size / 2);
-		glVertex3f (size / 2, 0, 0);
-		glVertex3f (0, 0, size / 2);
-		glVertex3f (0, 0, size);
-		glVertex3f (size / 2, 0, 3*size / 4);
-		glVertex3f (0, 0, size);
-		glVertex3f (-size / 2, 0, 3*size / 4);
-		glVertex3f (0, 0, size);
-		glVertex3f (0, 0, 3*size / 2);
-		glEnd();
+		glBindTexture (GL_TEXTURE_2D, tex_person);
 
-		//hlava
-		glColor3f (1, 0, 0);
-		glBegin (GL_TRIANGLE_FAN);
-		glVertex3f (0, 0, 3*size / 2);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glVertex3f (-size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, size / 4, size + 3*size / 4);
-		glVertex3f (size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glEnd();
-		glColor3f (1, 1, 0);
-		glBegin (GL_TRIANGLE_FAN);
-		glNormal3f (0, 0, 1);
-		glVertex3f (0, 0, 2*size);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glVertex3f (size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, size / 4, size + 3*size / 4);
-		glVertex3f (-size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glEnd();
-		break;
-		//stromy
-		/*	case object_tree:
-				//kmen
-				glColor3f (1, 0.5, 0);
-				glBegin (GL_LINES);
-				glVertex3f (0, 0, 0);
-				glVertex3f (0, 0, size / 2);
-				glEnd();
-				//koruna
-				glColor3f (0.5, 1, 0.5);
-				glBegin (GL_TRIANGLE_FAN);
-				glVertex3f (0, 0, size / 2);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glVertex3f (-size / 2, 0, size + size / 4);
-				glVertex3f (0, size / 2, size + size / 4);
-				glVertex3f (size / 2, 0, size + size / 4);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glEnd();
-				glColor3f (0.2, 1, 0);
-				glBegin (GL_TRIANGLE_FAN);
-				glNormal3f (0, 0, 1);
-				glVertex3f (0, 0, 2*size);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glVertex3f (size / 2, 0, size + size / 4);
-				glVertex3f (0, size / 2, size + size / 4);
-				glVertex3f (-size / 2, 0, size + size / 4);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glEnd();
-				break;
-		*/
-	case object_tree1:
-	case object_tree2:
-	case object_tree3:
-		glEnable (GL_TEXTURE_2D);
-		if (type == object_tree1) glBindTexture (GL_TEXTURE_2D, tex_tree1);
-		if (type == object_tree2) glBindTexture (GL_TEXTURE_2D, tex_tree2);
-		if (type == object_tree3) glBindTexture (GL_TEXTURE_2D, tex_tree3);
-
-		glDepthMask (0);
 		glBegin (GL_QUADS);
 		//prvni stena
 		glNormal3f (0, 1, 0);
@@ -324,13 +261,131 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3) {
 		glTexCoord2f (0, 1);
 		glVertex3f (0, size, 0);
 		glEnd();
-		glDepthMask (1);
 
-		glDisable (GL_TEXTURE_2D);
+		/*
+				glColor3f (1, 1, 1);
+				//telo
+				glBegin (GL_LINE_STRIP);
+				glVertex3f (-size / 2, 0, 0);
+				glVertex3f (0, 0, size / 2);
+				glVertex3f (size / 2, 0, 0);
+				glVertex3f (0, 0, size / 2);
+				glVertex3f (0, 0, size);
+				glVertex3f (size / 2, 0, 3*size / 4);
+				glVertex3f (0, 0, size);
+				glVertex3f (-size / 2, 0, 3*size / 4);
+				glVertex3f (0, 0, size);
+				glVertex3f (0, 0, 3*size / 2);
+				glEnd();
+
+				//hlava
+				glColor3f (1, 0, 0);
+				glBegin (GL_TRIANGLE_FAN);
+				glVertex3f (0, 0, 3*size / 2);
+				glVertex3f (0, -size / 4, size + 3*size / 4);
+				glVertex3f (-size / 4, 0, size + 3*size / 4);
+				glVertex3f (0, size / 4, size + 3*size / 4);
+				glVertex3f (size / 4, 0, size + 3*size / 4);
+				glVertex3f (0, -size / 4, size + 3*size / 4);
+				glEnd();
+				glColor3f (1, 1, 0);
+				glBegin (GL_TRIANGLE_FAN);
+				glNormal3f (0, 0, 1);
+				glVertex3f (0, 0, 2*size);
+				glVertex3f (0, -size / 4, size + 3*size / 4);
+				glVertex3f (size / 4, 0, size + 3*size / 4);
+				glVertex3f (0, size / 4, size + 3*size / 4);
+				glVertex3f (-size / 4, 0, size + 3*size / 4);
+				glVertex3f (0, -size / 4, size + 3*size / 4);
+				glEnd();
+				break;
+				//stromy
+			case object_tree:
+				//kmen
+				glColor3f (1, 0.5, 0);
+				glBegin (GL_LINES);
+				glVertex3f (0, 0, 0);
+				glVertex3f (0, 0, size / 2);
+				glEnd();
+				//koruna
+				glColor3f (0.5, 1, 0.5);
+				glBegin (GL_TRIANGLE_FAN);
+				glVertex3f (0, 0, size / 2);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glVertex3f (-size / 2, 0, size + size / 4);
+				glVertex3f (0, size / 2, size + size / 4);
+				glVertex3f (size / 2, 0, size + size / 4);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glEnd();
+				glColor3f (0.2, 1, 0);
+				glBegin (GL_TRIANGLE_FAN);
+				glNormal3f (0, 0, 1);
+				glVertex3f (0, 0, 2*size);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glVertex3f (size / 2, 0, size + size / 4);
+				glVertex3f (0, size / 2, size + size / 4);
+				glVertex3f (-size / 2, 0, size + size / 4);
+				glVertex3f (0, -size / 2, size + size / 4);
+				glEnd();
+				break;
+		*/
+	case object_tree1:
+	case object_tree2:
+	case object_tree3:
+		if (type == object_tree1) glBindTexture (GL_TEXTURE_2D, tex_tree1);
+		if (type == object_tree2) glBindTexture (GL_TEXTURE_2D, tex_tree2);
+		if (type == object_tree3) glBindTexture (GL_TEXTURE_2D, tex_tree3);
+
+		glBegin (GL_QUADS);
+		//prvni stena
+		glNormal3f (0, 1, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (-size, 0, 0);
+		glTexCoord2f (0, 1);
+		glVertex3f (size, 0, 0);
+		glTexCoord2f (0, 0);
+		glVertex3f (size, 0, 2*size);
+		glTexCoord2f (1, 0);
+		glVertex3f (-size, 0, 2*size);
+
+		glNormal3f (0, -1, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (-size, 0, 0);
+		glTexCoord2f (1, 0);
+		glVertex3f (-size, 0, 2*size);
+		glTexCoord2f (0, 0);
+		glVertex3f (size, 0, 2*size);
+		glTexCoord2f (0, 1);
+		glVertex3f (size, 0, 0);
+
+		//druha stena
+		glNormal3f (1, 0, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (0, -size, 0);
+		glTexCoord2f (0, 1);
+		glVertex3f (0, size, 0);
+		glTexCoord2f (0, 0);
+		glVertex3f (0, size, 2*size);
+		glTexCoord2f (1, 0);
+		glVertex3f (0, -size, 2*size);
+
+		glNormal3f (-1, 0, 0);
+		glTexCoord2f (1, 1);
+		glVertex3f (0, -size, 0);
+		glTexCoord2f (1, 0);
+		glVertex3f (0, -size, 2*size);
+		glTexCoord2f (0, 0);
+		glVertex3f (0, size, 2*size);
+		glTexCoord2f (0, 1);
+		glVertex3f (0, size, 0);
+		glEnd();
+
 		break;
 	}
 	glPopMatrix();
 
+	glDepthMask (1);
+	glDisable (GL_TEXTURE_2D);
 	glDisable (GL_BLEND);
 }
 

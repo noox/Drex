@@ -58,8 +58,6 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.size_z = 3 + FRAND;
 		p.roof_size = 5 * FRAND;
 		p.rot = 360 * FRAND;
-		p.type = enemy_house;
-		p.hp = 100;
 	}
 	for (int i = 0;i < 20;++i) {
 		enemy& p = es.add_one();
@@ -71,8 +69,6 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.size_z = 3 + FRAND;
 		p.roof_size = 5 * FRAND;
 		p.rot = 360 * FRAND;
-		p.type = enemy_house;
-		p.hp = 100;
 	}
 	for (int i = 0;i < 5;++i) {
 		enemy& p = es.add_one();
@@ -84,8 +80,6 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.size_z = 3 + FRAND;
 		p.roof_size = 5 * FRAND;
 		p.rot = 360 * FRAND;
-		p.type = enemy_house;
-		p.hp = 100;
 	}
 	//lide
 	for (int i = 0;i < 20;++i) {
@@ -93,7 +87,7 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.spd.x = DFRAND;
 		p.spd.y = DFRAND;
 		p.spd.z = 0;
-		p.size = FRAND;
+		p.size = 1 + FRAND;
 		p.start_pos.x = (0.13 + FRAND * 0.07) * hm_x;
 		p.start_pos.y = (0.13 + FRAND * 0.07) * hm_y;
 		p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);

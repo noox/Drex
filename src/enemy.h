@@ -10,27 +10,20 @@ class world;
 
 #include "vector.h"
 
-enum enemy_type {
-	enemy_house,
-	enemy_shooting_house
-};
-
 class enemy {
 public:
 	vect pos;
-	int type;
 	float hp, burning;
-
-	//vlastnosti domu
 	float size_x, size_y, size_z, roof_size, rot;
 
 	enemy() {
 		burning = 0;
+		hp = 100;
 	}
 
 	void create();
 	void update (float time, world& w);
-	void draw();
+	void draw (GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof, GLuint tex_burning_roof);
 	void accept_damage (float dmg, float fire);
 	bool collides (vect missile_pos);
 	bool deletable();
@@ -39,6 +32,7 @@ public:
 class enemy_system {
 public:
 	list<enemy> enemies;
+	GLuint tex_wall, tex_red_roof, tex_black_roof, tex_burning_roof;
 
 	void init();
 	enemy& add_one();
