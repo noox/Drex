@@ -32,7 +32,7 @@ public:
 
 	void create();
 	void update (float time, world& w, float &reload);
-	void draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint tex_person);
+	void draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint tex_person, world &w);
 	void accept_damage (float dmg, float fire);
 	bool collides (vect missile_pos);
 	bool deletable();
@@ -47,7 +47,7 @@ public:
 	void init();
 	object& add_one();
 	void update (float time, world& w);
-	void draw();
+	void draw(world &w);
 	bool try_to_damage_object (vect missile_pos, float dmg, float fire);
 	void finish();
 	bool all_objects_dead();

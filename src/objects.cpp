@@ -64,9 +64,9 @@ void object_system::update (float time, world& w) {
 }
 
 //nakresleni vsech objektu v case
-void object_system::draw() {
+void object_system::draw(world &w) {
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i)
-		i->draw (tex_tree1, tex_tree2, tex_tree3, tex_person);
+		i->draw (tex_tree1, tex_tree2, tex_tree3, tex_person, w);
 }
 
 //zajistuje kolize a ztratu hp objektu
@@ -190,7 +190,9 @@ void object::update (float time, world& w, float &reload) {
 		if (burning > 0) {
 			//partikly pro horeni poskozenych stromu
 			particle& p = w.ps.add_one();
-			p.pos = pos + vect (0, 0, DFRAND * size);
+			p.pos = pos + vect (DFRAND, DFRAND, size + DFRAND * size);
+			if (type == object_tree1) 
+				p.pos = pos + vect (3*DFRAND, 3*DFRAND, 1.5*size + DFRAND * size);
 			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 			p.type = part_fire;
 			p.life = 1;
@@ -203,13 +205,10 @@ void object::update (float time, world& w, float &reload) {
 	}
 }
 
-void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint tex_person) {
-	float temp;
-
+void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint tex_person, world &w) {
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable (GL_TEXTURE_2D);
-	glDepthMask (0);
 
 	glPushMatrix();
 	glTranslatef (pos.x, pos.y, pos.z);
@@ -217,7 +216,7 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 		//lide
 	case object_person:
 		glBindTexture (GL_TEXTURE_2D, tex_person);
-
+		
 		glBegin (GL_QUADS);
 		//prvni stena
 		glNormal3f (0, 1, 0);
@@ -240,22 +239,43 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 		glTexCoord2f (0, 1);
 		glVertex3f (size, 0, 0);
 
-		//druha stena
+		//druha stena - predni cast
 		glNormal3f (1, 0, 0);
 		glTexCoord2f (1, 1);
 		glVertex3f (0, -size, 0);
-		glTexCoord2f (0, 1);
-		glVertex3f (0, size, 0);
-		glTexCoord2f (0, 0);
-		glVertex3f (0, size, 2*size);
+		glTexCoord2f (0.5, 1);
+		glVertex3f (0, 0, 0);
+		glTexCoord2f (0.5, 0);
+		glVertex3f (0, 0, 2*size);
 		glTexCoord2f (1, 0);
 		glVertex3f (0, -size, 2*size);
 
-		glNormal3f (-1, 0, 0);
+		glNormal3f (1, 0, 0);
+		glTexCoord2f (0.5, 1);
+		glVertex3f (0, 0, 0);
 		glTexCoord2f (1, 1);
-		glVertex3f (0, -size, 0);
+		glVertex3f (0, size, 0);
 		glTexCoord2f (1, 0);
+		glVertex3f (0, size, 2*size);
+		glTexCoord2f (0.5, 0);
+		glVertex3f (0, 0, 2*size);
+
+		//druha stena - zadni cast
+		glNormal3f (-1, 0, 0);
+		glTexCoord2f (0, 1);
+		glVertex3f (0, -size, 0);
+		glTexCoord2f (0, 0);
 		glVertex3f (0, -size, 2*size);
+		glTexCoord2f (0.5, 0);
+		glVertex3f (0, 0, 2*size);
+		glTexCoord2f (0.5, 1);
+		glVertex3f (0, 0, 0);
+
+		glNormal3f (-1, 0, 0);
+		glTexCoord2f (0.5, 1);
+		glVertex3f (0, 0, 0);
+		glTexCoord2f (0.5, 0);
+		glVertex3f (0, 0, 2*size);
 		glTexCoord2f (0, 0);
 		glVertex3f (0, size, 2*size);
 		glTexCoord2f (0, 1);
@@ -329,9 +349,11 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 				glEnd();
 				break;
 		*/
+		break;
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
+	glDepthMask (0);
 		if (type == object_tree1) glBindTexture (GL_TEXTURE_2D, tex_tree1);
 		if (type == object_tree2) glBindTexture (GL_TEXTURE_2D, tex_tree2);
 		if (type == object_tree3) glBindTexture (GL_TEXTURE_2D, tex_tree3);
