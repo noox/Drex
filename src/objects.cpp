@@ -96,15 +96,17 @@ bool object_system::all_objects_dead() {
 
 void object::update (float time, world& w, float &reload) {
 	float border;
-	if (w.weather == rainy) burning = 0;
-	if (w.weather == snowy) burning *= 0.75;
+	
+	if (w.weather == rainy) burning *= 0.75;
+	if (w.weather == snowy) burning *= 0.85;
+	
 	burning -= time;
+	if (burning < 0) burning = 0;
+	else hp -= time;
+
 	switch (type) {
 		//lide
 	case object_person:
-		if (burning < 0) burning = 0;
-		else hp -= time;
-
 		//pohyb lidi
 		pos += spd * time;
 		pos.z = w.hm.get_height (pos.x, pos.y);
@@ -139,7 +141,7 @@ void object::update (float time, world& w, float &reload) {
 			reload -= 15 * FRAND;
 		}
 
-		if (burning > 0) {
+		if (hp < 10) {
 			//partikly pro horeni poskozenych nepratel
 			particle& p = w.ps.add_one();
 			p.pos = pos + vect (0, 0, DFRAND * size);
@@ -184,10 +186,7 @@ void object::update (float time, world& w, float &reload) {
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
-		if (burning < 0) burning = 0;
-		else hp -= time;
-
-		if (burning > 0) {
+		if (hp < 50) {
 			//partikly pro horeni poskozenych stromu
 			particle& p = w.ps.add_one();
 			p.pos = pos + vect (DFRAND, DFRAND, size + DFRAND * size);
@@ -206,8 +205,8 @@ void object::update (float time, world& w, float &reload) {
 }
 
 void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint tex_person, world &w) {
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable (GL_ALPHA_TEST);
+	glAlphaFunc (GL_GREATER, 0.3);
 	glEnable (GL_TEXTURE_2D);
 
 	glPushMatrix();
@@ -353,7 +352,6 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
-	glDepthMask (0);
 		if (type == object_tree1) glBindTexture (GL_TEXTURE_2D, tex_tree1);
 		if (type == object_tree2) glBindTexture (GL_TEXTURE_2D, tex_tree2);
 		if (type == object_tree3) glBindTexture (GL_TEXTURE_2D, tex_tree3);
@@ -406,9 +404,8 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 	}
 	glPopMatrix();
 
-	glDepthMask (1);
 	glDisable (GL_TEXTURE_2D);
-	glDisable (GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
 }
 
 //prijeti poskozeni a horeni

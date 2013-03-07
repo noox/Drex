@@ -18,7 +18,7 @@ public:
 
 	enemy() {
 		burning = 0;
-		hp = 100;
+		hp = 20;
 	}
 
 	void create();

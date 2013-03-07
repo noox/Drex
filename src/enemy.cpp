@@ -101,14 +101,14 @@ void enemy::update (float time, world& w) {
 	float border;
 
 	//zkraceni horeni objektu za deste a snehu
-	if (w.weather == rainy) burning = 0;
-	if (w.weather == snowy) burning *= 0.5;
+	if (w.weather == rainy) burning *= 0.75;
+	if (w.weather == snowy) burning *= 0.85;
 
 	burning -= time;
 	if (burning < 0) burning = 0;
-	else hp -= time * 5;
+	else hp -= time;
 
-	if (burning > 0) {
+	if (hp < 20)  {
 		//partikly pro horeni poskozenych domu
 		particle& p = w.ps.add_one();
 		p.pos = pos + vect (DFRAND * size_x, DFRAND * size_y, size_z + FRAND * roof_size);
@@ -152,23 +152,17 @@ void enemy::update (float time, world& w) {
 void enemy::draw (GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof, GLuint tex_burning_roof) {
 	float temp;
 
-//	glEnable (GL_BLEND);
-//	glBlendFunc (GL_SRC_ALPHA, GL_ONE);
-
 	glPushMatrix();
 	glTranslatef (pos.x, pos.y, pos.z);
-
 	glRotatef (rot, 0, 0, 1);
 	glColor3f (1, 1, 1);
 
 	glEnable (GL_TEXTURE_2D);
 
 	//strecha
-	if (burning > 0) {
-		//	glColor3f (0.6, 0.06, 0);
+	if (hp < 10) {
 		glBindTexture (GL_TEXTURE_2D, tex_burning_roof);
 	} else {
-		//	glColor3f (0.8, 0.1, 0);
 		glBindTexture (GL_TEXTURE_2D, tex_red_roof);
 		if ( (int) pos.x % 2 != 0) glBindTexture (GL_TEXTURE_2D, tex_black_roof);
 	}
@@ -198,9 +192,6 @@ void enemy::draw (GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof, G
 	glEnd();
 
 	//steny
-//		if (burning > 0) glColor3f (0.8, 0.8, 0.8);
-//		else glColor3f (1, 1, 1);
-
 	glBindTexture (GL_TEXTURE_2D, tex_wall);
 
 	glBegin (GL_QUADS);
@@ -254,8 +245,6 @@ void enemy::draw (GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof, G
 	glEnd();
 
 	glPopMatrix();
-
-//	glDisable (GL_BLEND);
 }
 
 //prijeti poskozeni a horeni

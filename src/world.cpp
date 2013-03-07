@@ -95,7 +95,7 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.pos.y = p.start_pos.y;
 		p.pos.z = p.start_pos.z;
 		p.type = object_person;
-		p.hp = 50;
+		p.hp = 10;
 	}
 	//listnate stromy
 	for (int i = 0;i < 10;++i) {
@@ -106,7 +106,7 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
 		p.type = object_tree1;
-		p.hp = 500;
+		p.hp = 50;
 	}
 	//jehlicnate stromy
 	for (int i = 0;i < 10;++i) {
@@ -117,7 +117,7 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
 		p.type = object_tree2;
-		p.hp = 500;
+		p.hp = 50;
 	}
 	//kere
 	for (int i = 0;i < 10;++i) {
@@ -128,9 +128,9 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
 		p.type = object_tree3;
-		p.hp = 500;
+		p.hp = 50;
 	}
-	{object& p = ob.add_one();
+/*	{object& p = ob.add_one();
 		p.spd.x = 0;
 		p.spd.y = 0;
 		p.spd.z = 0;
@@ -142,9 +142,9 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.pos.y = p.start_pos.y;
 		p.pos.z = p.start_pos.z;
 		p.type = object_person;
-		p.hp = 50;
+		p.hp = 10;
 		};
-
+*/
 }
 
 void world::finish() {

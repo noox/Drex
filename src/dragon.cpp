@@ -21,6 +21,10 @@ void dragon::init() {
 }
 
 void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_mouse_down, bool space, float timediff, world &w) {
+	hp+=0.005;
+	if (hp > 110) hp = 110;
+	cout << hp << endl;
+
 	vect VX, VY, VZ;
 	ori.normalize();
 	VX = ori.vecx();
@@ -101,16 +105,18 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 		m.pos = pos;
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_fire;
-		m.power = 1;
-		reload -= 0.1;
+		m.power = 0.1;
+		m.fire = 0.5;
+		reload -= 0.3;
 	}
 	if (right_mouse_down && reload >= 0) {
 		missile& m = w.ms.add_one();
 		m.pos = pos;
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_ball;
-		m.power = 10;
-		reload -= 0.1;
+		m.power = 0.3;
+		m.fire = 1;
+		reload -= 0.5;
 	}
 }
 

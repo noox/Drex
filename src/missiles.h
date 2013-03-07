@@ -20,7 +20,7 @@ class missile {
 public:
 	vect pos, spd;
 	int type;
-	float age, power, reload;
+	float age, power, fire, reload;
 	bool deletable;
 
 	missile() {

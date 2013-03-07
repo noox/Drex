@@ -52,7 +52,7 @@ void missile::update (float time, world& w) {
 			if (age > 3) deletable = true;
 
 			//pokud zasahla cil
-			if (w.es.try_to_damage_enemy (pos, power, 10) || w.ob.try_to_damage_object (pos, power, 10) )
+			if (w.es.try_to_damage_enemy (pos, power, fire) || w.ob.try_to_damage_object (pos, power, fire) )
 				deletable = true;
 
 			//pridani particlu do systemu
@@ -73,7 +73,7 @@ void missile::update (float time, world& w) {
 			if (age > 10) deletable = true;
 
 			//pokud zasahla cil
-			if (w.es.try_to_damage_enemy (pos, power, 20) || w.ob.try_to_damage_object (pos, power, 20) )
+			if (w.es.try_to_damage_enemy (pos, power, fire) || w.ob.try_to_damage_object (pos, power, fire) )
 				deletable = true;
 			break;
 		case missile_human_shot:
