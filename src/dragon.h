@@ -13,9 +13,8 @@ class dragon {
 public:
 	vect pos, spd;
 	quat ori, mom;
-	float hp;
+	float hp, reload_dragon_fire, reload_dragon_ball;
 	GLuint texture;
-	float reload;
 	int wings;
 
 	void set (const vect &Pos, const quat &Ori) {
@@ -24,7 +23,8 @@ public:
 		ori.normalize();
 		spd = vect (0, 0, 0);
 		mom = quat (0, 0, 0, 0);
-		reload = 0;
+		reload_dragon_fire = 0;
+		reload_dragon_ball = 0;
 		hp = 100;
 	}
 

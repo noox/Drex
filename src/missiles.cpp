@@ -53,14 +53,15 @@ void missile::update (float time, world& w) {
 	age += time;
 	reload += time;
 
-	while (reload >= 0) {
-		//pokud existuje moc dlouho
+	while (reload > 0) {
+		//pokud strela existuje moc dlouho, preda se ke smazani
 		if (age > 3) deletable = true;
 
 		switch (type) {
+
 			//zakladni draci utok
 		case missile_dragon_fire:
-			//pokud zasahla cil
+			//pokud strela zasahla cil, preda se ke smazani
 			if (w.es.try_to_damage_enemy (pos, power, fire) || w.ob.try_to_damage_object (pos, power, fire) )
 				deletable = true;
 
@@ -75,11 +76,11 @@ void missile::update (float time, world& w) {
 				p.g = FRAND / 2;
 				p.b = 0.01;
 			}
-			//TODO particle jednou za cas
 			break;
+
 			//pokrocily draci utok
 		case missile_dragon_ball:
-			//pokud zasahla cil
+			//pokud strela zasahla cil, preda se ke smazani
 			if (w.es.try_to_damage_enemy (pos, power, fire) || w.ob.try_to_damage_object (pos, power, fire) )
 				deletable = true;
 
@@ -94,11 +95,11 @@ void missile::update (float time, world& w) {
 				p.g = FRAND / 2;
 				p.b = 0.01;
 			}
-			//TODO particle jednou za cas
 			break;
+
 			//utok nepratel
 		case missile_human_shot:
-			//pokud zasahla cil - draka
+			//pokud strela zasahla draka, preda se ke smazani
 			if (w.dr.try_to_damage_dragon (pos, power) )
 				deletable = true;
 
@@ -113,8 +114,6 @@ void missile::update (float time, world& w) {
 				p.g = 0.01;
 				p.b = 0.01;
 			}
-			//TODO particle jednou za cas
-
 			break;
 		}
 		reload -= 0.01;

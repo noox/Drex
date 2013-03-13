@@ -13,11 +13,12 @@ class world;
 class enemy {
 public:
 	vect pos;
-	float hp, burning;
+	float hp, burning, reload;
 	float size_x, size_y, size_z, roof_size, rot;
 
 	enemy() {
 		burning = 0;
+		reload = 0;
 		hp = 20;
 	}
 

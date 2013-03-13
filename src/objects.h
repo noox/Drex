@@ -21,13 +21,14 @@ class object {
 public:
 	vect pos, spd;
 	int type;
-	float size, hp, burning;
+	float size, hp, burning, reload;
 
 	//vlastnost lidi
 	vect start_pos;
 
 	object() {
 		burning = 0;
+		reload = 0;
 	}
 
 	void create();

@@ -65,7 +65,8 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 	mom *= powf (0.2, timediff);
 
 	//nabijeni
-	reload += timediff;
+	reload_dragon_fire += timediff;
+	reload_dragon_ball += timediff;
 
 	//kolize s mapou
 	float hmh = w.hm.get_height (pos.x, pos.y) + 3;
@@ -100,23 +101,23 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 	}
 
 	//strelba
-	if (left_mouse_down && reload >= 0) {
+	if (left_mouse_down && reload_dragon_fire >= 0) {
 		missile& m = w.ms.add_one();
 		m.pos = pos;
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_fire;
 		m.power = 0.1;
 		m.fire = 0.5;
-		reload -= 0.3;
+		reload_dragon_fire -= 0.3;
 	}
-	if (right_mouse_down && reload >= 0) {
+	if (right_mouse_down && reload_dragon_ball >= 0) {
 		missile& m = w.ms.add_one();
 		m.pos = pos;
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_ball;
 		m.power = 0.3;
 		m.fire = 1.5;
-		reload -= 5;
+		reload_dragon_ball -= 5;
 	}
 }
 

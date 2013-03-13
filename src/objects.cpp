@@ -101,106 +101,82 @@ void object::update (float time, world& w, float &reload) {
 	if (w.weather == snowy) burning *= 0.85;
 
 	burning -= time;
+	reload += time;
 	if (burning < 0) burning = 0;
 	else hp -= time;
-
-	switch (type) {
-		//lide
-	case object_person:
-		//pohyb lidi
-		pos += spd * time;
-		pos.z = w.hm.get_height (pos.x, pos.y);
-		//hranice chuze pro lidi
-		border = 10 * size;
-		if (pos.x - start_pos.x >= border) {
-			pos.x = start_pos.x + border;
-			spd.x *= -1;
-		}
-		if (pos.x - start_pos.x <= -border) {
-			pos.x = start_pos.x - border;
-			spd.x *= -1;
-		}
-		if (pos.y - start_pos.y >= border) {
-			pos.y = start_pos.y + border;
-			spd.y *= -1;
-		}
-		if (pos.y - start_pos.y <= -border) {
-			pos.y = start_pos.y - border;
-			spd.y *= -1;
-		}
-
-		//obrana lidi - strelba
-		if (w.dr.in_range (pos) && (reload > 0) ) {
-			missile& m = w.ms.add_one();
-			m.pos = pos;
-			//vypocet pozice draka v okamziku, kdy k nemu doletne strela
-			vect target = w.dr.pos + w.dr.spd * ( (w.dr.pos - pos).length() ) / (10 + 5 * w.difficulty);
-			m.spd = (target - pos) | (10 + 5 * w.difficulty);
-			m.type = missile_human_shot;
-			m.power = 1;
-			reload -= 15 * FRAND;
-		}
-
-		if (hp < 10) {
-			//partikly pro horeni poskozenych nepratel
-			particle& p = w.ps.add_one();
-			p.pos = pos + vect (0, 0, DFRAND * size);
-			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
-			p.type = part_fire;
-			p.life = 1;
-			p.r = 1;
-			p.g = FRAND / 2;
-			p.b = 0.01;
-			//TODO particle jednou za cas
-		}
-
-		if (deletable() ) {
-			//vybuch z partiklu, pokud nepritel ztrati hp
-			for (int i = 0;i < 100;++i) {
-				{
-					particle& p = w.ps.add_one();
-					p.pos = pos;
-					p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 5;
-					p.type = part_fire;
-					p.life = 1;
-					p.r = 1;
-					p.g = 0;
-					p.b = 0;
-				}
-				//TODO particle jednou za cas
-				{
-					particle& p = w.ps.add_one();
-					p.pos = pos + vect (DFRAND, DFRAND, DFRAND);
-					p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 0.5;
-					p.type = part_smoke;
-					p.life = 3;
-					p.r = 1;
-					p.g = 0;
-					p.b = 0;
-				}
+	
+	while (reload > 0 ) {
+		switch (type) {
+			//lide
+		case object_person:
+			//pohyb lidi
+			pos += spd * time;
+			pos.z = w.hm.get_height (pos.x, pos.y);
+			//hranice chuze pro lidi
+			border = 10 * size;
+			if (pos.x - start_pos.x >= border) {
+				pos.x = start_pos.x + border;
+				spd.x *= -1;
 			}
-		}
-		break;
+			if (pos.x - start_pos.x <= -border) {
+				pos.x = start_pos.x - border;
+				spd.x *= -1;
+			}
+			if (pos.y - start_pos.y >= border) {
+				pos.y = start_pos.y + border;
+				spd.y *= -1;
+			}
+			if (pos.y - start_pos.y <= -border) {
+				pos.y = start_pos.y - border;
+				spd.y *= -1;
+			}
 
-		//stromy
-	case object_tree1:
-	case object_tree2:
-	case object_tree3:
-		if (hp < 50) {
-			//partikly pro horeni poskozenych stromu
-			particle& p = w.ps.add_one();
-			p.pos = pos + vect (DFRAND, DFRAND, size + DFRAND * size);
-			if (type == object_tree1)
-				p.pos = pos + vect (3 * DFRAND, 3 * DFRAND, 1.5 * size + DFRAND * size);
-			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
-			p.type = part_fire;
-			p.life = 1;
-			p.r = 1;
-			p.g = FRAND / 2;
-			p.b = 0.01;
-			//TODO particle jednou za cas
+			//obrana lidi - strelba
+			if (w.dr.in_range (pos) && (reload > 0) ) {
+				missile& m = w.ms.add_one();
+				m.pos = pos;
+				//vypocet pozice draka v okamziku, kdy k nemu doletne strela
+				vect target = w.dr.pos + w.dr.spd * ( (w.dr.pos - pos).length() ) / (10 + 5 * w.difficulty);
+				m.spd = (target - pos) | (10 + 5 * w.difficulty);
+				
+				m.type = missile_human_shot;
+				m.power = 1;
+				reload -= 15 * FRAND;
+			}
+
+			if (burning > 0) {
+				//partikly pro horeni poskozenych nepratel
+				particle& p = w.ps.add_one();
+				p.pos = pos;
+				p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
+				p.type = part_burning;
+				p.life = 1;
+				p.r = 1;
+				p.g = FRAND / 2;
+				p.b = 0.01;
+			}
+			break;
+
+			//stromy
+		case object_tree1:
+		case object_tree2:
+		case object_tree3:
+			if (burning > 0) {
+				//partikly pro horeni poskozenych stromu
+				particle& p = w.ps.add_one();
+				p.pos = pos + vect (DFRAND, DFRAND, 0);
+				if (type == object_tree1)
+					p.pos = pos + vect (2 * DFRAND, 2 * DFRAND, DFRAND * size);
+				p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
+				p.type = part_burning;
+				p.life = 1;
+				p.r = 1;
+				p.g = FRAND / 2;
+				p.b = 0.01;
+			}
+			break;
 		}
-		break;
+		reload -= 0.01;
 	}
 }
 

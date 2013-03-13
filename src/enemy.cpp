@@ -98,30 +98,29 @@ vect enemy_system::one_enemy() {
 /* =========================================================== */
 
 void enemy::update (float time, world& w) {
-	float border;
-
 	//zkraceni horeni objektu za deste a snehu
 	if (w.weather == rainy) burning *= 0.75;
 	if (w.weather == snowy) burning *= 0.85;
 
 	burning -= time;
+	reload += time;
 	if (burning < 0) burning = 0;
 	else hp -= time;
 
-	if (hp < 20)  {
-		//partikly pro horeni poskozenych domu
-		particle& p = w.ps.add_one();
-		p.pos = pos + vect (DFRAND * size_x, DFRAND * size_y, size_z + FRAND * roof_size / 2);
-		p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
-		p.type = part_burning;
-		p.life = 1;
-		p.r = 1;
-		p.g = FRAND / 2;
-		p.b = 0.01;
-		//TODO particle jednou za cas
-	}
+	while (reload > 0) { 
+		if (burning > 0)  {
+			//partikly pro horeni poskozenych domu
+			particle& p = w.ps.add_one();
+			p.pos = pos + vect (DFRAND * size_x, DFRAND * size_y, size_z + FRAND * roof_size / 3);
+			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
+			p.type = part_burning;
+			p.life = 1;
+			p.r = 1;
+			p.g = FRAND / 2;
+			p.b = 0.01;
+		}
 
-	if (deletable() ) {
+/*	if (deletable() ) {
 		//vybuch z partiklu, pokud dum ztrati hp
 		for (int i = 0;i < 100;++i) {
 			{
@@ -134,7 +133,6 @@ void enemy::update (float time, world& w) {
 				p.g = FRAND / 2;
 				p.b = 0.01;
 			}
-			//TODO particle jednou za cas
 			{
 				particle& p = w.ps.add_one();
 				p.pos = pos + vect (DFRAND, DFRAND, DFRAND) * 3 * FRAND;
@@ -146,6 +144,9 @@ void enemy::update (float time, world& w) {
 				p.b = 0.5;
 			}
 		}
+	}
+*/
+		reload -= 0.01;
 	}
 }
 
