@@ -147,9 +147,9 @@ void object::update (float time, world& w, float &reload) {
 			if (burning > 0) {
 				//partikly pro horeni poskozenych nepratel
 				particle& p = w.ps.add_one();
-				p.pos = pos;
+				p.pos = pos + vect (DFRAND, DFRAND, 0);
 				p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
-				p.type = part_burning;
+				p.type = part_small_burning;
 				p.life = 1;
 				p.r = 1;
 				p.g = FRAND / 2;
@@ -169,6 +169,8 @@ void object::update (float time, world& w, float &reload) {
 					p.pos = pos + vect (2 * DFRAND, 2 * DFRAND, DFRAND * size);
 				p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 				p.type = part_burning;
+				if (type == object_tree3)
+					p.type = part_small_burning;
 				p.life = 1;
 				p.r = 1;
 				p.g = FRAND / 2;
@@ -299,9 +301,12 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
-		if (type == object_tree1) glBindTexture (GL_TEXTURE_2D, tex_tree1);
-		if (type == object_tree2) glBindTexture (GL_TEXTURE_2D, tex_tree2);
-		if (type == object_tree3) glBindTexture (GL_TEXTURE_2D, tex_tree3);
+		if (type == object_tree1) 
+			glBindTexture (GL_TEXTURE_2D, tex_tree1);
+		if (type == object_tree2) 
+			glBindTexture (GL_TEXTURE_2D, tex_tree2);
+		if (type == object_tree3)
+			glBindTexture (GL_TEXTURE_2D, tex_tree3);
 
 		glBegin (GL_QUADS);
 		//prvni stena

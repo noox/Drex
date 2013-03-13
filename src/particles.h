@@ -14,6 +14,7 @@ enum particle_type {
 	part_fireball,
 	part_fire,
 	part_burning,
+	part_small_burning,
 	part_spark,
 	part_smoke,
 	part_rain,

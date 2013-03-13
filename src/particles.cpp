@@ -101,6 +101,8 @@ void particle_system::draw (world &w) {
 			glEnd();
 			glDisable (GL_TEXTURE_2D);
 			break;
+		case part_small_burning:
+			glScalef (1, 1, 0.3);
 		case part_burning:
 			glBindTexture (GL_TEXTURE_2D, tex_burning);
 			glEnable (GL_TEXTURE_2D);
