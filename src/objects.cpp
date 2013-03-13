@@ -64,7 +64,7 @@ void object_system::update (float time, world& w) {
 }
 
 //nakresleni vsech objektu v case
-void object_system::draw(world &w) {
+void object_system::draw (world &w) {
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i)
 		i->draw (tex_tree1, tex_tree2, tex_tree3, tex_person, w);
 }
@@ -96,10 +96,10 @@ bool object_system::all_objects_dead() {
 
 void object::update (float time, world& w, float &reload) {
 	float border;
-	
+
 	if (w.weather == rainy) burning *= 0.75;
 	if (w.weather == snowy) burning *= 0.85;
-	
+
 	burning -= time;
 	if (burning < 0) burning = 0;
 	else hp -= time;
@@ -190,8 +190,8 @@ void object::update (float time, world& w, float &reload) {
 			//partikly pro horeni poskozenych stromu
 			particle& p = w.ps.add_one();
 			p.pos = pos + vect (DFRAND, DFRAND, size + DFRAND * size);
-			if (type == object_tree1) 
-				p.pos = pos + vect (3*DFRAND, 3*DFRAND, 1.5*size + DFRAND * size);
+			if (type == object_tree1)
+				p.pos = pos + vect (3 * DFRAND, 3 * DFRAND, 1.5 * size + DFRAND * size);
 			p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 			p.type = part_fire;
 			p.life = 1;
@@ -215,7 +215,7 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 		//lide
 	case object_person:
 		glBindTexture (GL_TEXTURE_2D, tex_person);
-		
+
 		glBegin (GL_QUADS);
 		//prvni stena
 		glNormal3f (0, 1, 0);
@@ -318,35 +318,6 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 				glVertex3f (0, -size / 4, size + 3*size / 4);
 				glEnd();
 				break;
-				//stromy
-			case object_tree:
-				//kmen
-				glColor3f (1, 0.5, 0);
-				glBegin (GL_LINES);
-				glVertex3f (0, 0, 0);
-				glVertex3f (0, 0, size / 2);
-				glEnd();
-				//koruna
-				glColor3f (0.5, 1, 0.5);
-				glBegin (GL_TRIANGLE_FAN);
-				glVertex3f (0, 0, size / 2);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glVertex3f (-size / 2, 0, size + size / 4);
-				glVertex3f (0, size / 2, size + size / 4);
-				glVertex3f (size / 2, 0, size + size / 4);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glEnd();
-				glColor3f (0.2, 1, 0);
-				glBegin (GL_TRIANGLE_FAN);
-				glNormal3f (0, 0, 1);
-				glVertex3f (0, 0, 2*size);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glVertex3f (size / 2, 0, size + size / 4);
-				glVertex3f (0, size / 2, size + size / 4);
-				glVertex3f (-size / 2, 0, size + size / 4);
-				glVertex3f (0, -size / 2, size + size / 4);
-				glEnd();
-				break;
 		*/
 		break;
 	case object_tree1:
@@ -405,7 +376,7 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 	glPopMatrix();
 
 	glDisable (GL_TEXTURE_2D);
-	glEnable(GL_ALPHA_TEST);
+	glEnable (GL_ALPHA_TEST);
 }
 
 //prijeti poskozeni a horeni

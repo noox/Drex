@@ -111,9 +111,9 @@ void enemy::update (float time, world& w) {
 	if (hp < 20)  {
 		//partikly pro horeni poskozenych domu
 		particle& p = w.ps.add_one();
-		p.pos = pos + vect (DFRAND * size_x, DFRAND * size_y, size_z + FRAND * roof_size);
+		p.pos = pos + vect (DFRAND * size_x, DFRAND * size_y, size_z + FRAND * roof_size / 2);
 		p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
-		p.type = part_fire;
+		p.type = part_burning;
 		p.life = 1;
 		p.r = 1;
 		p.g = FRAND / 2;
@@ -128,7 +128,7 @@ void enemy::update (float time, world& w) {
 				particle& p = w.ps.add_one();
 				p.pos = pos;
 				p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 5;
-				p.type = part_fire;
+				p.type = part_burning;
 				p.life = 1;
 				p.r = 1;
 				p.g = FRAND / 2;

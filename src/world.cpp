@@ -130,21 +130,21 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 		p.type = object_tree3;
 		p.hp = 50;
 	}
-/*	{object& p = ob.add_one();
-		p.spd.x = 0;
-		p.spd.y = 0;
-		p.spd.z = 0;
-		p.size = 20 + FRAND;
-		p.start_pos.x = 10;
-		p.start_pos.y = 10;
-		p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.pos.x = p.start_pos.x;
-		p.pos.y = p.start_pos.y;
-		p.pos.z = p.start_pos.z;
-		p.type = object_person;
-		p.hp = 10;
-		};
-*/
+	/*	{object& p = ob.add_one();
+			p.spd.x = 0;
+			p.spd.y = 0;
+			p.spd.z = 0;
+			p.size = 20 + FRAND;
+			p.start_pos.x = 10;
+			p.start_pos.y = 10;
+			p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
+			p.pos.x = p.start_pos.x;
+			p.pos.y = p.start_pos.y;
+			p.pos.z = p.start_pos.z;
+			p.type = object_person;
+			p.hp = 10;
+			};
+	*/
 }
 
 void world::finish() {
@@ -212,15 +212,15 @@ void world::render() {
 	dr.draw();
 	hm.draw();
 	es.draw();
-	ob.draw(*this);
+	ob.draw (*this);
 
 	if (weather == rainy) make_rain (*this);
 	if (weather == snowy) make_snow (*this);
 
-	ms.draw();
 	f.turn_off();
 
 	glDisable (GL_LIGHTING);
+	ms.draw (*this);
 	ps.draw (*this);
 
 	//navigace k nepriteli

@@ -21,7 +21,7 @@ void dragon::init() {
 }
 
 void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_mouse_down, bool space, float timediff, world &w) {
-	hp+=0.005;
+	hp += 0.005;
 	if (hp > 110) hp = 110;
 	cout << hp << endl;
 
@@ -115,8 +115,8 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_ball;
 		m.power = 0.3;
-		m.fire = 1;
-		reload -= 0.5;
+		m.fire = 1.5;
+		reload -= 5;
 	}
 }
 
@@ -368,7 +368,7 @@ vect dragon::camera_pos() {
 
 //zjisteni, zda je drak na dostrel nepratelum
 bool dragon::in_range (vect e_pos) {
-	if ( (pos - e_pos).length() < 100) return true;
+	if ( (pos - e_pos).length() < 150) return true;
 	return false;
 }
 

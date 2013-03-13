@@ -47,7 +47,7 @@ public:
 	void init();
 	object& add_one();
 	void update (float time, world& w);
-	void draw(world &w);
+	void draw (world &w);
 	bool try_to_damage_object (vect missile_pos, float dmg, float fire);
 	void finish();
 	bool all_objects_dead();

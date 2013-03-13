@@ -11,7 +11,9 @@ using namespace std;
 class world;
 
 enum particle_type {
+	part_fireball,
 	part_fire,
+	part_burning,
 	part_spark,
 	part_smoke,
 	part_rain,
@@ -36,7 +38,7 @@ public:
 class particle_system {
 public:
 	list<particle> particles;
-	GLuint tex_fire, tex_smoke;
+	GLuint tex_fire, tex_burning, tex_smoke;
 
 	void init();
 	particle& add_one();

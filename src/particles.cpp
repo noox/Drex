@@ -10,19 +10,26 @@
 void particle_system::init() {
 	particles.clear();
 
-	tex_fire = imageloader_load ("data/particle.png", 1, GL_LUMINANCE);
+	tex_fire = imageloader_load ("data/particle_fire.png", 1, GL_LUMINANCE);
 	glBindTexture (GL_TEXTURE_2D, tex_fire);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);;
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	tex_burning = imageloader_load ("data/particle_burning.png", 1, GL_LUMINANCE);
+	glBindTexture (GL_TEXTURE_2D, tex_burning);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	tex_smoke = imageloader_load ("data/particle_smoke.png", 1, GL_LUMINANCE);
 	glBindTexture (GL_TEXTURE_2D, tex_smoke);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);;
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 }
 
 //pridani jednoho particlu do systemu
@@ -76,8 +83,10 @@ void particle_system::draw (world &w) {
 		glTranslatef (i->pos.x, i->pos.y, i->pos.z);
 		glColor4f (i->r, i->g, i->b, 1 - (i->age / i->life) );
 		switch (i->type) {
+		case part_fireball:
+			glScalef (4, 4, 4);
 		case part_fire:
-			glBindTexture (GL_TEXTURE_2D, tex_fire);
+			glBindTexture (GL_TEXTURE_2D, tex_burning);
 			glEnable (GL_TEXTURE_2D);
 			glMultMatrixf (part_face);
 			glBegin (GL_QUADS);
@@ -92,6 +101,22 @@ void particle_system::draw (world &w) {
 			glEnd();
 			glDisable (GL_TEXTURE_2D);
 			break;
+		case part_burning:
+			glBindTexture (GL_TEXTURE_2D, tex_burning);
+			glEnable (GL_TEXTURE_2D);
+			glMultMatrixf (part_face);
+			glBegin (GL_QUADS);
+			glTexCoord2f (0, 0);
+			glVertex3f (-1, 0, 0);
+			glTexCoord2f (1, 0);
+			glVertex3f (1, 0, 0);
+			glTexCoord2f (1, 1);
+			glVertex3f (1, 10, 0);
+			glTexCoord2f (0, 1);
+			glVertex3f (-1, 10, 0);
+			glEnd();
+			glDisable (GL_TEXTURE_2D);
+			break;
 		case part_spark:
 			glBegin (GL_LINES);
 			glVertex3f (0, 0, 0);
@@ -100,6 +125,7 @@ void particle_system::draw (world &w) {
 			glEnd();
 			break;
 		case part_smoke:
+		case part_snow:
 			glBindTexture (GL_TEXTURE_2D, tex_smoke);
 			glEnable (GL_TEXTURE_2D);
 			glMultMatrixf (part_face);
@@ -121,22 +147,6 @@ void particle_system::draw (world &w) {
 			glColor4f (0, 0, 0, 0);
 			glVertex3f (0, 0, 0);
 			glEnd();
-			break;
-		case part_snow:
-			glBindTexture (GL_TEXTURE_2D, tex_smoke);
-			glEnable (GL_TEXTURE_2D);
-			glMultMatrixf (part_face);
-			glBegin (GL_QUADS);
-			glTexCoord2f (0, 0);
-			glVertex3f (-0.2, -0.2, 0);
-			glTexCoord2f (1, 0);
-			glVertex3f (0.2, -0.2, 0);
-			glTexCoord2f (1, 1);
-			glVertex3f (0.2, 0.2, 0);
-			glTexCoord2f (0, 1);
-			glVertex3f (-0.2, 0.2, 0);
-			glEnd();
-			glDisable (GL_TEXTURE_2D);
 			break;
 		}
 		glPopMatrix();

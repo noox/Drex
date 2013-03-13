@@ -31,17 +31,18 @@ public:
 
 	void create();
 	void update (float time, world& w);
-	void draw();
+	void draw (world &w, GLuint tex_fireball);
 };
 
 class missile_system {
 public:
 	list<missile> missiles;
+	GLuint tex_fireball;
 
 	void init();
 	missile& add_one();
 	void update (float time, world& w);
-	void draw();
+	void draw (world &w);
 	void finish();
 };
 
