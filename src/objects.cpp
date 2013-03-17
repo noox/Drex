@@ -104,7 +104,7 @@ void object::update (float time, world& w, float &reload) {
 	reload += time;
 	if (burning < 0) burning = 0;
 	else hp -= time;
-	
+
 	while (reload > 0 ) {
 		switch (type) {
 			//lide
@@ -138,7 +138,7 @@ void object::update (float time, world& w, float &reload) {
 				//vypocet pozice draka v okamziku, kdy k nemu doletne strela
 				vect target = w.dr.pos + w.dr.spd * ( (w.dr.pos - pos).length() ) / (10 + 5 * w.difficulty);
 				m.spd = (target - pos) | (10 + 5 * w.difficulty);
-				
+
 				m.type = missile_human_shot;
 				m.power = 1;
 				reload -= 15 * FRAND;
@@ -301,9 +301,9 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
-		if (type == object_tree1) 
+		if (type == object_tree1)
 			glBindTexture (GL_TEXTURE_2D, tex_tree1);
-		if (type == object_tree2) 
+		if (type == object_tree2)
 			glBindTexture (GL_TEXTURE_2D, tex_tree2);
 		if (type == object_tree3)
 			glBindTexture (GL_TEXTURE_2D, tex_tree3);

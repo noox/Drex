@@ -5,9 +5,10 @@
 class game;
 #include "world.h"
 #include "menu.h"
+#include "creation.h"
 
 enum game_state {playing, win, fail};
-enum game_status {in_menu, in_game};
+enum game_status {in_menu, in_game, in_creation};
 enum game_daytime {day, night};
 enum game_weather {sunny, rainy, snowy};
 enum game_difficulty {easy, medium, hard};
@@ -15,13 +16,14 @@ enum game_difficulty {easy, medium, hard};
 class game {
 	world w;
 	menu m;
+	creation c;
 	int gamestatus, daytime, weather, difficulty, sensitivity;
-	int esc_hit;
 	int mapchosen, userchosen;
+	int esc_hit;
 public:
 	void init();
 	void finish();
-	bool update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y);
+	bool update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x, int mouse__y);
 	void render();
 	void change_userchosen (int Userchosen);
 	int get_userchosen();
@@ -37,11 +39,14 @@ public:
 	int get_difficulty();
 	float get_min_timediff();
 	void go_to_menu() {
-		gamestatus = 0;
+		gamestatus = in_menu;
 	}
 	void go_to_game() {
-		gamestatus = 1;
+		gamestatus = in_game;
 		w.init (daytime, weather, difficulty);
+	}
+	void create_map() {
+		gamestatus = in_creation;
 	}
 };
 

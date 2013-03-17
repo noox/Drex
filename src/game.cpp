@@ -1,4 +1,5 @@
 
+#include "SDL/SDL.h"
 #include <iostream>
 
 using namespace std;
@@ -21,6 +22,7 @@ void game::init() {
 	difficulty = easy;
 	w.init (daytime, weather, difficulty);
 	m.init();
+	c.init();
 	maplist_init();
 	userlist_init();
 }
@@ -29,7 +31,7 @@ void game::finish() {
 	w.finish();
 }
 
-bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y) {
+bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x, int mouse__y) {
 	int state = playing;
 	int esc_just_pressed = 0;
 	//proti sekvencim stisknutych tlacitek
@@ -38,14 +40,23 @@ bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down
 			esc_just_pressed = esc_hit = 1;
 	} else esc_hit = 0;
 
-
+	//v menu
 	if (gamestatus == in_menu) {
-		//v menu
+		SDL_ShowCursor (SDL_DISABLE);
 		if (!m.update (timediff, esc_down, left_mouse_down, right_mouse_down, mouse_x, mouse_y, *this) ) return false;
 		return true;
-	} else {
-		state = w.update (timediff, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x / sensitivity, mouse_y / sensitivity);
+
+		//v tvorbe map
+	} else if (gamestatus == in_creation) {
+		SDL_ShowCursor (SDL_ENABLE);
+		c.update (timediff, space_down, esc_down, left_mouse_down, right_mouse_down, mouse__x, mouse__y, *this);
+		if (esc_just_pressed) go_to_menu();
+		return true;
+
 		//ve hre
+	} else {
+		SDL_ShowCursor (SDL_DISABLE);
+		state = w.update (timediff, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x / sensitivity, mouse_y / sensitivity);
 		if (state == win) {
 			go_to_menu();
 			m.go_to_winscreen();
@@ -62,8 +73,9 @@ float game::get_min_timediff() {
 }
 
 void game::render() {
-	if (gamestatus == 0) m.render();
-	else w.render();
+	if (gamestatus == in_menu) m.render();
+	else if (gamestatus == in_game) w.render();
+	else c.render();
 }
 
 //zmeni uzivatelske jmeno, dle volby accountu

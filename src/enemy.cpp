@@ -107,7 +107,7 @@ void enemy::update (float time, world& w) {
 	if (burning < 0) burning = 0;
 	else hp -= time;
 
-	while (reload > 0) { 
+	while (reload > 0) {
 		if (burning > 0)  {
 			//partikly pro horeni poskozenych domu
 			particle& p = w.ps.add_one();
@@ -120,32 +120,32 @@ void enemy::update (float time, world& w) {
 			p.b = 0.01;
 		}
 
-/*	if (deletable() ) {
-		//vybuch z partiklu, pokud dum ztrati hp
-		for (int i = 0;i < 100;++i) {
-			{
-				particle& p = w.ps.add_one();
-				p.pos = pos;
-				p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 5;
-				p.type = part_burning;
-				p.life = 1;
-				p.r = 1;
-				p.g = FRAND / 2;
-				p.b = 0.01;
+		/*	if (deletable() ) {
+				//vybuch z partiklu, pokud dum ztrati hp
+				for (int i = 0;i < 100;++i) {
+					{
+						particle& p = w.ps.add_one();
+						p.pos = pos;
+						p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 5;
+						p.type = part_burning;
+						p.life = 1;
+						p.r = 1;
+						p.g = FRAND / 2;
+						p.b = 0.01;
+					}
+					{
+						particle& p = w.ps.add_one();
+						p.pos = pos + vect (DFRAND, DFRAND, DFRAND) * 3 * FRAND;
+						p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 0.5;
+						p.type = part_smoke;
+						p.life = 3;
+						p.r = 0.5;
+						p.g = 0.5;
+						p.b = 0.5;
+					}
+				}
 			}
-			{
-				particle& p = w.ps.add_one();
-				p.pos = pos + vect (DFRAND, DFRAND, DFRAND) * 3 * FRAND;
-				p.spd = vect (DFRAND, DFRAND, DFRAND).normal() * 0.5;
-				p.type = part_smoke;
-				p.life = 3;
-				p.r = 0.5;
-				p.g = 0.5;
-				p.b = 0.5;
-			}
-		}
-	}
-*/
+		*/
 		reload -= 0.01;
 	}
 }

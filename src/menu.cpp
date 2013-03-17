@@ -67,6 +67,7 @@ void menu::set_menu (int newstatus) {
 		items.push_back (make_pair ("campaign", 0) );
 		items.push_back (make_pair ("missions", 0) );
 		items.push_back (make_pair ("options", 0) );
+		items.push_back (make_pair ("map creation", 0) );
 		items.push_back (make_pair ("exit", 0) );
 		break;
 		//kampan
@@ -170,9 +171,13 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			set_menu (3);
 			break;
 		case 3:
+			g.create_map();
+			break;
+		case 4:
 			return false;
 		case -1:
-			return false;
+			set_menu (0);
+			break;
 		}
 		break;
 		//kampan
