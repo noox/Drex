@@ -33,6 +33,7 @@ void game::finish() {
 
 bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x, int mouse__y) {
 	int state = playing;
+
 	int esc_just_pressed = 0;
 	//proti sekvencim stisknutych tlacitek
 	if (esc_down) {
@@ -46,14 +47,14 @@ bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down
 		if (!m.update (timediff, esc_down, left_mouse_down, right_mouse_down, mouse_x, mouse_y, *this) ) return false;
 		return true;
 
-		//v tvorbe map
+	//v tvorbe map
 	} else if (gamestatus == in_creation) {
 		SDL_ShowCursor (SDL_ENABLE);
 		c.update (timediff, space_down, esc_down, left_mouse_down, right_mouse_down, mouse__x, mouse__y, *this);
 		if (esc_just_pressed) go_to_menu();
 		return true;
 
-		//ve hre
+	//ve hre
 	} else {
 		SDL_ShowCursor (SDL_DISABLE);
 		state = w.update (timediff, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x / sensitivity, mouse_y / sensitivity);

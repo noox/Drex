@@ -14,11 +14,11 @@ using namespace std;
 #include "../vendor/OGLFT.h"
 
 enum type {
-	mountain,
-	upland,
-	lowland,
 	water,
-	house
+	lowland,
+	upland,
+	mountain,
+	estate
 };
 
 class types {
@@ -33,7 +33,7 @@ class creation {
 	int left_mouse_hit, esc_hit, status, type;
 	vector<int> terrain, units;
 public:
-	int x, y, cursor_pos_x, cursor_pos_y;
+	int i, j, x, y, z, zz, cursor_pos_x, cursor_pos_y;
 	vector<types> data;
 	void init();
 	void set();

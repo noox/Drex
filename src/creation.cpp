@@ -14,29 +14,29 @@ void creation::set() {
 	data.resize (5);
 	data.clear();
 
-	data[0].r = 1;
-	data[0].g = 1;
+	data[0].r = 0;
+	data[0].g = 0.5;
 	data[0].b = 1;
 	data[0].active = false;
-	data[0].name = "mountain";
+	data[0].name = "water";
 
-	data[1].r = 0.8;
-	data[1].g = 0.5;
-	data[1].b = 0.1;
+	data[1].r = 0;
+	data[1].g = 1;
+	data[1].b = 0.3;
 	data[1].active = false;
-	data[1].name = "upland";
+	data[1].name = "lowland";
 
-	data[2].r = 0;
-	data[2].g = 1;
-	data[2].b = 0.3;
+	data[2].r = 0.8;
+	data[2].g = 0.5;
+	data[2].b = 0.1;
 	data[2].active = false;
-	data[2].name = "lowland";
+	data[2].name = "upland";
 
-	data[3].r = 0;
-	data[3].g = 0.5;
+	data[3].r = 1;
+	data[3].g = 1;
 	data[3].b = 1;
 	data[3].active = false;
-	data[3].name = "water";
+	data[3].name = "mountain";
 
 	data[4].r = 1;
 	data[4].g = 0.1;
@@ -59,21 +59,24 @@ void creation::init() {
 
 	set();
 	status = 0;
-	type = -1;
-	x = 90;
-	y = 520;
+	type = water;
 	left_mouse_hit = 0;
 	esc_hit = 0;
+
+	x = 90;
+	y = 520;
+	z = 64;
+	zz = 16;
 }
 
 int creation::get_type () {
 	if (status == 0) {
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = mountain;
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 55) && (cursor_pos_y > y - 10 - 30 - 55) ) type = upland;
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 2*55) && (cursor_pos_y > y - 10 - 30 - 2*55) ) type = lowland;
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 3*55) && (cursor_pos_y > y - 10 - 30 - 3*55) ) type = water;
+		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = water;
+		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 55) && (cursor_pos_y > y - 10 - 30 - 55) ) type = lowland;
+		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 2*55) && (cursor_pos_y > y - 10 - 30 - 2*55) ) type = upland;
+		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 3*55) && (cursor_pos_y > y - 10 - 30 - 3*55) ) type = mountain;
 	} else {
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = house;
+		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = estate;
 	}
 }
 
@@ -94,20 +97,55 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 
 	//zmena typu terenu/jednotky
 	if (left_just_pressed) {
-		if (type != -1) data[type].active = false;
+		data[type].active = false;
 		get_type();
-		if (type != -1) data[type].active = true;
+		data[type].active = true;
 	}
 
 	cout << "x: " << cursor_pos_x << " y: " << cursor_pos_y << " type: " << type << " status: " << status << endl;
 
 	if (status == 0) {
+		//vyplneni mrizky terenu
+		if(left_just_pressed)
+			for(i=0;i<8;++i) {
+				for(j=0;j<8;++j) {
+					if((cursor_pos_x>(x-1)+(j+1)+(j*(z-1))) && (cursor_pos_x<(x-1)+(j+1)+(j+1)*(z-1)) && (cursor_pos_y>(y-512-1)+(i+1)+(i*(z-1))) && (cursor_pos_y<(y-512-1)+(i+1)+(i+1)*(z-1))) {
+						if(type != -1) terrain[(7-i)*8+j] = type;
+						//cout << "teren: " << 8-i << ", " << j+1 << " je " << (7-i)*8+j << endl;
+					}
+				}
+			}
+		
 		//tlacitko "continue"
-		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60 + 5) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) status = 1;
+		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60 + 5) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+			status = 1;
+			//defaultni stetec
+			data[type].active = false;
+			type = estate;
+			data[estate].active = true;
+		}
 
-	} else {
+	} else {	
+		//vyplneni mrizky jednotek
+		if(left_just_pressed)
+			for(i=0;i<32;++i) {
+				for(j=0;j<32;++j) {
+					if((cursor_pos_x>(x-1)+(j+1)+(j*(zz-1))) && (cursor_pos_x<(x-1)+(j+1)+(j+1)*(zz-1)) && (cursor_pos_y>(y-512-1)+(i+1)+(i*(zz-1))) && (cursor_pos_y<(y-512-1)+(i+1)+(i+1)*(zz-1))) {
+						if(type != -1) units[(31-i)*32+j] = type;
+						//cout << "jednotky: " << 32-i << ", " << j+1 << " je " << (31-i)*32+j << endl;
+					}
+				}
+			}
+
 		//tlacitko "back"
-		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) status = 0;
+		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+			status = 0;
+			//defaultni stetec
+			data[type].active = false;
+			type = water;
+			data[water].active=true;
+		 }
+
 		//tlacitko "save map"
 		if (left_just_pressed && (cursor_pos_x > x + 542 + 75) && (cursor_pos_x < x + 542 + 60 + 95) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) status = 0;
 	}
@@ -132,7 +170,7 @@ void creation::render() {
 	face->setHorizontalJustification (OGLFT::Face::CENTER);
 	face2->setHorizontalJustification (OGLFT::Face::LEFT);
 
-	int i, a, b;
+	int a, b;
 
 	glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
 
@@ -151,24 +189,43 @@ void creation::render() {
 	glDisable (GL_BLEND);
 	glDisable (GL_TEXTURE_2D);
 
-	//oblast mapy
-	glPushMatrix();
-	glTranslatef (x, y, 0);
-	glColor3f (0.1, 0.1, 0.1);
-	glBegin (GL_QUADS);
-	glVertex2f (0, 0);
-	glVertex2f (0, -512);
-	glVertex2f (512, -512);
-	glVertex2f (512, 0);
-	glEnd();
-	glPopMatrix();
+	//vyplnena mrizka terenu
+	glTranslatef(0,0,0);
+	for(i=0;i<8;++i) {
+		for(j=0;j<8;++j) {
+			glColor3f(data[terrain[(7-i)*8+j]].r, data[terrain[(7-i)*8+j]].g, data[terrain[(7-i)*8+j]].b);
+			glBegin(GL_QUADS);
+			glVertex2f((x-1)+(j+1)+(j*(z-1)),(y-512-1)+(i+1)+(i*(z-1)));
+			glVertex2f((x-1)+(j+1)+(j+1)*(z-1),(y-512-1)+(i+1)+(i*(z-1)));
+			glVertex2f((x-1)+(j+1)+(j+1)*(z-1),(y-512-1)+(i+1)+(i+1)*(z-1));
+			glVertex2f((x-1)+(j+1)+(j*(z-1)),(y-512-1)+(i+1)+(i+1)*(z-1));
+			glEnd();
+		}
+	}
+	//vyplnena mrizka jednotek
+	glTranslatef(0,0,0);
+	if (status==1) {
+		for(i=0;i<32;++i) {
+			for(j=0;j<32;++j) {
+				if(units[(31-i)*32+j] == estate) {
+					glColor3f(data[units[(31-i)*32+j]].r, data[units[(31-i)*32+j]].g, data[units[(31-i)*32+j]].b);
+					glBegin(GL_QUADS);
+					glVertex2f((x-1)+(j+1)+(j*(zz-1)),(y-512-1)+(i+1)+(i*(zz-1)));
+					glVertex2f((x-1)+(j+1)+(j+1)*(zz-1),(y-512-1)+(i+1)+(i*(zz-1)));
+					glVertex2f((x-1)+(j+1)+(j+1)*(zz-1),(y-512-1)+(i+1)+(i+1)*(zz-1));
+					glVertex2f((x-1)+(j+1)+(j*(zz-1)),(y-512-1)+(i+1)+(i+1)*(zz-1));
+					glEnd();
+				}
+			}
+		}
+	}
 
 	//mrizka
 	if (status == 0) {
-		a = 64;
+		a = z;
 		b = 7;
 	} else {
-		a = 16;
+		a = zz;
 		b = 31;
 	}
 	glColor3f (0.25, 0.25, 0.25);
@@ -178,19 +235,19 @@ void creation::render() {
 	for (i = 0;i < b;++i) {
 		glBegin (GL_LINES);
 		glVertex2f (0, 0);
-		glVertex2f (512, 0);
+		glVertex2f (511, 0);
 		glEnd();
 		glTranslatef (0, -a, 0);
 	}
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef (x + a, y, 0);
+	glTranslatef (x + a, y - 1, 0);
 	//svisle cary
 	for (i = 0;i < b;++i) {
 		glBegin (GL_LINES);
 		glVertex2f (0, 0);
-		glVertex2f (0, -512);
+		glVertex2f (0, -511);
 		glEnd();
 		glTranslatef (a, 0, 0);
 	}
@@ -254,7 +311,7 @@ void creation::render() {
 	glDisable (GL_TEXTURE_2D);
 	glPopMatrix();
 
-	//podbarveni kurzoru
+	//tvorba mapy
 	glPushMatrix();
 
 	glPopMatrix();
