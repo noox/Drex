@@ -31,12 +31,15 @@ public:
 class creation {
 	OGLFT::TranslucentTexture *face, *face2;
 	int left_mouse_hit, esc_hit, status, type;
-	vector<int> terrain, units;
+	vector<int> terrain, final_terrain, terrain_to_save, units;
 public:
 	int i, j, x, y, z, zz, cursor_pos_x, cursor_pos_y;
 	vector<types> data;
 	void init();
 	void set();
+	void prepare_map();
+	void blur();
+	void save_map();
 	int get_type();
 	bool update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g);
 	void render();

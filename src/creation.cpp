@@ -1,6 +1,7 @@
 
 #include "GL/gl.h"
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 
@@ -43,6 +44,18 @@ void creation::set() {
 	data[4].b = 0.1;
 	data[4].active = false;
 	data[4].name = "estate";
+	
+	terrain.clear();
+	units.clear();
+	final_terrain.clear();
+	terrain_to_save.clear();
+	terrain.resize (8*8);
+	units.resize (32*32);
+	final_terrain.resize(256*256);
+	terrain_to_save.resize(256*256);
+
+	status = 0;
+	type = water;
 }
 
 void creation::init() {
@@ -52,14 +65,7 @@ void creation::init() {
 		cerr << "Could not construct face." << endl;
 		return;
 	}
-	terrain.clear();
-	units.clear();
-	terrain.resize (8*8);
-	units.resize (32*32);
-
 	set();
-	status = 0;
-	type = water;
 	left_mouse_hit = 0;
 	esc_hit = 0;
 
@@ -69,6 +75,7 @@ void creation::init() {
 	zz = 16;
 }
 
+//typ tlacitka pro stetec kreslici mapu
 int creation::get_type () {
 	if (status == 0) {
 		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = water;
@@ -78,6 +85,72 @@ int creation::get_type () {
 	} else {
 		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = estate;
 	}
+}
+
+//blur mapy pro tupejsi hrany
+void creation::blur() {
+	int s, rad, k, l;
+
+        rad=16;
+	for (i = 0; i < 256; ++i) {
+            	for (j = 0; j < 256; ++j) {
+                	s = 0;
+                	for (l = -rad; l <= rad; ++l)
+                    		for (k = -rad; k <= rad; ++k)
+                        		if((i+k >= 0) && (i+k <=255) && (j+l >=0) && (j+l <=255)) 	
+						s += final_terrain[(i + k)*256 + (j + l)];
+                	terrain_to_save[i*256+j] = s / ((rad * 2 + 1) * (rad * 2 + 1));  
+            	}
+        }
+
+/*
+	for (i=0;i<256;++i) {
+		for (j=0;j<256;++j) {
+			cout << terrain_to_save[i*256+j] << " ";
+		}
+		cout << endl;
+	}
+*/
+}
+
+//ulozi mapu do souboru
+void creation::save_map() {
+	ofstream f;
+	f.open ( "maps/pokus.map" );
+	for(i=0;i<256;++i) {
+		for(j=0;j<256;++j)
+			f << terrain_to_save[i*256+j] << " ";
+		f << endl;
+	}
+	f.close();
+}
+
+//pripravi mapu pro ulozeni
+void creation::prepare_map() {
+	int p, k, l;
+
+	//zvetsi meritko mapy a doplni o finalni hodnoty
+	for(i=0;i<8;++i) {
+		for(k=0;k<32;++k) {
+			for(j=0;j<8;++j) {
+				for(l=0;l<32;++l) {
+					p=terrain[i*8+j];
+					//hory
+					if (p==3) final_terrain[(((i*32)+k)*256)+j*32+l]=256;
+					//pahorkatiny
+					if (p==2) final_terrain[(((i*32)+k)*256)+j*32+l]=171;
+					//niziny
+					if (p==1) final_terrain[(((i*32)+k)*256)+j*32+l]=85;
+					//voda
+					if (p==0) final_terrain[(((i*32)+k)*256)+j*32+l]=0;
+				//	cout << final_terrain[(((i*32)+k)*256)+j*32+l] << " ";
+				}
+			}
+		//	cout << endl;
+		}
+	}
+	blur();
+	save_map();
 }
 
 bool creation::update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g) {
@@ -102,20 +175,20 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 		data[type].active = true;
 	}
 
-	cout << "x: " << cursor_pos_x << " y: " << cursor_pos_y << " type: " << type << " status: " << status << endl;
+	//cout << "x: " << cursor_pos_x << " y: " << cursor_pos_y << " type: " << type << " status: " << status << endl;
 
 	if (status == 0) {
 		//vyplneni mrizky terenu
-		if(left_just_pressed)
-			for(i=0;i<8;++i) {
-				for(j=0;j<8;++j) {
-					if((cursor_pos_x>(x-1)+(j+1)+(j*(z-1))) && (cursor_pos_x<(x-1)+(j+1)+(j+1)*(z-1)) && (cursor_pos_y>(y-512-1)+(i+1)+(i*(z-1))) && (cursor_pos_y<(y-512-1)+(i+1)+(i+1)*(z-1))) {
-						if(type != -1) terrain[(7-i)*8+j] = type;
+		if (left_just_pressed)
+			for (i = 0;i < 8;++i) {
+				for (j = 0;j < 8;++j) {
+					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (z - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (z - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (z - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) ) ) {
+						if (type != -1) terrain[ (7-i) *8+j] = type;
 						//cout << "teren: " << 8-i << ", " << j+1 << " je " << (7-i)*8+j << endl;
 					}
 				}
 			}
-		
+
 		//tlacitko "continue"
 		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60 + 5) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			status = 1;
@@ -125,13 +198,13 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 			data[estate].active = true;
 		}
 
-	} else {	
+	} else {
 		//vyplneni mrizky jednotek
-		if(left_just_pressed)
-			for(i=0;i<32;++i) {
-				for(j=0;j<32;++j) {
-					if((cursor_pos_x>(x-1)+(j+1)+(j*(zz-1))) && (cursor_pos_x<(x-1)+(j+1)+(j+1)*(zz-1)) && (cursor_pos_y>(y-512-1)+(i+1)+(i*(zz-1))) && (cursor_pos_y<(y-512-1)+(i+1)+(i+1)*(zz-1))) {
-						if(type != -1) units[(31-i)*32+j] = type;
+		if (left_just_pressed)
+			for (i = 0;i < 32;++i) {
+				for (j = 0;j < 32;++j) {
+					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (zz - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (zz - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) ) ) {
+						if (type != -1) units[ (31-i) *32+j] = type;
 						//cout << "jednotky: " << 32-i << ", " << j+1 << " je " << (31-i)*32+j << endl;
 					}
 				}
@@ -143,13 +216,16 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 			//defaultni stetec
 			data[type].active = false;
 			type = water;
-			data[water].active=true;
-		 }
+			data[water].active = true;
+		}
 
 		//tlacitko "save map"
-		if (left_just_pressed && (cursor_pos_x > x + 542 + 75) && (cursor_pos_x < x + 542 + 60 + 95) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) status = 0;
+		if (left_just_pressed && (cursor_pos_x > x + 542 + 75) && (cursor_pos_x < x + 542 + 60 + 95) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+			prepare_map();
+			set();
+			return false;
+		}
 	}
-
 	return true;
 }
 
@@ -190,30 +266,30 @@ void creation::render() {
 	glDisable (GL_TEXTURE_2D);
 
 	//vyplnena mrizka terenu
-	glTranslatef(0,0,0);
-	for(i=0;i<8;++i) {
-		for(j=0;j<8;++j) {
-			glColor3f(data[terrain[(7-i)*8+j]].r, data[terrain[(7-i)*8+j]].g, data[terrain[(7-i)*8+j]].b);
-			glBegin(GL_QUADS);
-			glVertex2f((x-1)+(j+1)+(j*(z-1)),(y-512-1)+(i+1)+(i*(z-1)));
-			glVertex2f((x-1)+(j+1)+(j+1)*(z-1),(y-512-1)+(i+1)+(i*(z-1)));
-			glVertex2f((x-1)+(j+1)+(j+1)*(z-1),(y-512-1)+(i+1)+(i+1)*(z-1));
-			glVertex2f((x-1)+(j+1)+(j*(z-1)),(y-512-1)+(i+1)+(i+1)*(z-1));
+	glTranslatef (0, 0, 0);
+	for (i = 0;i < 8;++i) {
+		for (j = 0;j < 8;++j) {
+			glColor3f (data[terrain[ (7-i) *8+j]].r, data[terrain[ (7-i) *8+j]].g, data[terrain[ (7-i) *8+j]].b);
+			glBegin (GL_QUADS);
+			glVertex2f ( (x - 1) + (j + 1) + (j* (z - 1) ), (y - 512 - 1) + (i + 1) + (i* (z - 1) ) );
+			glVertex2f ( (x - 1) + (j + 1) + (j + 1) * (z - 1), (y - 512 - 1) + (i + 1) + (i* (z - 1) ) );
+			glVertex2f ( (x - 1) + (j + 1) + (j + 1) * (z - 1), (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) );
+			glVertex2f ( (x - 1) + (j + 1) + (j* (z - 1) ), (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) );
 			glEnd();
 		}
 	}
 	//vyplnena mrizka jednotek
-	glTranslatef(0,0,0);
-	if (status==1) {
-		for(i=0;i<32;++i) {
-			for(j=0;j<32;++j) {
-				if(units[(31-i)*32+j] == estate) {
-					glColor3f(data[units[(31-i)*32+j]].r, data[units[(31-i)*32+j]].g, data[units[(31-i)*32+j]].b);
-					glBegin(GL_QUADS);
-					glVertex2f((x-1)+(j+1)+(j*(zz-1)),(y-512-1)+(i+1)+(i*(zz-1)));
-					glVertex2f((x-1)+(j+1)+(j+1)*(zz-1),(y-512-1)+(i+1)+(i*(zz-1)));
-					glVertex2f((x-1)+(j+1)+(j+1)*(zz-1),(y-512-1)+(i+1)+(i+1)*(zz-1));
-					glVertex2f((x-1)+(j+1)+(j*(zz-1)),(y-512-1)+(i+1)+(i+1)*(zz-1));
+	glTranslatef (0, 0, 0);
+	if (status == 1) {
+		for (i = 0;i < 32;++i) {
+			for (j = 0;j < 32;++j) {
+				if (units[ (31-i) *32+j] == estate) {
+					glColor3f (data[units[ (31-i) *32+j]].r, data[units[ (31-i) *32+j]].g, data[units[ (31-i) *32+j]].b);
+					glBegin (GL_QUADS);
+					glVertex2f ( (x - 1) + (j + 1) + (j* (zz - 1) ), (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) );
+					glVertex2f ( (x - 1) + (j + 1) + (j + 1) * (zz - 1), (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) );
+					glVertex2f ( (x - 1) + (j + 1) + (j + 1) * (zz - 1), (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) );
+					glVertex2f ( (x - 1) + (j + 1) + (j* (zz - 1) ), (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) );
 					glEnd();
 				}
 			}

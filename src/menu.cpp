@@ -174,6 +174,8 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			g.create_map();
 			break;
 		case 4:
+			g.save_user();
+			g.save_game();
 			return false;
 		case -1:
 			set_menu (0);
@@ -427,6 +429,7 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 				break;
 			}
 			//pri zvoleni jmena, zaridi vse potrebne
+			g.save_user();
 			g.change_userchosen (make_user (name) );
 			username = name;
 			set_menu (8);
@@ -441,6 +444,7 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 		switch (item) {
 		case 0:
 			//posuvnik nahoru
+			g.save_user();
 			userchosen--;
 			if (userchosen < 0) userchosen = 0;
 			g.change_userchosen (userchosen);
@@ -449,13 +453,12 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			break;
 		case 1:
 			//jmeno uctu k vyberu
-			g.change_userchosen (userchosen);
-			username = userlist_get_name (userchosen);
 			if (username == "") set_menu (11);
 			else set_menu (8);
 			break;
 		case 2:
 			//posuvnik dolu
+			g.save_user();
 			userchosen++;
 			if (userchosen > userlist_count() - 1) userchosen = userlist_count() - 1;
 			g.change_userchosen (userchosen);

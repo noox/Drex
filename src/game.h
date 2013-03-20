@@ -18,6 +18,7 @@ class game {
 	menu m;
 	creation c;
 	int gamestatus, daytime, weather, difficulty, sensitivity;
+	int campaign_status, maps_created;
 	int mapchosen, userchosen;
 	int esc_hit;
 public:
@@ -25,6 +26,10 @@ public:
 	void finish();
 	bool update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x, int mouse__y);
 	void render();
+	void save_game();
+	void save_user();
+	void load_game();
+	void read_user_info();
 	void change_userchosen (int Userchosen);
 	int get_userchosen();
 	void change_mapchosen (int Mapchosen);
