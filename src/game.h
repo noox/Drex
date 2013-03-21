@@ -54,6 +54,7 @@ public:
 	}
 	void create_map() {
 		gamestatus = in_creation;
+		c.init();
 	}
 };
 

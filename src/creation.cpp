@@ -22,30 +22,35 @@ void creation::set() {
 	data[0].b = 1;
 	data[0].active = false;
 	data[0].name = "water";
+	data[0].color = "blue";
 
 	data[1].r = 0;
 	data[1].g = 1;
 	data[1].b = 0.3;
 	data[1].active = false;
 	data[1].name = "lowland";
+	data[1].color = "green";
 
 	data[2].r = 0.8;
 	data[2].g = 0.5;
 	data[2].b = 0.1;
 	data[2].active = false;
 	data[2].name = "upland";
+	data[2].color = "brown";
 
 	data[3].r = 1;
 	data[3].g = 1;
 	data[3].b = 1;
 	data[3].active = false;
 	data[3].name = "mountain";
+	data[3].color = "white";
 
 	data[4].r = 1;
 	data[4].g = 0.1;
 	data[4].b = 0.1;
 	data[4].active = false;
 	data[4].name = "estate";
+	data[4].color = "red";
 
 	terrain.clear();
 	units.clear();
@@ -75,6 +80,13 @@ void creation::init() {
 	y = 520;
 	z = 64;
 	zz = 16;
+
+	weather = -1;
+	daytime = -1;
+	difficulty = -1;
+	active_weather = -1;
+	active_daytime = -1;
+	active_difficulty = -1;
 }
 
 //typ tlacitka pro stetec kreslici mapu
@@ -119,11 +131,19 @@ void creation::blur() {
 void creation::save_map (game& g) {
 	ofstream f;
 	f.open ( ("maps/" + userlist_get_name (g.get_userchosen() ) + "-" + g.get_map_created() + ".map").c_str() );
+	//vyplni nastaveni mapy
+	f << "w\t" << weather << endl << "d\t" << daytime << endl << "f\t" << difficulty << endl;
+	//vyplni teren
 	for (i = 0;i < 256;++i) {
 		for (j = 0;j < 256;++j)
 			f << terrain_to_save[i*256+j] << " ";
 		f << endl;
 	}
+	//vyplni nepratelske jednotky v meritku
+	for (i=0;i<32;++i)
+		for (j=0;j<32;++j)
+			if (units[i*32+j] == estate) 
+				f << (i*8)+3.5 << "\t" << (j*8)+3.5 << endl;
 	f.close();
 	//a zresetuje seznam map
 	maplist_init();
@@ -148,6 +168,47 @@ void creation::prepare_map() {
 					//voda
 					if (p == 0) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 0;
 				}
+}
+
+//nastaveni hodnot pro zaskrtavatko pocasi/denni doby/obtiznosti
+void creation::get_settings() {
+	if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 100) ) {
+		//weather
+		if ( (cursor_pos_y < y - 215) && (cursor_pos_y > y - 225) ) {
+			weather = 0;
+			active_weather = 0;
+		}
+		if ( (cursor_pos_y < y - 235) && (cursor_pos_y > y - 245) ) {
+			weather = 1;
+			active_weather = 1;
+		}
+		if ( (cursor_pos_y < y - 255) && (cursor_pos_y > y - 265) ) {
+			weather = 2;
+			active_weather = 2;
+		}
+		//daytime
+		if ( (cursor_pos_y < y - 305) && (cursor_pos_y > y - 315) ) {
+			daytime = 0;;
+			active_daytime = 3;;
+		}
+		if ( (cursor_pos_y < y - 325) && (cursor_pos_y > y - 335) ) {
+			daytime = 1;
+			active_daytime = 4;
+		}
+		//difficulty
+		if ( (cursor_pos_y < y - 375) && (cursor_pos_y > y - 385) ) {
+			difficulty = 0;
+			active_difficulty = 5;
+		}
+		if ( (cursor_pos_y < y - 395) && (cursor_pos_y > y - 405) ) {
+			difficulty = 1;
+			active_difficulty = 6;
+		}
+		if ( (cursor_pos_y < y - 415) && (cursor_pos_y > y - 425) ) {
+			difficulty = 2;
+			active_difficulty = 7;
+		}
+	}
 }
 
 bool creation::update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g) {
@@ -204,6 +265,9 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 					}
 				}
 			}
+		
+		//zaskrtnuti pocasi/denni doby/obtiznosti	
+		if (left_just_pressed) get_settings();
 
 		//tlacitko "back"
 		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
@@ -218,7 +282,8 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 		if (left_just_pressed && (cursor_pos_x > x + 542 + 75) && (cursor_pos_x < x + 542 + 60 + 95) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			prepare_map();
 			blur();
-			save_map (g);
+			if (weather!=-1 && daytime != -1 && difficulty!=-1) save_map (g); //TODO no enemies
+			else return true;
 			set();
 			return false;
 		}
@@ -226,6 +291,21 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 	return true;
 }
 
+//nakresli ctverecek ci zaskrtnuty ctverecek
+void creation::make_quad(int empty) {
+	glPushMatrix();
+	glColor3f(0.5,0.5,0.5);
+	if(empty) glBegin(GL_LINE_LOOP);
+	else glBegin(GL_QUADS);
+	glVertex2f(0,0);
+	glVertex2f(1,0);
+	glVertex2f(1,1);
+	glVertex2f(0,1);
+	glEnd();
+	glPopMatrix();
+}
+
+//vykresli sekci pro tvorbu map
 void creation::render() {
 	glDisable (GL_DEPTH_TEST);
 	glClearColor (0, 0, 0, 0);
@@ -236,11 +316,11 @@ void creation::render() {
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity();
 
-	face->setBackgroundColor (0, 0.75, 0.75, 0);
-	face2->setBackgroundColor (0.8, 0.8, 0.8, 0);
 	face->setForegroundColor (0, 0.75, 0.75, 1);
-	face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+	face->setBackgroundColor (0, 0.75, 0.75, 0);
 	face->setHorizontalJustification (OGLFT::Face::CENTER);
+	face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+	face2->setBackgroundColor (0.8, 0.8, 0.8, 0);
 	face2->setHorizontalJustification (OGLFT::Face::LEFT);
 
 	int a, b;
@@ -256,7 +336,7 @@ void creation::render() {
 	glPushMatrix();
 	glTranslatef (400, 540, 0);
 	if (status == 0) face->draw (0, 0, "create terrain");
-	else face->draw (0, 0, "add units");
+	else face->draw (0, 0, "settings");
 	glPopMatrix();
 
 	glDisable (GL_BLEND);
@@ -340,10 +420,8 @@ void creation::render() {
 		glEnable (GL_BLEND);
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		if (data[i].active) {
-			face2->setBackgroundColor (1, 0, 0, 0);
 			face2->setForegroundColor (1, 0, 0, 1);
 			face2->draw (0, 0, (data[i].name).c_str() );
-			face2->setBackgroundColor (0.8, 0.8, 0.8, 0);
 			face2->setForegroundColor (0.8, 0.8, 0.8, 1);
 		} else face2->draw (0, 0, (data[i].name).c_str() );
 		glDisable (GL_BLEND);
@@ -363,13 +441,90 @@ void creation::render() {
 	}
 	glPopMatrix();
 
-	//napisy pro prechody a save
+	//legenda
 	glPushMatrix();
-	glTranslatef (x + 542, y - 480, 0);
 	glEnable (GL_TEXTURE_2D);
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	face2->setBackgroundColor (1, 1, 1, 0);
+	if (status == 0) glTranslatef (x + 542, y - 260, 0);
+	else glTranslatef (x + 542, y - 70, 0);
+	face2->draw (0, 0, ("Use " + data[type].color).c_str());
+	glTranslatef (0, -20, 0);
+	face2->draw (0, 0, "to arrange");
+	glTranslatef (0, -20, 0);
+	if (type!=water && type !=estate) face2->draw (0, 0, (data[type].name + "'s.").c_str());
+	else face2->draw (0, 0, (data[type].name + ".").c_str());
+	if (status == 1) {
+		glTranslatef (0, -40, 0);
+		face2->draw (0, 0, "Choose the game");
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, "properties.");
+	}
+	glPopMatrix();
+
+	//volba pocasi/denni doby/obtiznosti
+	if (status == 1) {
+		//zaskrtavatka
+		glDisable (GL_BLEND);
+		glDisable (GL_TEXTURE_2D);
+		glPushMatrix();
+		glTranslatef (x + 542, y - 225, 0);
+		glScalef (10, 10, 10);
+		for (i=0; i<8; ++i) {
+			//vyplnene zaskrtavatko
+			if (i == active_weather || i == active_daytime || i == active_difficulty) 
+				make_quad (false);
+			//prazdne zaskrtavatko
+			else make_quad (true);
+			//posun do dalsi kategorie
+			if (i == 2 || i == 4) glTranslatef (0, -5, 0);
+			//posun v ramci kategorie
+			else glTranslatef (0, -2, 0);
+		}
+		glPopMatrix();
+		glEnable (GL_TEXTURE_2D);
+		glEnable (GL_BLEND);
+		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		//text k zaskrtavatkum
+		glPushMatrix();
+		glTranslatef (x + 542, y - 205, 0);
+		
+		face2->setForegroundColor (1, 1, 1, 1);
+		face2->draw (0, 0, ("weather"));
+		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+		glTranslatef (20, -20, 0);
+		face2->draw (0, 0, ("sunny"));
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, ("rainy"));
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, ("snowy"));
+		glTranslatef (-20, -30, 0);
+	
+		face2->setForegroundColor (1, 1, 1, 1);
+		face2->draw (0, 0, ("daytime"));
+		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+		glTranslatef (20, -20, 0);
+		face2->draw (0, 0, ("day"));
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, ("night"));
+		glTranslatef (-20, -30, 0);
+
+		face2->setForegroundColor (1, 1, 1, 1);
+		face2->draw (0, 0, ("difficulty"));
+		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+		glTranslatef (20, -20, 0);
+		face2->draw (0, 0, ("easy"));
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, ("medium"));
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, ("hard"));
+		glPopMatrix();
+	}
+
+	//napisy pro prechody a save
+	glPushMatrix();
+	glTranslatef (x + 542, y - 480, 0);
 	face2->setForegroundColor (1, 1, 1, 1);
 	if (status == 0) face2->draw (0, 0, "continue");
 	else {
