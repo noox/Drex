@@ -14,7 +14,7 @@ using namespace std;
 #include "../vendor/OGLFT.h"
 
 void creation::set() {
-	data.resize (5);
+	data.resize (6);
 	data.clear();
 
 	data[0].r = 0;
@@ -51,6 +51,13 @@ void creation::set() {
 	data[4].active = false;
 	data[4].name = "estate";
 	data[4].color = "red";
+
+	data[5].r = 1;
+	data[5].g = 0.1;
+	data[5].b = 0.1;
+	data[5].active = false;
+	data[5].name = "estate";
+	data[5].color = "eraser";
 
 	terrain.clear();
 	units.clear();
@@ -91,14 +98,16 @@ void creation::init() {
 
 //typ tlacitka pro stetec kreslici mapu
 int creation::get_type () {
-	if (status == 0) {
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = water;
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 55) && (cursor_pos_y > y - 10 - 30 - 55) ) type = lowland;
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 2*55) && (cursor_pos_y > y - 10 - 30 - 2*55) ) type = upland;
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10 - 3*55) && (cursor_pos_y > y - 10 - 30 - 3*55) ) type = mountain;
-	} else {
-		if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = estate;
-	}
+	if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) )
+		if (status == 0) {
+			if ( (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = water;
+			if ( (cursor_pos_y < y - 10 - 55) && (cursor_pos_y > y - 10 - 30 - 55) ) type = lowland;
+			if ( (cursor_pos_y < y - 10 - 2*55) && (cursor_pos_y > y - 10 - 30 - 2*55) ) type = upland;
+			if ( (cursor_pos_y < y - 10 - 3*55) && (cursor_pos_y > y - 10 - 30 - 3*55) ) type = mountain;
+		} else if (status == 1) {
+			if ( (cursor_pos_y < y - 10) && (cursor_pos_y > y - 10 - 30) ) type = estate;
+			if ( (cursor_pos_y < y - 10 - 55) && (cursor_pos_y > y - 10 - 30 - 55) ) type = no_estate;
+		}
 }
 
 //blur mapy pro tupejsi hrany
@@ -140,10 +149,10 @@ void creation::save_map (game& g) {
 		f << endl;
 	}
 	//vyplni nepratelske jednotky v meritku
-	for (i=0;i<32;++i)
-		for (j=0;j<32;++j)
-			if (units[i*32+j] == estate) 
-				f << (i*8)+3.5 << "\t" << (j*8)+3.5 << endl;
+	for (i = 0;i < 32;++i)
+		for (j = 0;j < 32;++j)
+			if (units[i*32+j] == estate)
+				f << (i*8) + 3.5 << "\t" << (j*8) + 3.5 << endl;
 	f.close();
 	//a zresetuje seznam map
 	maplist_init();
@@ -174,41 +183,49 @@ void creation::prepare_map() {
 void creation::get_settings() {
 	if ( (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 100) ) {
 		//weather
-		if ( (cursor_pos_y < y - 215) && (cursor_pos_y > y - 225) ) {
+		if ( (cursor_pos_y < y - 80) && (cursor_pos_y > y - 90) ) {
 			weather = 0;
 			active_weather = 0;
 		}
-		if ( (cursor_pos_y < y - 235) && (cursor_pos_y > y - 245) ) {
+		if ( (cursor_pos_y < y - 100) && (cursor_pos_y > y - 110) ) {
 			weather = 1;
 			active_weather = 1;
 		}
-		if ( (cursor_pos_y < y - 255) && (cursor_pos_y > y - 265) ) {
+		if ( (cursor_pos_y < y - 120) && (cursor_pos_y > y - 130) ) {
 			weather = 2;
 			active_weather = 2;
 		}
 		//daytime
-		if ( (cursor_pos_y < y - 305) && (cursor_pos_y > y - 315) ) {
+		if ( (cursor_pos_y < y - 170) && (cursor_pos_y > y - 180) ) {
 			daytime = 0;;
 			active_daytime = 3;;
 		}
-		if ( (cursor_pos_y < y - 325) && (cursor_pos_y > y - 335) ) {
+		if ( (cursor_pos_y < y - 190) && (cursor_pos_y > y - 200) ) {
 			daytime = 1;
 			active_daytime = 4;
 		}
 		//difficulty
-		if ( (cursor_pos_y < y - 375) && (cursor_pos_y > y - 385) ) {
+		if ( (cursor_pos_y < y - 240) && (cursor_pos_y > y - 250) ) {
 			difficulty = 0;
 			active_difficulty = 5;
 		}
-		if ( (cursor_pos_y < y - 395) && (cursor_pos_y > y - 405) ) {
+		if ( (cursor_pos_y < y - 260) && (cursor_pos_y > y - 270) ) {
 			difficulty = 1;
 			active_difficulty = 6;
 		}
-		if ( (cursor_pos_y < y - 415) && (cursor_pos_y > y - 425) ) {
+		if ( (cursor_pos_y < y - 280) && (cursor_pos_y > y - 290) ) {
 			difficulty = 2;
 			active_difficulty = 7;
 		}
 	}
+}
+
+//zkontroluje, zda jsou na mape nejaci nepratele
+bool creation::someone_on_map() {
+	for (i = 0;i < 32;++i)
+		for (j = 0;j < 32;++j)
+			if (units[i*32+j] == estate) return true;
+	return false;
 }
 
 bool creation::update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g) {
@@ -238,16 +255,13 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 	if (status == 0) {
 		//vyplneni mrizky terenu
 		if (left_just_pressed)
-			for (i = 0;i < 8;++i) {
-				for (j = 0;j < 8;++j) {
-					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (z - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (z - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (z - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) ) ) {
+			for (i = 0;i < 8;++i)
+				for (j = 0;j < 8;++j)
+					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (z - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (z - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (z - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) ) )
 						if (type != -1) terrain[ (7-i) *8+j] = type;
-					}
-				}
-			}
 
 		//tlacitko "continue"
-		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60 + 5) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			status = 1;
 			//defaultni stetec
 			data[type].active = false;
@@ -255,22 +269,23 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 			data[estate].active = true;
 		}
 
-	} else {
+	} else if (status == 1 ) {
 		//vyplneni mrizky jednotek
 		if (left_just_pressed)
-			for (i = 0;i < 32;++i) {
-				for (j = 0;j < 32;++j) {
-					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (zz - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (zz - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) ) ) {
+			for (i = 0;i < 32;++i)
+				for (j = 0;j < 32;++j)
+					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (zz - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (zz - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) ) )
 						if (type != -1) units[ (31-i) *32+j] = type;
-					}
-				}
-			}
-		
-		//zaskrtnuti pocasi/denni doby/obtiznosti	
-		if (left_just_pressed) get_settings();
 
+		//tlacitko "continue"
+		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+			status = 2;
+			//defaultni stetec
+			data[type].active = false;
+			type = -1;
+		}
 		//tlacitko "back"
-		if (left_just_pressed && (cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+		if (left_just_pressed && (cursor_pos_x > x + 542 + 88 ) && (cursor_pos_x < x + 542 + 88 + 50) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			status = 0;
 			//defaultni stetec
 			data[type].active = false;
@@ -278,29 +293,42 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 			data[water].active = true;
 		}
 
+	} else {
+		//zaskrtnuti pocasi/denni doby/obtiznosti
+		if (left_just_pressed) get_settings();
+
 		//tlacitko "save map"
-		if (left_just_pressed && (cursor_pos_x > x + 542 + 75) && (cursor_pos_x < x + 542 + 60 + 95) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			prepare_map();
 			blur();
-			if (weather!=-1 && daytime != -1 && difficulty!=-1) save_map (g); //TODO no enemies
+			if (weather != -1 && daytime != -1 && difficulty != -1 && someone_on_map() ) save_map (g);
 			else return true;
 			set();
 			return false;
 		}
+		//tlacitko "back"
+		if (left_just_pressed && (cursor_pos_x > x + 542 + 88) && (cursor_pos_x < x + 542 + 88 + 50) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
+			status = 1;
+			//defaultni stetec
+			data[type].active = false;
+			type = estate;
+			data[estate].active = true;
+		}
+
 	}
 	return true;
 }
 
 //nakresli ctverecek ci zaskrtnuty ctverecek
-void creation::make_quad(int empty) {
+void creation::make_quad (int empty) {
 	glPushMatrix();
-	glColor3f(0.5,0.5,0.5);
-	if(empty) glBegin(GL_LINE_LOOP);
-	else glBegin(GL_QUADS);
-	glVertex2f(0,0);
-	glVertex2f(1,0);
-	glVertex2f(1,1);
-	glVertex2f(0,1);
+	glColor3f (0.5, 0.5, 0.5);
+	if (empty) glBegin (GL_LINE_LOOP);
+	else glBegin (GL_QUADS);
+	glVertex2f (0, 0);
+	glVertex2f (1, 0);
+	glVertex2f (1, 1);
+	glVertex2f (0, 1);
 	glEnd();
 	glPopMatrix();
 }
@@ -336,7 +364,8 @@ void creation::render() {
 	glPushMatrix();
 	glTranslatef (400, 540, 0);
 	if (status == 0) face->draw (0, 0, "create terrain");
-	else face->draw (0, 0, "settings");
+	else if (status == 1) face->draw (0, 0, "build estate");
+	else face->draw (0, 0, "choose conditions");
 	glPopMatrix();
 
 	glDisable (GL_BLEND);
@@ -357,7 +386,7 @@ void creation::render() {
 
 	//vyplnena mrizka jednotek
 	glTranslatef (0, 0, 0);
-	if (status == 1)
+	if ( status == 1 || status == 2 )
 		for (i = 0;i < 32;++i)
 			for (j = 0;j < 32;++j)
 				if (units[ (31-i) *32+j] == estate) {
@@ -374,9 +403,12 @@ void creation::render() {
 	if (status == 0) {
 		a = z;
 		b = 7;
-	} else {
+	} else if (status == 1) {
 		a = zz;
 		b = 31;
+	} else {
+		a = 2;
+		b = 255;
 	}
 	glColor3f (0.25, 0.25, 0.25);
 	glPushMatrix();
@@ -409,53 +441,75 @@ void creation::render() {
 		a = 0;
 		b = 4;
 		//v dodani jednotek
-	} else {
+	} else if (status == 1) {
 		a = 4;
-		b = 5;
+		b = 6;
 	}
-	glPushMatrix();
-	glTranslatef (x + 542, y - 7, 0);
-	for (i = a;i < b;++i) {
-		glEnable (GL_TEXTURE_2D);
-		glEnable (GL_BLEND);
-		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		if (data[i].active) {
-			face2->setForegroundColor (1, 0, 0, 1);
-			face2->draw (0, 0, (data[i].name).c_str() );
-			face2->setForegroundColor (0.8, 0.8, 0.8, 1);
-		} else face2->draw (0, 0, (data[i].name).c_str() );
-		glDisable (GL_BLEND);
-		glDisable (GL_TEXTURE_2D);
+	if (status != 2) {
+		glPushMatrix();
+		glTranslatef (x + 542, y - 7, 0);
+		for (i = a;i < b;++i) {
+			glEnable (GL_TEXTURE_2D);
+			glEnable (GL_BLEND);
+			glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			if (data[i].active) {
+				face2->setForegroundColor (1, 0, 0, 1);
+				if (i == no_estate) face2->draw (0, 0, "eraser");
+				else face2->draw (0, 0, (data[i].name).c_str() );
+				face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+			} else {
+				if (i == no_estate) face2->draw (0, 0, "eraser");
+				else face2->draw (0, 0, (data[i].name).c_str() );
+			}
+			glDisable (GL_BLEND);
+			glDisable (GL_TEXTURE_2D);
 
-		glTranslatef (0, -3, 0);
+			glTranslatef (0, -3, 0);
 
-		glColor3f (data[i].r, data[i].g, data[i].b);
-		glBegin (GL_QUADS);
-		glVertex2f (0, 0);
-		glVertex2f (0, -30);
-		glVertex2f (60, -30);
-		glVertex2f (60, 0);
-		glEnd();
+			if (i == no_estate) glColor3f (0, 0, 0);
+			else glColor3f (data[i].r, data[i].g, data[i].b);
+			glBegin (GL_QUADS);
+			glVertex2f (0, 0);
+			glVertex2f (0, -30);
+			glVertex2f (60, -30);
+			glVertex2f (60, 0);
+			glEnd();
 
-		glTranslatef (0, -52 , 0);
+			if (i == no_estate) {
+				glBegin (GL_LINE_LOOP);
+				glColor3f (data[i].r, data[i].g, data[i].b);
+				glVertex2f (0, 0);
+				glVertex2f (0, -30);
+				glVertex2f (60, -30);
+				glVertex2f (60, 0);
+				glEnd();
+			}
+
+			glTranslatef (0, -52 , 0);
+		}
+		glPopMatrix();
 	}
-	glPopMatrix();
 
 	//legenda
 	glPushMatrix();
 	glEnable (GL_TEXTURE_2D);
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	if (status == 0) glTranslatef (x + 542, y - 260, 0);
-	else glTranslatef (x + 542, y - 70, 0);
-	face2->draw (0, 0, ("Use " + data[type].color).c_str());
-	glTranslatef (0, -20, 0);
-	face2->draw (0, 0, "to arrange");
-	glTranslatef (0, -20, 0);
-	if (type!=water && type !=estate) face2->draw (0, 0, (data[type].name + "'s.").c_str());
-	else face2->draw (0, 0, (data[type].name + ".").c_str());
-	if (status == 1) {
-		glTranslatef (0, -40, 0);
+	else if (status == 1) glTranslatef (x + 542, y - 150, 0);
+	else glTranslatef (x + 542, y - 10, 0);
+
+	if (status != 2) {
+		face2->draw (0, 0, ("Use " + data[type].color).c_str() );
+		glTranslatef (0, -20, 0);
+		if (type == no_estate) face2->draw (0, 0, "to remove");
+		else face2->draw (0, 0, "to arrange");
+		glTranslatef (0, -20, 0);
+		if (type != water && type != estate && type != no_estate) face2->draw (0, 0, (data[type].name + "s.").c_str() );
+		else face2->draw (0, 0, (data[type].name + ".").c_str() );
+	}
+	if (status == 2) {
 		face2->draw (0, 0, "Choose the game");
 		glTranslatef (0, -20, 0);
 		face2->draw (0, 0, "properties.");
@@ -463,16 +517,16 @@ void creation::render() {
 	glPopMatrix();
 
 	//volba pocasi/denni doby/obtiznosti
-	if (status == 1) {
+	if (status == 2) {
 		//zaskrtavatka
 		glDisable (GL_BLEND);
 		glDisable (GL_TEXTURE_2D);
 		glPushMatrix();
-		glTranslatef (x + 542, y - 225, 0);
+		glTranslatef (x + 542, y - 90, 0);
 		glScalef (10, 10, 10);
-		for (i=0; i<8; ++i) {
+		for (i = 0; i < 8; ++i) {
 			//vyplnene zaskrtavatko
-			if (i == active_weather || i == active_daytime || i == active_difficulty) 
+			if (i == active_weather || i == active_daytime || i == active_difficulty)
 				make_quad (false);
 			//prazdne zaskrtavatko
 			else make_quad (true);
@@ -488,37 +542,37 @@ void creation::render() {
 
 		//text k zaskrtavatkum
 		glPushMatrix();
-		glTranslatef (x + 542, y - 205, 0);
-		
+		glTranslatef (x + 542, y - 70, 0);
+
 		face2->setForegroundColor (1, 1, 1, 1);
-		face2->draw (0, 0, ("weather"));
+		face2->draw (0, 0, ("weather") );
 		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
 		glTranslatef (20, -20, 0);
-		face2->draw (0, 0, ("sunny"));
+		face2->draw (0, 0, ("sunny") );
 		glTranslatef (0, -20, 0);
-		face2->draw (0, 0, ("rainy"));
+		face2->draw (0, 0, ("rainy") );
 		glTranslatef (0, -20, 0);
-		face2->draw (0, 0, ("snowy"));
-		glTranslatef (-20, -30, 0);
-	
-		face2->setForegroundColor (1, 1, 1, 1);
-		face2->draw (0, 0, ("daytime"));
-		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
-		glTranslatef (20, -20, 0);
-		face2->draw (0, 0, ("day"));
-		glTranslatef (0, -20, 0);
-		face2->draw (0, 0, ("night"));
+		face2->draw (0, 0, ("snowy") );
 		glTranslatef (-20, -30, 0);
 
 		face2->setForegroundColor (1, 1, 1, 1);
-		face2->draw (0, 0, ("difficulty"));
+		face2->draw (0, 0, ("daytime") );
 		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
 		glTranslatef (20, -20, 0);
-		face2->draw (0, 0, ("easy"));
+		face2->draw (0, 0, ("day") );
 		glTranslatef (0, -20, 0);
-		face2->draw (0, 0, ("medium"));
+		face2->draw (0, 0, ("night") );
+		glTranslatef (-20, -30, 0);
+
+		face2->setForegroundColor (1, 1, 1, 1);
+		face2->draw (0, 0, ("difficulty") );
+		face2->setForegroundColor (0.8, 0.8, 0.8, 1);
+		glTranslatef (20, -20, 0);
+		face2->draw (0, 0, ("easy") );
 		glTranslatef (0, -20, 0);
-		face2->draw (0, 0, ("hard"));
+		face2->draw (0, 0, ("medium") );
+		glTranslatef (0, -20, 0);
+		face2->draw (0, 0, ("hard") );
 		glPopMatrix();
 	}
 
@@ -527,18 +581,17 @@ void creation::render() {
 	glTranslatef (x + 542, y - 480, 0);
 	face2->setForegroundColor (1, 1, 1, 1);
 	if (status == 0) face2->draw (0, 0, "continue");
-	else {
+	else if (status == 1) {
+		face2->draw (0, 0, "continue");
+		glTranslatef (90, 0, 0);
 		face2->draw (0, 0, "back");
-		glTranslatef (75, 0, 0);
+	} else {
 		face2->draw (0, 0, "save map");
+		glTranslatef (90, 0, 0);
+		face2->draw (0, 0, "back");
 	}
 	glDisable (GL_BLEND);
 	glDisable (GL_TEXTURE_2D);
-	glPopMatrix();
-
-	//tvorba mapy
-	glPushMatrix();
-
 	glPopMatrix();
 
 	glEnable (GL_DEPTH_TEST);

@@ -106,6 +106,7 @@ void game::save_game() {
 
 //ulozi uzivatelovo nastaveni
 void game::save_user() {
+	if (userlist_get_name (userchosen) == "") return;
 	ofstream f;
 	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
 	f << "c\t" << campaign_status << endl << "m\t" << mapchosen << endl << "d\t" << daytime << endl << "w\t" << weather << endl << "f\t" << difficulty << endl << "s\t" << sensitivity << endl << "z\t" << maps_created << endl;
