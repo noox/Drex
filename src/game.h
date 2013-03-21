@@ -3,6 +3,7 @@
 #define _GAME_H_
 
 class game;
+#include <string>
 #include "world.h"
 #include "menu.h"
 #include "creation.h"
@@ -30,6 +31,7 @@ public:
 	void save_user();
 	void load_game();
 	void read_user_info();
+	string get_map_created();
 	void change_userchosen (int Userchosen);
 	int get_userchosen();
 	void change_mapchosen (int Mapchosen);

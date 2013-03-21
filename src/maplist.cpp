@@ -43,6 +43,7 @@ string maplist_get_name (int mapid) {
 
 //funkce pripravujici adresar map
 void maplist_init() {
+	maps.clear();
 	DIR* dirp;
 	struct dirent* dp;
 	dirp = opendir ("maps/");

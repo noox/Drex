@@ -8,6 +8,8 @@
 using namespace std;
 
 #include "creation.h"
+#include "userlist.h"
+#include "maplist.h"
 
 #include "../vendor/OGLFT.h"
 
@@ -44,15 +46,15 @@ void creation::set() {
 	data[4].b = 0.1;
 	data[4].active = false;
 	data[4].name = "estate";
-	
+
 	terrain.clear();
 	units.clear();
 	final_terrain.clear();
 	terrain_to_save.clear();
 	terrain.resize (8*8);
 	units.resize (32*32);
-	final_terrain.resize(256*256);
-	terrain_to_save.resize(256*256);
+	final_terrain.resize (256*256);
+	terrain_to_save.resize (256*256);
 
 	status = 0;
 	type = water;
@@ -91,38 +93,40 @@ int creation::get_type () {
 void creation::blur() {
 	int s, rad, k, l;
 
-        rad=16;
+	rad = 16;
 	for (i = 0; i < 256; ++i) {
-            	for (j = 0; j < 256; ++j) {
-                	s = 0;
-                	for (l = -rad; l <= rad; ++l)
-                    		for (k = -rad; k <= rad; ++k)
-                        		if((i+k >= 0) && (i+k <=255) && (j+l >=0) && (j+l <=255)) 	
-						s += final_terrain[(i + k)*256 + (j + l)];
-                	terrain_to_save[i*256+j] = s / ((rad * 2 + 1) * (rad * 2 + 1));  
-            	}
-        }
-
-/*
-	for (i=0;i<256;++i) {
-		for (j=0;j<256;++j) {
-			cout << terrain_to_save[i*256+j] << " ";
+		for (j = 0; j < 256; ++j) {
+			s = 0;
+			for (l = -rad; l <= rad; ++l)
+				for (k = -rad; k <= rad; ++k)
+					if ( (i + k >= 0) && (i + k <= 255) && (j + l >= 0) && (j + l <= 255) )
+						s += final_terrain[ (i + k) *256 + (j + l) ];
+			terrain_to_save[i*256+j] = s / ( (rad * 2 + 1) * (rad * 2 + 1) );
 		}
-		cout << endl;
 	}
-*/
+
+	/*
+		for (i=0;i<256;++i) {
+			for (j=0;j<256;++j) {
+				cout << terrain_to_save[i*256+j] << " ";
+			}
+			cout << endl;
+		}
+	*/
 }
 
 //ulozi mapu do souboru
-void creation::save_map() {
+void creation::save_map (game& g) {
 	ofstream f;
-	f.open ( "maps/pokus.map" );
-	for(i=0;i<256;++i) {
-		for(j=0;j<256;++j)
+	f.open ( ("maps/" + userlist_get_name (g.get_userchosen() ) + "-" + g.get_map_created() + ".map").c_str() );
+	for (i = 0;i < 256;++i) {
+		for (j = 0;j < 256;++j)
 			f << terrain_to_save[i*256+j] << " ";
 		f << endl;
 	}
 	f.close();
+	//a zresetuje seznam map
+	maplist_init();
 }
 
 //pripravi mapu pro ulozeni
@@ -130,27 +134,20 @@ void creation::prepare_map() {
 	int p, k, l;
 
 	//zvetsi meritko mapy a doplni o finalni hodnoty
-	for(i=0;i<8;++i) {
-		for(k=0;k<32;++k) {
-			for(j=0;j<8;++j) {
-				for(l=0;l<32;++l) {
-					p=terrain[i*8+j];
+	for (i = 0;i < 8;++i)
+		for (k = 0;k < 32;++k)
+			for (j = 0;j < 8;++j)
+				for (l = 0;l < 32;++l) {
+					p = terrain[i*8+j];
 					//hory
-					if (p==3) final_terrain[(((i*32)+k)*256)+j*32+l]=256;
+					if (p == 3) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 256;
 					//pahorkatiny
-					if (p==2) final_terrain[(((i*32)+k)*256)+j*32+l]=171;
+					if (p == 2) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 171;
 					//niziny
-					if (p==1) final_terrain[(((i*32)+k)*256)+j*32+l]=85;
+					if (p == 1) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 85;
 					//voda
-					if (p==0) final_terrain[(((i*32)+k)*256)+j*32+l]=0;
-				//	cout << final_terrain[(((i*32)+k)*256)+j*32+l] << " ";
+					if (p == 0) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 0;
 				}
-			}
-		//	cout << endl;
-		}
-	}
-	blur();
-	save_map();
 }
 
 bool creation::update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g) {
@@ -184,7 +181,6 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 				for (j = 0;j < 8;++j) {
 					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (z - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (z - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (z - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) ) ) {
 						if (type != -1) terrain[ (7-i) *8+j] = type;
-						//cout << "teren: " << 8-i << ", " << j+1 << " je " << (7-i)*8+j << endl;
 					}
 				}
 			}
@@ -205,7 +201,6 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 				for (j = 0;j < 32;++j) {
 					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (zz - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (zz - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) ) ) {
 						if (type != -1) units[ (31-i) *32+j] = type;
-						//cout << "jednotky: " << 32-i << ", " << j+1 << " je " << (31-i)*32+j << endl;
 					}
 				}
 			}
@@ -222,6 +217,8 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 		//tlacitko "save map"
 		if (left_just_pressed && (cursor_pos_x > x + 542 + 75) && (cursor_pos_x < x + 542 + 60 + 95) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			prepare_map();
+			blur();
+			save_map (g);
 			set();
 			return false;
 		}
@@ -267,7 +264,7 @@ void creation::render() {
 
 	//vyplnena mrizka terenu
 	glTranslatef (0, 0, 0);
-	for (i = 0;i < 8;++i) {
+	for (i = 0;i < 8;++i)
 		for (j = 0;j < 8;++j) {
 			glColor3f (data[terrain[ (7-i) *8+j]].r, data[terrain[ (7-i) *8+j]].g, data[terrain[ (7-i) *8+j]].b);
 			glBegin (GL_QUADS);
@@ -277,12 +274,12 @@ void creation::render() {
 			glVertex2f ( (x - 1) + (j + 1) + (j* (z - 1) ), (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) );
 			glEnd();
 		}
-	}
+
 	//vyplnena mrizka jednotek
 	glTranslatef (0, 0, 0);
-	if (status == 1) {
-		for (i = 0;i < 32;++i) {
-			for (j = 0;j < 32;++j) {
+	if (status == 1)
+		for (i = 0;i < 32;++i)
+			for (j = 0;j < 32;++j)
 				if (units[ (31-i) *32+j] == estate) {
 					glColor3f (data[units[ (31-i) *32+j]].r, data[units[ (31-i) *32+j]].g, data[units[ (31-i) *32+j]].b);
 					glBegin (GL_QUADS);
@@ -292,9 +289,6 @@ void creation::render() {
 					glVertex2f ( (x - 1) + (j + 1) + (j* (zz - 1) ), (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) );
 					glEnd();
 				}
-			}
-		}
-	}
 
 	//mrizka
 	if (status == 0) {

@@ -45,6 +45,7 @@ string userlist_get_name (int userid) {
 
 //funkce pripravujici adresar uzivatelu
 void userlist_init() {
+	usernames.clear();
 	DIR* dirp;
 	struct dirent* dp;
 	dirp = opendir ("users/");
@@ -97,7 +98,6 @@ int make_user (string name) {
 	f << "c\t0" << endl << "m" << endl << "d\t0" << endl << "w\t0" << endl << "f\t0" << endl << "s\t4" << endl << "z\t0" << endl;
 	f.close();
 	//a zresetuje seznam uzivatelu
-	usernames.clear();
 	userlist_init();
 	return usernames.size() - 1;
 }

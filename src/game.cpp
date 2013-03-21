@@ -54,7 +54,7 @@ bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down
 		//v tvorbe map
 	} else if (gamestatus == in_creation) {
 		SDL_ShowCursor (SDL_ENABLE);
-		if(!c.update (timediff, space_down, esc_down, left_mouse_down, right_mouse_down, mouse__x, mouse__y, *this)) go_to_menu();
+		if (!c.update (timediff, space_down, esc_down, left_mouse_down, right_mouse_down, mouse__x, mouse__y, *this) ) go_to_menu();
 		if (esc_just_pressed) go_to_menu();
 		return true;
 
@@ -89,9 +89,9 @@ void game::load_game() {
 	string line;
 	fstream f;
 	f.open ("data/game.txt");
-	getline(f,line,'\n');
-	stringstream ss(line);
-	if(ss) ss>>userchosen;
+	getline (f, line, '\n');
+	stringstream ss (line);
+	if (ss) ss >> userchosen;
 	f.close();
 	read_user_info();
 }
@@ -107,7 +107,7 @@ void game::save_game() {
 //ulozi uzivatelovo nastaveni
 void game::save_user() {
 	ofstream f;
-	f.open ( ("users/" + userlist_get_name(userchosen) + ".usr").c_str() );
+	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
 	f << "c\t" << campaign_status << endl << "m\t" << mapchosen << endl << "d\t" << daytime << endl << "w\t" << weather << endl << "f\t" << difficulty << endl << "s\t" << sensitivity << endl << "z\t" << maps_created << endl;
 	f.close();
 }
@@ -115,46 +115,58 @@ void game::save_user() {
 //nacte z uzivatelskeho souboru nastaveni hry
 void game::read_user_info() {
 	fstream f;
-	f.open ( ("users/" + userlist_get_name(userchosen) + ".usr").c_str() );
+	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
 
 	char c;
 	string line;
 
-	while(getline(f,line,'\n')) {
-		stringstream ss(line);
-		ss>>c;
+	while (getline (f, line, '\n') ) {
+		stringstream ss (line);
+		ss >> c;
 		switch (c) {
 			//cteni pokroku v kampani
-			case 'c':
-				ss>>campaign_status;
-				break;
+		case 'c':
+			ss >> campaign_status;
+			break;
 			//naposledy vybrana mapa
-			case 'm':
-				ss>>mapchosen;
-				break;
+		case 'm':
+			ss >> mapchosen;
+			break;
 			//naposledy vybrana denni doba
-			case 'd':
-				ss>>daytime;
-				break;
+		case 'd':
+			ss >> daytime;
+			break;
 			//naposledy vybrane pocasi
-			case 'w':
-				ss>>weather;
-				break;
+		case 'w':
+			ss >> weather;
+			break;
 			//naposledy vybrana obtiznost hry
-			case 'f':
-				ss>>difficulty;
-				break;
+		case 'f':
+			ss >> difficulty;
+			break;
 			//naposledy vybrana sensitivita mysi
-			case 's':
-				ss>>sensitivity;
-				break;
+		case 's':
+			ss >> sensitivity;
+			break;
 			//pocet uzivatelem vytvorenych map
-			case 'z':
-				ss>>maps_created;
-				break;
+		case 'z':
+			ss >> maps_created;
+			break;
 		}
 	}
 	f.close();
+}
+
+//vrati pocet vytvorenych map uzivatelem a prida udaj o nove
+string game::get_map_created() {
+	ostringstream ss;
+	ss << maps_created;
+	maps_created++;
+	ofstream f;
+	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
+	f << "c\t" << campaign_status << endl << "m\t" << mapchosen << endl << "d\t" << daytime << endl << "w\t" << weather << endl << "f\t" << difficulty << endl << "s\t" << sensitivity << endl << "z\t" << maps_created << endl;
+	f.close();
+	return ss.str();
 }
 
 //zmeni uzivatelske jmeno dle volby accountu a nacte jeho nastaveni

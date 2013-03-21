@@ -39,7 +39,7 @@ public:
 	void set();
 	void prepare_map();
 	void blur();
-	void save_map();
+	void save_map (game& g);
 	int get_type();
 	bool update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g);
 	void render();
