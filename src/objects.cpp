@@ -9,9 +9,11 @@ using namespace std;
 #include "frand.h"
 #include "imageloader.h"
 
+//inicializace stromu a lidi
 void object_system::init() {
 	objects.clear();
 
+	//textura listnatych stromu
 	tex_tree1 = imageloader_load ("data/tree1.png", 4, GL_RGBA);
 	glBindTexture (GL_TEXTURE_2D, tex_tree1);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -19,6 +21,7 @@ void object_system::init() {
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	//textura jehlicnatych stromu
 	tex_tree2 = imageloader_load ("data/tree2.png", 4, GL_RGBA);
 	glBindTexture (GL_TEXTURE_2D, tex_tree2);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -26,6 +29,7 @@ void object_system::init() {
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	//textura keru
 	tex_tree3 = imageloader_load ("data/tree3.png", 4, GL_RGBA);
 	glBindTexture (GL_TEXTURE_2D, tex_tree3);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -33,6 +37,7 @@ void object_system::init() {
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	//textura jednotek
 	tex_person = imageloader_load ("data/catarcher.png", 4, GL_RGBA);
 	glBindTexture (GL_TEXTURE_2D, tex_person);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -107,12 +112,12 @@ void object::update (float time, world& w, float &reload) {
 
 	while (reload > 0 ) {
 		switch (type) {
-			//lide
+			//jednotky
 		case object_person:
-			//pohyb lidi
+			//pohyb jednotek
 			pos += spd * time;
 			pos.z = w.hm.get_height (pos.x, pos.y);
-			//hranice chuze pro lidi
+			//hranice chuze pro jednotky
 			border = 10 * size;
 			if (pos.x - start_pos.x >= border) {
 				pos.x = start_pos.x + border;
@@ -131,11 +136,11 @@ void object::update (float time, world& w, float &reload) {
 				spd.y *= -1;
 			}
 
-			//obrana lidi - strelba
+			//obrana jednotek - strelba
 			if (w.dr.in_range (pos) && (reload > 0) ) {
 				missile& m = w.ms.add_one();
 				m.pos = pos;
-				//vypocet pozice draka v okamziku, kdy k nemu doletne strela
+				//vypocet pozice draka v okamziku, kdy k nemu doletne strela jednotky
 				vect target = w.dr.pos + w.dr.spd * ( (w.dr.pos - pos).length() ) / (10 + 5 * w.difficulty);
 				m.spd = (target - pos) | (10 + 5 * w.difficulty);
 
@@ -145,7 +150,7 @@ void object::update (float time, world& w, float &reload) {
 			}
 
 			if (burning > 0) {
-				//partikly pro horeni poskozenych nepratel
+				//partikly pro horeni poskozenych jednotek
 				particle& p = w.ps.add_one();
 				p.pos = pos + vect (DFRAND, DFRAND, 0);
 				p.spd = vect (DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
@@ -190,7 +195,7 @@ void object::draw (GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3, GLuint 
 	glPushMatrix();
 	glTranslatef (pos.x, pos.y, pos.z);
 	switch (type) {
-		//lide
+		//jednotky
 	case object_person:
 		glBindTexture (GL_TEXTURE_2D, tex_person);
 

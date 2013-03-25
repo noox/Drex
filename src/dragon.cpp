@@ -1,9 +1,9 @@
 
 #include <iostream>
-using namespace std;
-
 #include <GL/gl.h>
 #include <math.h>
+
+using namespace std;
 
 #include "imageloader.h"
 #include "dragon.h"

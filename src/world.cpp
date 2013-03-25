@@ -14,8 +14,13 @@ using namespace std;
 
 void world::init (game &g) {
 	dr.init();
-	dr.set (vect (50, 50, 255), quat (0.7, 0.7, 0, 0) );
-	cam.set (vect (50, 50, 255), quat (1, 0, 0, 0) );
+
+	//random pozice draka na pocatku (5=tileheight z heightmapy)
+	int px = FRAND * 255 * 5, py = FRAND * 255 * 5, pz = hm.get_height (px, py) + 50;
+	dr.set (vect (px, py, pz), quat (0.7, 0.7, 0, 0) );
+
+	cam.set (vect (px - 10, py - 10, pz - 10), quat (1, 0, 0, 0) );
+
 	hm.init (g, *this);
 	es.init();
 	ob.init();

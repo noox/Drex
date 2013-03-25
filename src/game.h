@@ -7,6 +7,7 @@ class game;
 #include "world.h"
 #include "menu.h"
 #include "creation.h"
+#include "maplist.h"
 
 enum game_state {playing, win, fail};
 enum game_status {in_menu, in_game, in_creation};
@@ -50,8 +51,11 @@ public:
 		gamestatus = in_menu;
 	}
 	void go_to_game() {
-		gamestatus = in_game;
-		w.init (*this);
+		if (maplist_get_name (mapchosen) == "") go_to_menu();
+		else {
+			gamestatus = in_game;
+			w.init (*this);
+		}
 	}
 	void create_map() {
 		gamestatus = in_creation;

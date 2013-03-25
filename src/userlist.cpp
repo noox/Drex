@@ -80,7 +80,7 @@ string get_random_name (int t) {
 
 //funkce pro cteni jmen ze souboru
 void name_file_init() {
-	fstream f ("users/names.txt", fstream::in);
+	fstream f ("data/names.txt", fstream::in);
 	string line, name;
 
 	while (getline (f, line, '\n') ) {
