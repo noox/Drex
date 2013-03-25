@@ -3,19 +3,21 @@
 
 using namespace std;
 
-#include "imageloader.h"
 #include "heightmap.h"
+#include "imageloader.h"
 
 #define tilesize 5
 #define tileheight 0.1
 
 #define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glTexCoord2f(x,y); glVertex3f(tilesize*(x),tilesize*(y),tilesize*(tileheight*h[y*size_x+x]));
 
-void heightmap::init() {
-	t = imageloader_load ("data/terrain.png", 1, GL_LUMINANCE);
-	glBindTexture (GL_TEXTURE_2D, t);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+void heightmap::init (game& g, world& w) {
+	/*
+	 	t = imageloader_load ("data/terrain.png", 1, GL_LUMINANCE);
+		glBindTexture (GL_TEXTURE_2D, t);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	*/
 	dl = glGenLists (1);
 }
 
@@ -26,9 +28,10 @@ void heightmap::draw() {
 	glDisable (GL_TEXTURE_2D);
 }
 
-void heightmap::load (const char* fn, const char* fn2) {
+void heightmap::load (const char* fn, const char* fn2, game& g, world& w) {
 	free();
-	imageloader_load_heightmap (fn, h, size_x, size_y);
+	imageloader_load_map (fn, h, size_x, size_y, g, w);
+//	imageloader_load_heightmap (fn, h, size_x, size_y);
 	imageloader_load_color (fn2, c, size_x, size_y);
 
 	//spocita normaly

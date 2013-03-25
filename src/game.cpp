@@ -8,7 +8,6 @@
 using namespace std;
 
 #include "game.h"
-
 #include "world.h"
 #include "menu.h"
 #include "maplist.h"
@@ -17,18 +16,20 @@ using namespace std;
 void game::init() {
 	gamestatus = in_menu;
 	esc_hit = 0;
+
 	mapchosen = 0;
 	userchosen = 0;
 	sensitivity = 4;
 	daytime = day;
 	weather = sunny;
 	difficulty = easy;
-	w.init (daytime, weather, difficulty);
-	m.init();
-	c.init();
+
 	maplist_init();
 	userlist_init();
+
 	load_game();
+
+	m.init();
 }
 
 void game::finish() {
@@ -108,15 +109,16 @@ void game::save_game() {
 void game::save_user() {
 	if (userlist_get_name (userchosen) == "") return;
 	ofstream f;
-	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
+	f.open ( userlist_get_file_name (userchosen).c_str() );
 	f << "c\t" << campaign_status << endl << "m\t" << mapchosen << endl << "d\t" << daytime << endl << "w\t" << weather << endl << "f\t" << difficulty << endl << "s\t" << sensitivity << endl << "z\t" << maps_created << endl;
 	f.close();
 }
 
 //nacte z uzivatelskeho souboru nastaveni hry
 void game::read_user_info() {
+	if (userlist_get_name (userchosen) == "") return;
 	fstream f;
-	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
+	f.open ( userlist_get_file_name (userchosen).c_str() );
 
 	char c;
 	string line;
@@ -164,10 +166,40 @@ string game::get_map_created() {
 	ss << maps_created;
 	maps_created++;
 	ofstream f;
-	f.open ( ("users/" + userlist_get_name (userchosen) + ".usr").c_str() );
+	f.open ( userlist_get_file_name (userchosen).c_str() );
 	f << "c\t" << campaign_status << endl << "m\t" << mapchosen << endl << "d\t" << daytime << endl << "w\t" << weather << endl << "f\t" << difficulty << endl << "s\t" << sensitivity << endl << "z\t" << maps_created << endl;
 	f.close();
 	return ss.str();
+}
+
+void game::get_map_data() {
+	fstream f;
+	f.open ( maplist_get_file_name (mapchosen) );
+
+	string line;
+
+	//nacteni nastaveni mapy
+	char c;
+	for (int i = 0;i < 3;++i) {
+		getline (f, line, '\n');
+		stringstream ss (line);
+		ss >> c;
+		switch (c) {
+			//zmena pocasi podle nastaveni z mapy
+		case 'w':
+			ss >> weather;
+			break;
+			//zmena denni doby podle nastaveni z mapy
+		case 'd':
+			ss >> daytime;
+			break;
+			//zmena obtiznosti podle nastaveni z mapy
+		case 'f':
+			ss >> difficulty;
+			break;
+		}
+	}
+	f.close();
 }
 
 //zmeni uzivatelske jmeno dle volby accountu a nacte jeho nastaveni
@@ -184,6 +216,7 @@ int game::get_userchosen() {
 //zmeni mapu, dle volby accountu
 void game::change_mapchosen (int Mapchosen) {
 	mapchosen = Mapchosen;
+	get_map_data();
 }
 
 //vrati mapid aktualni mapy

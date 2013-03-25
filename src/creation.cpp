@@ -156,6 +156,7 @@ void creation::save_map (game& g) {
 	f.close();
 	//a zresetuje seznam map
 	maplist_init();
+	g.change_mapchosen (maplist_count() - 1);
 }
 
 //pripravi mapu pro ulozeni
@@ -169,7 +170,7 @@ void creation::prepare_map() {
 				for (l = 0;l < 32;++l) {
 					p = terrain[i*8+j];
 					//hory
-					if (p == 3) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 256;
+					if (p == 3) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 255;
 					//pahorkatiny
 					if (p == 2) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 171;
 					//niziny

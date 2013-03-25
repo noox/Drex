@@ -424,15 +424,14 @@ bool menu::handle_menu_click (int item, game& g, int esc_just_pressed) {
 			break;
 		case 2:
 			//kontrola pro nevygenerovane jmeno
-			if (name == "") {
-				set_menu (10);
-				break;
+			if (name == "") set_menu (10);
+			else {
+				//pri zvoleni jmena, zaridi vse potrebne
+				g.save_user();
+				g.change_userchosen (make_user (name) );
+				username = name;
+				set_menu (8);
 			}
-			//pri zvoleni jmena, zaridi vse potrebne
-			g.save_user();
-			g.change_userchosen (make_user (name) );
-			username = name;
-			set_menu (8);
 			break;
 		case -1:
 			set_menu (8);

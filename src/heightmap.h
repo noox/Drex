@@ -5,9 +5,12 @@
 #include <vector>
 #include <GL/gl.h>
 
+using namespace std;
+
 #include "vector.h"
 
-using namespace std;
+class game;
+class world;
 
 class heightmap {
 	vector<vect> normal;
@@ -16,9 +19,9 @@ public:
 	vector<int> h;
 	vector<unsigned char> c;
 	int size_x, size_y;
-	void init();
+	void init (game& g, world& w);
 	void draw();
-	void load (const char* fn, const char* fn2);
+	void load (const char* fn, const char* fn2, game& g, world& w);
 	float get_height (float x, float y);
 	void get_sizes (float &x, float &y);
 	void free();

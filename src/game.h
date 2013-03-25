@@ -32,6 +32,7 @@ public:
 	void load_game();
 	void read_user_info();
 	string get_map_created();
+	void get_map_data();
 	void change_userchosen (int Userchosen);
 	int get_userchosen();
 	void change_mapchosen (int Mapchosen);
@@ -50,7 +51,7 @@ public:
 	}
 	void go_to_game() {
 		gamestatus = in_game;
-		w.init (daytime, weather, difficulty);
+		w.init (*this);
 	}
 	void create_map() {
 		gamestatus = in_creation;

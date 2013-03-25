@@ -5,28 +5,30 @@
 
 using namespace std;
 
+#include "world.h"
 #include "frand.h"
 #include "imageloader.h"
 #include "health.h"
 #include "weather.h"
-#include "world.h"
+#include "maplist.h"
 
-void world::init (int Daytime, int Weather, int Difficulty) {
+void world::init (game &g) {
 	dr.init();
-	dr.set (vect (10, 10, 10), quat (0.7, 0.7, 0, 0) );
-	cam.set (vect (0, 0, 0), quat (1, 0, 0, 0) );
-	hm.init();
-	hm.load ("data/hm3.png", "data/color3.png");
+	dr.set (vect (50, 50, 255), quat (0.7, 0.7, 0, 0) );
+	cam.set (vect (50, 50, 255), quat (1, 0, 0, 0) );
+	hm.init (g, *this);
 	es.init();
 	ob.init();
 	ps.init();
 	ms.init();
 
+	hm.load (maplist_get_file_name (g.get_mapchosen() ), "data/color3.png", g, *this);
+
 	tab_hit = 0;
 	help_on = false;
-	weather = Weather;
-	daytime = Daytime;
-	difficulty = Difficulty;
+	weather = g.get_weather();
+	daytime = g.get_daytime();
+	difficulty = g.get_difficulty();
 
 	glShadeModel (GL_SMOOTH);
 	glFrontFace (GL_CCW);
@@ -44,107 +46,6 @@ void world::init (int Daytime, int Weather, int Difficulty) {
 	glHint (GL_FOG_HINT, GL_NICEST);
 	f.set_color (0.4, 0.6, 0.9);
 	f.set_distance (50, 200);
-
-	float hm_x, hm_y;
-	hm.get_sizes (hm_x, hm_y);
-	//domy
-	for (int i = 0;i < 8;++i) {
-		enemy& p = es.add_one();
-		p.pos.x = (0.13 + FRAND * 0.07) * hm_x;
-		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
-		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.size_x = 3 + FRAND;
-		p.size_y = 3 + FRAND;
-		p.size_z = 3 + FRAND;
-		p.roof_size = 5 * FRAND;
-		p.rot = 360 * FRAND;
-	}
-	for (int i = 0;i < 20;++i) {
-		enemy& p = es.add_one();
-		p.pos.x = (0.3 + FRAND * 0.1) * hm_x;
-		p.pos.y = (0.3 + FRAND * 0.1) * hm_y;
-		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.size_x = 3 + FRAND;
-		p.size_y = 3 + FRAND;
-		p.size_z = 3 + FRAND;
-		p.roof_size = 5 * FRAND;
-		p.rot = 360 * FRAND;
-	}
-	for (int i = 0;i < 5;++i) {
-		enemy& p = es.add_one();
-		p.pos.x = (0.13 + FRAND * 0.05) * hm_x;
-		p.pos.y = (0.3 + FRAND * 0.05) * hm_y;
-		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.size_x = 3 + FRAND;
-		p.size_y = 3 + FRAND;
-		p.size_z = 3 + FRAND;
-		p.roof_size = 5 * FRAND;
-		p.rot = 360 * FRAND;
-	}
-	//lide
-	for (int i = 0;i < 20;++i) {
-		object& p = ob.add_one();
-		p.spd.x = DFRAND;
-		p.spd.y = DFRAND;
-		p.spd.z = 0;
-		p.size = 1 + FRAND;
-		p.start_pos.x = (0.13 + FRAND * 0.07) * hm_x;
-		p.start_pos.y = (0.13 + FRAND * 0.07) * hm_y;
-		p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.pos.x = p.start_pos.x;
-		p.pos.y = p.start_pos.y;
-		p.pos.z = p.start_pos.z;
-		p.type = object_person;
-		p.hp = 10;
-	}
-	//listnate stromy
-	for (int i = 0;i < 10;++i) {
-		object& p = ob.add_one();
-		p.spd = vect (0, 0, 0);
-		p.size = 4 + FRAND;
-		p.pos.x = (0.13 + FRAND * 0.07) * hm_x;
-		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
-		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.type = object_tree1;
-		p.hp = 50;
-	}
-	//jehlicnate stromy
-	for (int i = 0;i < 10;++i) {
-		object& p = ob.add_one();
-		p.spd = vect (0, 0, 0);
-		p.size = 4 + FRAND;
-		p.pos.x = (0.13 + FRAND * 0.07) * hm_x;
-		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
-		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.type = object_tree2;
-		p.hp = 50;
-	}
-	//kere
-	for (int i = 0;i < 10;++i) {
-		object& p = ob.add_one();
-		p.spd = vect (0, 0, 0);
-		p.size = 1 + FRAND;
-		p.pos.x = (0.13 + FRAND * 0.07) * hm_x;
-		p.pos.y = (0.13 + FRAND * 0.07) * hm_y;
-		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
-		p.type = object_tree3;
-		p.hp = 50;
-	}
-	/*	{object& p = ob.add_one();
-			p.spd.x = 0;
-			p.spd.y = 0;
-			p.spd.z = 0;
-			p.size = 20 + FRAND;
-			p.start_pos.x = 10;
-			p.start_pos.y = 10;
-			p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
-			p.pos.x = p.start_pos.x;
-			p.pos.y = p.start_pos.y;
-			p.pos.z = p.start_pos.z;
-			p.type = object_person;
-			p.hp = 10;
-			};
-	*/
 }
 
 void world::finish() {
@@ -236,6 +137,73 @@ void world::render() {
 		glEnd();
 		glPopMatrix;
 		help_on = false;
+	}
+}
+
+void world::add_enemy (float u, float v) {
+	int rad = 170;
+	//domy
+	for (int i = 0;i < 8;++i) {
+		enemy& p = es.add_one();
+		p.pos.x = u + FRAND * rad;
+		p.pos.y = v + FRAND * rad;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.size_x = 3 + FRAND;
+		p.size_y = 3 + FRAND;
+		p.size_z = 3 + FRAND;
+		p.roof_size = 5 * FRAND;
+		p.rot = 360 * FRAND;
+	}
+
+	//lide
+	for (int i = 0;i < 10;++i) {
+		object& p = ob.add_one();
+		p.spd.x = DFRAND;
+		p.spd.y = DFRAND;
+		p.spd.z = 0;
+		p.size = 1 + FRAND;
+		p.start_pos.x = u + FRAND * rad;
+		p.start_pos.y = v + FRAND * rad;
+		p.start_pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.pos.x = p.start_pos.x;
+		p.pos.y = p.start_pos.y;
+		p.pos.z = p.start_pos.z;
+		p.type = object_person;
+		p.hp = 10;
+	}
+
+	//listnate stromy
+	for (int i = 0;i < 10;++i) {
+		object& p = ob.add_one();
+		p.spd = vect (0, 0, 0);
+		p.size = 4 + FRAND;
+		p.pos.x = u + FRAND * rad;
+		p.pos.y = v + FRAND * rad;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.type = object_tree1;
+		p.hp = 50;
+	}
+	//jehlicnate stromy
+	for (int i = 0;i < 10;++i) {
+		object& p = ob.add_one();
+		p.spd = vect (0, 0, 0);
+		p.size = 4 + FRAND;
+		p.pos.x = u + FRAND * rad;
+		p.pos.y = v + FRAND * rad;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.type = object_tree2;
+		p.hp = 50;
+	}
+	//kere
+	for (int i = 0;i < 10;++i) {
+		object& p = ob.add_one();
+		p.spd = vect (0, 0, 0);
+		p.size = 1 + FRAND;
+		p.pos.x = u + FRAND * rad;
+		p.pos.y = v + FRAND * rad;
+		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		p.type = object_tree3;
+		p.hp = 50;
 	}
 }
 

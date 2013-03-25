@@ -93,12 +93,13 @@ void name_file_init() {
 
 //vytvori uzivatelsky soubor pro noveho hrace
 int make_user (string name) {
+	if (name == "") return usernames.size() - 1;
 	ofstream f;
 	f.open ( ("users/" + name + ".usr").c_str() );
 	f << "c\t0" << endl << "m" << endl << "d\t0" << endl << "w\t0" << endl << "f\t0" << endl << "s\t4" << endl << "z\t0" << endl;
 	f.close();
 	//a zresetuje seznam uzivatelu
 	userlist_init();
-	return usernames.size() - 1;
+	return userlist_count() - 1;
 }
 

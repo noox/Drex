@@ -30,9 +30,12 @@ void process_mapfilename (string n) {
 }
 
 //funkce pro zjisteni nazvu mapy s priponou a cestou
-string maplist_get_file_name (int mapid) {
-	if (maps.size() > 0) return "maps/" + maps[mapid];
-	else return "";
+const char* maplist_get_file_name (int mapid) {
+	if (maps.size() > 0) {
+		string s = "maps/" + maps[mapid];
+		const char* x = s.c_str();
+		return x;
+	} else return "";
 }
 
 //funkce pro zjisteni nazvu mapy samotneho
