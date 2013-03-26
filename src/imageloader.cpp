@@ -91,19 +91,36 @@ bool imageloader_load_heightmap (const char* fn, vector<int> &h, int &size_x, in
 }
 */
 
+
 //loader barev mapy
-bool imageloader_load_color (const char* fn2, vector<unsigned char> &c, int size_x, int size_y) {
-	SDL_Surface *image;
-	image = IMG_Load (fn2);
-	if (!image) return false;
-	size_x = image->w;
-	size_y = image->h;
+bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, vector<unsigned char> &c, vector<int> h, int size_x, int size_y) {
+	SDL_Surface *w, *l, *u, *m, *image;
+	w = IMG_Load (water);
+	l = IMG_Load (lowland);
+	u = IMG_Load (upland);
+	m = IMG_Load (mountain);
+	if (!w || !l || !u || !m) return false;
+	size_x = 256;
+	size_y = 256;
 	c.resize (size_x*size_y*3);
 	for (int i = 0;i < size_y;++i)
-		for (int j = 0;j < size_x;++j)
+		for (int j = 0;j < size_x;++j) {
+			//vybere texturu podle vysky terenu
+			if (h[i*size_y+j] == 0) image = w;
+			else if ( (h[i*size_y+j] > 0) && (h[i*size_y+j] <= 85) ) image = l;
+			else if ( (h[i*size_y+j] > 85) && (h[i*size_y+j] <= 171) ) image = u;
+			else image = m;
+			//vyplni vektor pixelu
 			for (int k = 0;k < 3;++k)
-				c[3* (i*size_y+j) +k] = ( (unsigned char*) (image->pixels) ) [3* (i*size_y+j) +k];
+				c[3 * (i * size_y + j) + k] = ( (unsigned char*) (image->pixels) ) [3* (i*size_y+j) +k];
+
+			image = 0;
+		}
 	SDL_FreeSurface (image);
+	SDL_FreeSurface (w);
+	SDL_FreeSurface (l);
+	SDL_FreeSurface (u);
+	SDL_FreeSurface (m);
 	return true;
 }
 

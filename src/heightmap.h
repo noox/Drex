@@ -21,7 +21,7 @@ public:
 	int size_x, size_y;
 	void init (game& g, world& w);
 	void draw();
-	void load (const char* fn, const char* fn2, game& g, world& w);
+	void load (const char* fn, game& g, world& w);
 	float get_height (float x, float y);
 	void get_sizes (float &x, float &y);
 	void free();

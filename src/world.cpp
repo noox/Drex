@@ -27,7 +27,7 @@ void world::init (game &g) {
 	ps.init();
 	ms.init();
 
-	hm.load (maplist_get_file_name (g.get_mapchosen() ), "data/color3.png", g, *this);
+	hm.load (maplist_get_file_name (g.get_mapchosen() ), g, *this);
 
 	tab_hit = 0;
 	help_on = false;
@@ -146,7 +146,7 @@ void world::render() {
 }
 
 void world::add_enemy (float u, float v) {
-	int rad = 170;
+	int rad = 100;
 	//domy
 	for (int i = 0;i < 8;++i) {
 		enemy& p = es.add_one();
@@ -161,7 +161,7 @@ void world::add_enemy (float u, float v) {
 	}
 
 	//lide
-	for (int i = 0;i < 10;++i) {
+	for (int i = 0;i < 5;++i) {
 		object& p = ob.add_one();
 		p.spd.x = DFRAND;
 		p.spd.y = DFRAND;

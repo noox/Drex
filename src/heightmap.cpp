@@ -12,12 +12,12 @@ using namespace std;
 #define hm_vertex(x,y) glColor3ub(c[3*(y*size_x+x)],c[3*(y*size_x+x)+1],c[3*(y*size_x+x)+2]); glNormal3fv(normal[x+y*size_x].v); glTexCoord2f(x,y); glVertex3f(tilesize*(x),tilesize*(y),tilesize*(tileheight*h[y*size_x+x]));
 
 void heightmap::init (game& g, world& w) {
-	/*
-	 	t = imageloader_load ("data/terrain.png", 1, GL_LUMINANCE);
-		glBindTexture (GL_TEXTURE_2D, t);
-		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	*/
+	//textura povrchu - nerovnosti
+	t = imageloader_load ("data/terrain.png", 1, GL_LUMINANCE);
+	glBindTexture (GL_TEXTURE_2D, t);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	dl = glGenLists (1);
 }
 
@@ -28,11 +28,11 @@ void heightmap::draw() {
 	glDisable (GL_TEXTURE_2D);
 }
 
-void heightmap::load (const char* fn, const char* fn2, game& g, world& w) {
+void heightmap::load (const char* fn, game& g, world& w) {
 	free();
 	imageloader_load_map (fn, h, size_x, size_y, g, w);
 //	imageloader_load_heightmap (fn, h, size_x, size_y);
-	imageloader_load_color (fn2, c, size_x, size_y);
+	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", c, h, size_x, size_y);
 
 	//spocita normaly
 	normal.resize (size_x*size_y);
@@ -83,9 +83,9 @@ float heightmap::get_height (float x, float y) {
 		mx = my;
 		my = temp;
 	}
-	if (my < 0.001) return tileheight*tilesize* (mx*h2 + (1 - mx) *h1);
+	if (my < 0.001) return tileheight * tilesize * (mx * h2 + (1 - mx) * h1);
 	float mxy = my / mx;
-	return tileheight*tilesize* (mx* (h3*mxy + h2* (1 - mxy) ) + (1 - mx) *h1);
+	return tileheight * tilesize * (mx * (h3 * mxy + h2 * (1 - mxy) ) + (1 - mx) * h1);
 }
 
 //zjisti velikost mapy
