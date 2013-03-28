@@ -49,10 +49,16 @@ enemy& enemy_system::add_one() {
 
 //update vsech nepratel v case
 void enemy_system::update (float time, world& w) {
+	int c = 0;
 	list<list<enemy>::iterator> todel;
 	for (list<enemy>::iterator i = enemies.begin();i != enemies.end();++i) {
 		i->update (time, w);
-		if (i->deletable() ) todel.push_back (i);
+		if (i->deletable() ) {
+			todel.push_back (i);
+			//	cout << "removing: " << c << endl;
+			w.remove_object (c);
+		}
+		c++;
 	}
 	while (!todel.empty() ) {
 		enemies.erase (todel.front() );
@@ -263,7 +269,7 @@ bool enemy::collides (vect missile_pos) {
 
 //funkce pro overeni smazatelnosti strely
 bool enemy::deletable() {
-	if (hp < 0) return true;
+	if (hp <= 0) return true;
 	return false;
 }
 

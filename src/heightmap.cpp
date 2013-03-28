@@ -32,7 +32,7 @@ void heightmap::load (const char* fn, game& g, world& w) {
 	free();
 	imageloader_load_map (fn, h, size_x, size_y, g, w);
 //	imageloader_load_heightmap (fn, h, size_x, size_y);
-	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", c, h, size_x, size_y);
+	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", "data/ice.png", c, h, size_x, size_y, g);
 
 	//spocita normaly
 	normal.resize (size_x*size_y);
@@ -94,6 +94,7 @@ void heightmap::get_sizes (float &x, float &y) {
 	y = size_y * tilesize;
 }
 
+//uvolneni pameti
 void heightmap::free() {
 	h.clear();
 	c.clear();

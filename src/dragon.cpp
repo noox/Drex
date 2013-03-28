@@ -24,7 +24,7 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 	//regenerace zivota draka
 	hp += 0.005;
 	if (hp > 110) hp = 110;
-	cout << hp << endl;
+//	cout << hp << endl;
 
 	vect VX, VY, VZ;
 	ori.normalize();

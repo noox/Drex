@@ -29,6 +29,7 @@ public:
 	int tab_hit;
 	bool help_on;
 	int weather, daytime, difficulty;
+	int cu, rad;
 
 	int texture;
 	void init (game& g);
@@ -36,6 +37,8 @@ public:
 	int update (float timediff, bool space_down, bool tab_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y);
 	void render();
 	void add_enemy (float u, float v);
+	void add_rest (float u, float v);
+	void remove_object (int c);
 };
 
 #endif

@@ -97,6 +97,21 @@ bool object_system::all_objects_dead() {
 	if (objects.empty() ) return true;
 	return false;
 }
+
+//funkce pro zajisteni smazani nekterych objektu
+void object_system::delete_object (int x) {
+	int c = 0;
+	for (list<object>::iterator i = objects.begin();i != objects.end();++i) {
+		if (c == x)
+			if (i->type == object_person) {
+				i->hp = 0;
+				//	cout << "del " << i->pos.x << " " << i->pos.y << endl;
+				break;
+			}
+		c++;
+	}
+}
+
 /* =========================================================== */
 
 void object::update (float time, world& w, float &reload) {
@@ -385,7 +400,7 @@ bool object::collides (vect missile_pos) {
 
 //funkce pro overeni smazatelnosti strely
 bool object::deletable() {
-	if (hp < 0) return true;
+	if (hp <= 0) return true;
 	return false;
 }
 

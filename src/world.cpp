@@ -27,6 +27,9 @@ void world::init (game &g) {
 	ps.init();
 	ms.init();
 
+	cu = 8;
+	rad = 100;
+
 	hm.load (maplist_get_file_name (g.get_mapchosen() ), g, *this);
 
 	tab_hit = 0;
@@ -145,10 +148,10 @@ void world::render() {
 	}
 }
 
+//prida domy a jednotky
 void world::add_enemy (float u, float v) {
-	int rad = 100;
 	//domy
-	for (int i = 0;i < 8;++i) {
+	for (int i = 0;i < cu;++i) {
 		enemy& p = es.add_one();
 		p.pos.x = u + FRAND * rad;
 		p.pos.y = v + FRAND * rad;
@@ -161,7 +164,7 @@ void world::add_enemy (float u, float v) {
 	}
 
 	//lide
-	for (int i = 0;i < 5;++i) {
+	for (int i = 0;i < cu;++i) {
 		object& p = ob.add_one();
 		p.spd.x = DFRAND;
 		p.spd.y = DFRAND;
@@ -176,9 +179,12 @@ void world::add_enemy (float u, float v) {
 		p.type = object_person;
 		p.hp = 10;
 	}
+}
 
+//prida objekty nedulezite pro logiku hry (stromy)
+void world::add_rest (float u, float v) {
 	//listnate stromy
-	for (int i = 0;i < 10;++i) {
+	for (int i = 0;i < cu;++i) {
 		object& p = ob.add_one();
 		p.spd = vect (0, 0, 0);
 		p.size = 4 + FRAND;
@@ -189,7 +195,7 @@ void world::add_enemy (float u, float v) {
 		p.hp = 50;
 	}
 	//jehlicnate stromy
-	for (int i = 0;i < 10;++i) {
+	for (int i = 0;i < cu;++i) {
 		object& p = ob.add_one();
 		p.spd = vect (0, 0, 0);
 		p.size = 4 + FRAND;
@@ -200,7 +206,7 @@ void world::add_enemy (float u, float v) {
 		p.hp = 50;
 	}
 	//kere
-	for (int i = 0;i < 10;++i) {
+	for (int i = 0;i < cu;++i) {
 		object& p = ob.add_one();
 		p.spd = vect (0, 0, 0);
 		p.size = 1 + FRAND;
@@ -210,5 +216,10 @@ void world::add_enemy (float u, float v) {
 		p.type = object_tree3;
 		p.hp = 50;
 	}
+}
+
+//na zaklade zniceneho domu upravi pocet jednotek
+void world::remove_object (int c) {
+	ob.delete_object (c);
 }
 

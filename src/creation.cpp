@@ -153,6 +153,13 @@ void creation::save_map (game& g) {
 		for (j = 0;j < 32;++j)
 			if (units[i*32+j] == estate)
 				f << (i*8) + 3.5 << "\t" << (j*8) + 3.5 << endl;
+	f << -1 << "\t" << -1 << endl;
+	//vyplni nepratelske jednotky v meritku
+	for (i = 0;i < 32;++i)
+		for (j = 0;j < 32;++j)
+			if (units[i*32+j] == estate)
+				f << (i*8) + 3.5 << "\t" << (j*8) + 3.5 << endl;
+
 	f.close();
 	//a zresetuje seznam map
 	maplist_init();

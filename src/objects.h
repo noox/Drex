@@ -52,6 +52,7 @@ public:
 	bool try_to_damage_object (vect missile_pos, float dmg, float fire);
 	void finish();
 	bool all_objects_dead();
+	void delete_object (int x);
 };
 
 #endif

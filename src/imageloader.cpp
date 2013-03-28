@@ -65,7 +65,16 @@ void imageloader_load_map (const char* fn, vector<int> &h, int &size_x, int &siz
 	while (getline (f, line, '\n') ) {
 		stringstream ss (line);
 		ss >> u >> v;
-		w.add_enemy (u, v);
+		//	cout << "domy a jednotky: " << u << " " << v <<  endl;
+		if (u == -1 || v == -1) break;
+		else w.add_enemy (5*u, 5*v);
+	}
+	//zbytek objektu v krajine
+	while (getline (f, line, '\n') ) {
+		stringstream ss (line);
+		ss >> u >> v;
+		//	cout << "stromy: " << u << " " << v <<  endl;
+		w.add_rest (5*u, 5*v);
 	}
 	f.close();
 }
@@ -93,12 +102,13 @@ bool imageloader_load_heightmap (const char* fn, vector<int> &h, int &size_x, in
 
 
 //loader barev mapy
-bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, vector<unsigned char> &c, vector<int> h, int size_x, int size_y) {
-	SDL_Surface *w, *l, *u, *m, *image;
+bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, const char* ice, vector<unsigned char> &c, vector<int> h, int size_x, int size_y, game& g) {
+	SDL_Surface *w, *l, *u, *m, *ic, *image;
 	w = IMG_Load (water);
 	l = IMG_Load (lowland);
 	u = IMG_Load (upland);
 	m = IMG_Load (mountain);
+	ic = IMG_Load (ice);
 	if (!w || !l || !u || !m) return false;
 	size_x = 256;
 	size_y = 256;
@@ -106,10 +116,17 @@ bool imageloader_load_color (const char* water, const char* lowland, const char*
 	for (int i = 0;i < size_y;++i)
 		for (int j = 0;j < size_x;++j) {
 			//vybere texturu podle vysky terenu
-			if (h[i*size_y+j] == 0) image = w;
-			else if ( (h[i*size_y+j] > 0) && (h[i*size_y+j] <= 85) ) image = l;
-			else if ( (h[i*size_y+j] > 85) && (h[i*size_y+j] <= 171) ) image = u;
-			else image = m;
+			//pokud nesnezi, clenite textury terenu
+			if (g.get_weather() != snowy) {
+				if (h[i*size_y+j] == 0) image = w;
+				else if ( (h[i*size_y+j] > 0) && (h[i*size_y+j] <= 85) ) image = l;
+				else if ( (h[i*size_y+j] > 85) && (h[i*size_y+j] <= 171) ) image = u;
+				else image = m;
+				//kdyz snezi, je vsude snih a misto vody led
+			} else {
+				if (h[i*size_y+j] == 0) image = ic;
+				else image = m;
+			}
 			//vyplni vektor pixelu
 			for (int k = 0;k < 3;++k)
 				c[3 * (i * size_y + j) + k] = ( (unsigned char*) (image->pixels) ) [3* (i*size_y+j) +k];
@@ -121,6 +138,7 @@ bool imageloader_load_color (const char* water, const char* lowland, const char*
 	SDL_FreeSurface (l);
 	SDL_FreeSurface (u);
 	SDL_FreeSurface (m);
+	SDL_FreeSurface (ic);
 	return true;
 }
 

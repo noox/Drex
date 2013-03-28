@@ -49,12 +49,14 @@ bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down
 	//v menu
 	if (gamestatus == in_menu) {
 		SDL_ShowCursor (SDL_DISABLE);
+		SDL_WM_GrabInput (SDL_GRAB_ON);
 		if (!m.update (timediff, esc_down, left_mouse_down, right_mouse_down, mouse_x, mouse_y, *this) ) return false;
 		return true;
 
 		//v tvorbe map
 	} else if (gamestatus == in_creation) {
 		SDL_ShowCursor (SDL_ENABLE);
+		SDL_WM_GrabInput (SDL_GRAB_OFF);
 		if (!c.update (timediff, space_down, esc_down, left_mouse_down, right_mouse_down, mouse__x, mouse__y, *this) ) go_to_menu();
 		if (esc_just_pressed) go_to_menu();
 		return true;
@@ -62,6 +64,7 @@ bool game::update (float timediff, bool space_down, bool tab_down, bool esc_down
 		//ve hre
 	} else {
 		SDL_ShowCursor (SDL_DISABLE);
+		SDL_WM_GrabInput (SDL_GRAB_ON);
 		state = w.update (timediff, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x / sensitivity, mouse_y / sensitivity);
 		if (state == win) {
 			go_to_menu();
