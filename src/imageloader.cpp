@@ -49,16 +49,14 @@ void imageloader_load_map (const char* fn, vector<int> &h, int &size_x, int &siz
 		getline (f, line, '\n');
 
 	//vyskova mapa
-	int x;
-	for (int i = 0;i < 256;++i) {
+	for (int i = 0;i < size_y;++i) {
 		getline (f, line, '\n');
 		stringstream ss (line);
-		for (int j = 0;j < 256;++j) {
-			ss >> x;
-			h[i*256+j] = x;
-			//	cout << x << " ";
+		for (int j = 0;j < size_x;++j) {
+			ss >> h[i*size_y+j];
+			//	cout << h[i*size_y+j] << " ";
 		}
-		//cout << endl;
+		//	cout << endl;
 	}
 	//jednotky
 	float u, v;
@@ -79,27 +77,26 @@ void imageloader_load_map (const char* fn, vector<int> &h, int &size_x, int &siz
 	f.close();
 }
 
-/*
+
 //loader heightmapy - vysek terenu - z .png
-bool imageloader_load_heightmap (const char* fn, vector<int> &h, int &size_x, int &size_y) {
+bool imageloader_load_heightmap (vector<int> &h, int &size_x, int &size_y) {
 	SDL_Surface *image;
-	image = IMG_Load (fn);
+	image = IMG_Load ("data/hm3.png");
 	if (!image) return false;
 	size_x = image->w;
 	size_y = image->h;
+	//	cout << size_x << endl;
 	h.resize (size_x*size_y);
 	for (int i = 0;i < size_y;++i) {
 		for (int j = 0;j < size_x;++j) {
 			h[i*size_y+j] = * ( (unsigned char*) image->pixels + i * image->pitch + j);
-	//	cout << h[i*size_y+j] << " ";
+			//	cout << h[i*size_y+j] << " ";
 		}
-	//	cout << endl;
+		//	cout << endl;
 	}
 	SDL_FreeSurface (image);
 	return true;
 }
-*/
-
 
 //loader barev mapy
 bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, const char* ice, vector<unsigned char> &c, vector<int> h, int size_x, int size_y, game& g) {
@@ -109,7 +106,7 @@ bool imageloader_load_color (const char* water, const char* lowland, const char*
 	u = IMG_Load (upland);
 	m = IMG_Load (mountain);
 	ic = IMG_Load (ice);
-	if (!w || !l || !u || !m) return false;
+	if (!w || !l || !u || !m || !ic) return false;
 	size_x = 256;
 	size_y = 256;
 	c.resize (size_x*size_y*3);

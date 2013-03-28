@@ -64,7 +64,7 @@ void creation::set() {
 	final_terrain.clear();
 	terrain_to_save.clear();
 	terrain.resize (8*8);
-	units.resize (32*32);
+	units.resize (16*16);
 	final_terrain.resize (256*256);
 	terrain_to_save.resize (256*256);
 
@@ -86,7 +86,7 @@ void creation::init() {
 	x = 90;
 	y = 520;
 	z = 64;
-	zz = 16;
+	zz = 32;
 
 	weather = -1;
 	daytime = -1;
@@ -149,16 +149,16 @@ void creation::save_map (game& g) {
 		f << endl;
 	}
 	//vyplni nepratelske jednotky v meritku
-	for (i = 0;i < 32;++i)
-		for (j = 0;j < 32;++j)
-			if (units[i*32+j] == estate)
-				f << (i*8) + 3.5 << "\t" << (j*8) + 3.5 << endl;
+	for (i = 0;i < 16;++i)
+		for (j = 0;j < 16;++j)
+			if (units[i*16+j] == estate)
+				f << i*16 << "\t" << j*16 << endl;
 	f << -1 << "\t" << -1 << endl;
 	//vyplni nepratelske jednotky v meritku
-	for (i = 0;i < 32;++i)
-		for (j = 0;j < 32;++j)
-			if (units[i*32+j] == estate)
-				f << (i*8) + 3.5 << "\t" << (j*8) + 3.5 << endl;
+	for (i = 0;i < 16;++i)
+		for (j = 0;j < 16;++j)
+			if (units[i*16+j] == estate)
+				f << i*16 << "\t" << j*16 << endl;
 
 	f.close();
 	//a zresetuje seznam map
@@ -230,9 +230,9 @@ void creation::get_settings() {
 
 //zkontroluje, zda jsou na mape nejaci nepratele
 bool creation::someone_on_map() {
-	for (i = 0;i < 32;++i)
-		for (j = 0;j < 32;++j)
-			if (units[i*32+j] == estate) return true;
+	for (i = 0;i < 16;++i)
+		for (j = 0;j < 16;++j)
+			if (units[i*16+j] == estate) return true;
 	return false;
 }
 
@@ -266,7 +266,7 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 			for (i = 0;i < 8;++i)
 				for (j = 0;j < 8;++j)
 					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (z - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (z - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (z - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (z - 1) ) )
-						if (type != -1) terrain[ (7-i) *8+j] = type;
+						terrain[ (7-i) *8+j] = type;
 
 		//tlacitko "continue"
 		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
@@ -280,10 +280,10 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 	} else if (status == 1 ) {
 		//vyplneni mrizky jednotek
 		if (left_just_pressed)
-			for (i = 0;i < 32;++i)
-				for (j = 0;j < 32;++j)
+			for (i = 0;i < 16;++i)
+				for (j = 0;j < 16;++j)
 					if ( (cursor_pos_x > (x - 1) + (j + 1) + (j* (zz - 1) ) ) && (cursor_pos_x < (x - 1) + (j + 1) + (j + 1) * (zz - 1) ) && (cursor_pos_y > (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) ) && (cursor_pos_y < (y - 512 - 1) + (i + 1) + (i + 1) * (zz - 1) ) )
-						if (type != -1) units[ (31-i) *32+j] = type;
+						units[ (15-i) *16+j] = type;
 
 		//tlacitko "continue"
 		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
@@ -395,10 +395,10 @@ void creation::render() {
 	//vyplnena mrizka jednotek
 	glTranslatef (0, 0, 0);
 	if ( status == 1 || status == 2 )
-		for (i = 0;i < 32;++i)
-			for (j = 0;j < 32;++j)
-				if (units[ (31-i) *32+j] == estate) {
-					glColor3f (data[units[ (31-i) *32+j]].r, data[units[ (31-i) *32+j]].g, data[units[ (31-i) *32+j]].b);
+		for (i = 0;i < 16;++i)
+			for (j = 0;j < 16;++j)
+				if (units[ (15-i) *16+j] == estate) {
+					glColor3f (data[units[ (15-i) *16+j]].r, data[units[ (15-i) *16+j]].g, data[units[ (15-i) *16+j]].b);
 					glBegin (GL_QUADS);
 					glVertex2f ( (x - 1) + (j + 1) + (j* (zz - 1) ), (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) );
 					glVertex2f ( (x - 1) + (j + 1) + (j + 1) * (zz - 1), (y - 512 - 1) + (i + 1) + (i* (zz - 1) ) );
@@ -413,7 +413,7 @@ void creation::render() {
 		b = 7;
 	} else if (status == 1) {
 		a = zz;
-		b = 31;
+		b = 15;
 	} else {
 		a = 2;
 		b = 255;

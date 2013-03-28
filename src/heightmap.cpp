@@ -31,27 +31,27 @@ void heightmap::draw() {
 void heightmap::load (const char* fn, game& g, world& w) {
 	free();
 	imageloader_load_map (fn, h, size_x, size_y, g, w);
-//	imageloader_load_heightmap (fn, h, size_x, size_y);
+//	imageloader_load_heightmap (h, size_x, size_y);
 	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", "data/ice.png", c, h, size_x, size_y, g);
 
 	//spocita normaly
 	normal.resize (size_x*size_y);
 	int i, j, a, b, C, D;
-	for (i = 0;i < size_x;++i) {
+	for (i = 0;i < size_y;++i) {
 		a = i - 1;
 		if (a < 0) a = 0;
 		b = i + 1;
-		if (b >= size_x) b = size_x - 1;
-		for (j = 0;j < size_y;++j) {
+		if (b >= size_y) b = size_y - 1;
+		for (j = 0;j < size_x;++j) {
 			C = j - 1;
 			if (C < 0) C = 0;
 			D = j + 1;
-			if (D >= size_y) D = size_y - 1;
+			if (D >= size_x) D = size_x - 1;
 
-			vect A = vect (0, (D - C), tileheight * (h[i+D*size_x] - h[i+C*size_x]) ),
-			         B = vect ( (b - a), 0, tileheight * (h[b+j*size_x] - h[a+j*size_x]) );
+			vect A = vect (0, (D - C), tileheight * (h[i+D*size_y] - h[i+C*size_y]) ),
+			         B = vect ( (b - a), 0, tileheight * (h[b+j*size_y] - h[a+j*size_y]) );
 
-			normal[i+j*size_x] = (B ^ A).normal();
+			normal[i+j*size_y] = (B ^ A).normal();
 		}
 	}
 
@@ -92,6 +92,11 @@ float heightmap::get_height (float x, float y) {
 void heightmap::get_sizes (float &x, float &y) {
 	x = size_x * tilesize;
 	y = size_y * tilesize;
+}
+
+//vrati promenou v meritku mapy
+float heightmap::get_size (float x) {
+	return x * tilesize;
 }
 
 //uvolneni pameti

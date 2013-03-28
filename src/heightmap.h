@@ -24,6 +24,7 @@ public:
 	void load (const char* fn, game& g, world& w);
 	float get_height (float x, float y);
 	void get_sizes (float &x, float &y);
+	float get_size (float x);
 	void free();
 	void finish();
 };

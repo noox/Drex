@@ -15,8 +15,8 @@ using namespace std;
 void world::init (game &g) {
 	dr.init();
 
-	//random pozice draka na pocatku (5=tileheight z heightmapy)
-	int px = FRAND * 255 * 5, py = FRAND * 255 * 5, pz = hm.get_height (px, py) + 50;
+	//random pozice draka na pocatku
+	int px = hm.get_size (FRAND * 255), py = hm.get_size (FRAND * 255), pz = hm.get_height (px, py) + 50;
 	dr.set (vect (px, py, pz), quat (0.7, 0.7, 0, 0) );
 
 	cam.set (vect (px - 10, py - 10, pz - 10), quat (1, 0, 0, 0) );
@@ -28,7 +28,7 @@ void world::init (game &g) {
 	ms.init();
 
 	cu = 8;
-	rad = 100;
+	rad = 70;
 
 	hm.load (maplist_get_file_name (g.get_mapchosen() ), g, *this);
 
@@ -155,6 +155,9 @@ void world::add_enemy (float u, float v) {
 		enemy& p = es.add_one();
 		p.pos.x = u + FRAND * rad;
 		p.pos.y = v + FRAND * rad;
+		cout << 255*5 << "\t" << 255*5 << endl;
+		cout << p.pos.x << "\t" << p.pos.y << endl;
+		cout << endl;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
 		p.size_x = 3 + FRAND;
 		p.size_y = 3 + FRAND;
