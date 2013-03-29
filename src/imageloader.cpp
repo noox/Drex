@@ -35,9 +35,9 @@ GLuint imageloader_load (const char* fn, int BPP, GLuint type) {
 }
 
 //loader mapoveho souboru (.map)
-void imageloader_load_map (const char* fn, vector<int> &h, int &size_x, int &size_y, game& g, world& w) {
-	size_x = 256;
-	size_y = 256;
+void imageloader_load_map (const char* fn, vector<int> &h, game& g, world& w) {
+	int size_x = 256;
+	int size_y = 256;
 	h.resize (size_x*size_y);
 	fstream f;
 	f.open (fn);
@@ -99,16 +99,17 @@ bool imageloader_load_heightmap (vector<int> &h, int &size_x, int &size_y) {
 }
 
 //loader barev mapy
-bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, const char* ice, vector<unsigned char> &c, vector<int> h, int size_x, int size_y, game& g) {
+bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, const char* ice, vector<unsigned char> &c, vector<int> h, game& g) {
 	SDL_Surface *w, *l, *u, *m, *ic, *image;
 	w = IMG_Load (water);
 	l = IMG_Load (lowland);
 	u = IMG_Load (upland);
 	m = IMG_Load (mountain);
 	ic = IMG_Load (ice);
+	image = 0;
 	if (!w || !l || !u || !m || !ic) return false;
-	size_x = 256;
-	size_y = 256;
+	int size_x = 256;
+	int size_y = 256;
 	c.resize (size_x*size_y*3);
 	for (int i = 0;i < size_y;++i)
 		for (int j = 0;j < size_x;++j) {

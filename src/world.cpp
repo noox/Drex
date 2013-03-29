@@ -22,6 +22,7 @@ void world::init (game &g) {
 	cam.set (vect (px - 10, py - 10, pz - 10), quat (1, 0, 0, 0) );
 
 	hm.init (g, *this);
+	skyb.init();
 	es.init();
 	ob.init();
 	ps.init();
@@ -58,6 +59,7 @@ void world::init (game &g) {
 
 void world::finish() {
 	hm.finish();
+	skyb.finish();
 	dr.finish();
 	es.finish();
 	ob.finish();

@@ -30,9 +30,12 @@ void heightmap::draw() {
 
 void heightmap::load (const char* fn, game& g, world& w) {
 	free();
-	imageloader_load_map (fn, h, size_x, size_y, g, w);
+	imageloader_load_map (fn, h, g, w);
 //	imageloader_load_heightmap (h, size_x, size_y);
-	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", "data/ice.png", c, h, size_x, size_y, g);
+	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", "data/ice.png", c, h, g);
+
+	size_x = 256;
+	size_y = 256;
 
 	//spocita normaly
 	normal.resize (size_x*size_y);

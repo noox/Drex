@@ -4,7 +4,11 @@
 
 class skybox {
 public:
+	GLuint sky;
 	void draw (vect pos, bool night);
+	void init();
+	void finish();
 };
 
 #endif
+
