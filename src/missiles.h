@@ -16,7 +16,8 @@ enum missile_type {
 
 class world;
 
-class missile {
+class missile
+{
 public:
 	vect pos, spd;
 	int type;
@@ -30,19 +31,20 @@ public:
 	}
 
 	void create();
-	void update (float time, world& w);
-	void draw (world &w, GLuint tex_fireball);
+	void update(float time, world& w);
+	void draw(world &w, GLuint tex_fireball);
 };
 
-class missile_system {
+class missile_system
+{
 public:
 	list<missile> missiles;
 	GLuint tex_fireball;
 
 	void init();
 	missile& add_one();
-	void update (float time, world& w);
-	void draw (world &w);
+	void update(float time, world& w);
+	void draw(world &w);
 	void finish();
 };
 

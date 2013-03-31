@@ -5,7 +5,8 @@
 #include <math.h>
 #include "vector.h"
 
-class quat {
+class quat
+{
 public:
 	union {
 		struct {
@@ -17,16 +18,16 @@ public:
 	quat() {
 	}
 
-	quat (float W, float X, float Y, float Z) {
+	quat(float W, float X, float Y, float Z) {
 		w = W;
 		x = X;
 		y = Y;
 		z = Z;
 	}
 
-	quat (float angle, const vect& axis) {
-		w = cosf (angle / 2);
-		float sine = sinf (angle / 2);
+	quat(float angle, const vect& axis) {
+		w = cosf(angle / 2);
+		float sine = sinf(angle / 2);
 		x = axis.x * sine;
 		y = axis.y * sine;
 		z = axis.z * sine;
@@ -69,32 +70,32 @@ public:
 		return *this;
 	}
 
-	quat operator* (float a) const {
-		return quat (w*a, x*a, y*a, z*a);
-	}
+	quat operator*(float a) const {
+		return quat(w * a, x * a, y * a, z * a);
+	} 
 
 	quat operator/ (float a) const {
-		return quat (w / a, x / a, y / a, z / a);
+		return quat(w / a, x / a, y / a, z / a);
 	}
 
 	quat operator+ (const quat& a) const {
-		return quat (w + a.w, x + a.x, y + a.y, z + a.z);
+		return quat(w + a.w, x + a.x, y + a.y, z + a.z);
 	}
 
-	quat operator* (const quat& a) const {
-		return quat (
-		           w*a.w - x*a.x - y*a.y - z*a.z,
-		           w*a.x + x*a.w + y*a.z - z*a.y,
-		           w*a.y - x*a.z + y*a.w + z*a.x,
-		           w*a.z + x*a.y - y*a.x + z*a.w);
+	quat operator*(const quat& a) const {
+		return quat(
+		           w * a.w - x * a.x - y * a.y - z * a.z,
+		           w * a.x + x * a.w + y * a.z - z * a.y,
+		           w * a.y - x * a.z + y * a.w + z * a.x,
+		           w * a.z + x * a.y - y * a.x + z * a.w);
 	}
 
 	float length() const {
-		return sqrtf (w*w + x*x + y*y + z*z);
+		return sqrtf(w * w + x * x + y * y + z * z);
 	}
 
 	quat normal() const {
-		return (*this) * (1 / length() );
+		return (*this) * (1 / length());
 	}
 
 	void normalize() {
@@ -102,28 +103,29 @@ public:
 	}
 
 	vect vecx() const {
-		return vect (w*w + x*x - y*y - z*z,
-		             2*x*y + 2*w*z,
-		             2*x*z - 2*w*y);
+		return vect(w * w + x * x - y * y - z * z,
+		            2 * x * y + 2 * w * z,
+		            2 * x * z - 2 * w * y);
 	}
 
 	vect vecy() const {
-		return vect (2*x*y - 2*w*z,
-		             w*w - x*x + y*y - z*z,
-		             2*y*z + 2*w*x);
+		return vect(2 * x * y - 2 * w * z,
+		            w * w - x * x + y * y - z * z,
+		            2 * y * z + 2 * w * x);
 	}
 
 	vect vecz() const {
-		return vect (2*x*z + 2*w*y,
-		             2*y*z - 2*w*x,
-		             w*w - x*x - y*y + z*z);
+		return vect(2 * x * z + 2 * w * y,
+		            2 * y * z - 2 * w * x,
+		            w * w - x * x - y * y + z * z);
 	}
 
 	void gl_rotate();
 };
 
-inline quat operator* (float a, const quat& b) {
-	return b*a;
+inline quat operator*(float a, const quat& b)
+{
+	return b * a;
 }
 
 #endif

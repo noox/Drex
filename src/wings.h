@@ -5,7 +5,7 @@
 #include "vector.h"
 #include "dragon.h"
 
-void wings_movement (vect points[][2], int &wings, float posz);
+void wings_movement(vect points[][2], int &wings, float posz);
 
 #endif
 

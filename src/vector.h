@@ -4,7 +4,8 @@
 
 #include <math.h>
 
-class vect {
+class vect
+{
 public:
 	union {
 		struct {
@@ -16,7 +17,7 @@ public:
 	vect() {
 	}
 
-	vect (float X, float Y, float Z) {
+	vect(float X, float Y, float Z) {
 		x = X;
 		y = Y;
 		z = Z;
@@ -58,37 +59,38 @@ public:
 	}
 
 	vect operator+ (const vect& a) const {
-		return vect (x + a.x, y + a.y, z + a.z);
+		return vect(x + a.x, y + a.y, z + a.z);
 	}
 
 	vect operator- (const vect& a) const {
-		return vect (x - a.x, y - a.y, z - a.z);
+		return vect(x - a.x, y - a.y, z - a.z);
 	}
 
-	vect operator* (float a) const {
-		return vect (x*a, y*a, z*a);
+	vect operator*(float a) const {
+		return vect(x * a, y * a, z * a);
 	}
 
 	//skalarni soucin
 	float operator% (const vect& a) const {
-		return x*a.x + y*a.y + z*a.z;
+		return x * a.x + y * a.y + z * a.z;
 	}
 
 	//vektorovy soucin
-	vect operator^ (const vect& a) const {
-		return vect (y*a.z - z*a.y, z*a.x - x*a.z, x*a.y - y*a.x);
+	vect operator^(const vect& a) const {
+		return vect(y * a.z - z * a.y, z * a.x - x * a.z, 
+			x * a.y - y * a.x);
 	}
 
 	vect operator/ (float a) const {
-		return vect (x / a, y / a, z / a);
+		return vect(x / a, y / a, z / a);
 	}
 
 	float length() const {
-		return sqrtf (x*x + y*y + z*z);
+		return sqrtf(x * x + y * y + z * z);
 	}
 
 	vect normal() const {
-		return (*this) * (1 / (this->length() ) );
+		return (*this) * (1 / (this->length()));
 	}
 
 	vect unit() const {
@@ -96,15 +98,14 @@ public:
 	}
 
 	vect operator| (const float& size) const {
-		return unit() *size;
+		return unit() * size;
 	}
 };
 
-inline vect operator* (float a, const vect& b) {
-	return b*a;
+inline vect operator*(float a, const vect& b)
+{
+	return b * a;
 }
 
 #endif
-
-
 

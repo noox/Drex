@@ -23,7 +23,8 @@ enum particle_type {
 
 class particle_system;
 
-class particle {
+class particle
+{
 public:
 	vect pos, spd;
 	int type;
@@ -33,18 +34,19 @@ public:
 		age = 0;
 	}
 
-	void update (float time);
+	void update(float time);
 };
 
-class particle_system {
+class particle_system
+{
 public:
 	list<particle> particles;
 	GLuint tex_fire, tex_burning, tex_smoke;
 
 	void init();
 	particle& add_one();
-	void update (float time);
-	void draw (world &w);
+	void update(float time);
+	void draw(world &w);
 	void finish();
 };
 

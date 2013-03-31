@@ -7,48 +7,56 @@
 #include "world.h"
 #include "imageloader.h"
 
-void missile_system::init() {
+void missile_system::init()
+{
 	missiles.clear();
 
-	tex_fireball = imageloader_load ("data/fireball.png", 4, GL_RGBA);
-	glBindTexture (GL_TEXTURE_2D, tex_fireball);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	tex_fireball = imageloader_load("data/fireball.png", 4, GL_RGBA);
+	glBindTexture(GL_TEXTURE_2D, tex_fireball);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 }
 
 //pridani jedne strely
-missile& missile_system::add_one() {
-	missiles.push_back (missile() );
+missile& missile_system::add_one()
+{
+	missiles.push_back(missile());
 	return missiles.back();
 }
 
 //update vsech strel a smazani nepotrebnych
-void missile_system::update (float time, world& w) {
+void missile_system::update(float time, world& w)
+{
 	list<list<missile>::iterator> todel;
-	for (list<missile>::iterator i = missiles.begin();i != missiles.end();++i) {
-		i->update (time, w);
-		if (i->deletable) todel.push_back (i);
+	for (list<missile>::iterator i = missiles.begin();i != missiles.end();
+	        ++i) {
+
+		i->update(time, w);
+		if (i->deletable) todel.push_back(i);
 	}
-	while (!todel.empty() ) {
-		missiles.erase (todel.front() );
+	while (!todel.empty()) {
+		missiles.erase(todel.front());
 		todel.pop_front();
 	}
 }
 
-void missile_system::draw (world &w) {
-	for (list<missile>::iterator i = missiles.begin();i != missiles.end();++i)
-		i->draw (w, tex_fireball);
+void missile_system::draw(world &w)
+{
+	for (list<missile>::iterator i = missiles.begin();i != missiles.end();
+	        ++i) i->draw(w, tex_fireball);
 }
 
-void missile_system::finish() {
+void missile_system::finish()
+{
 	missiles.clear();
 }
 
 /* =========================================================== */
 
-void missile::update (float time, world& w) {
+void missile::update(float time, world& w)
+{
 	pos += spd * time;
 	age += time;
 	reload += time;
@@ -62,14 +70,16 @@ void missile::update (float time, world& w) {
 			//zakladni draci utok
 		case missile_dragon_fire:
 			//pokud strela zasahla cil, preda se ke smazani
-			if (w.es.try_to_damage_enemy (pos, power, fire) || w.ob.try_to_damage_object (pos, power, fire) )
+			if (w.es.try_to_damage_enemy(pos, power, fire)
+			        || w.ob.try_to_damage_object(pos, power, fire))
+
 				deletable = true;
 
 			//pridani particlu do systemu
 			{
 				particle& p = w.ps.add_one();
 				p.pos = pos;
-				p.spd = vect (DFRAND, DFRAND, DFRAND);
+				p.spd = vect(DFRAND, DFRAND, DFRAND);
 				p.type = part_fire;
 				p.life = 0.4;
 				p.r = 1;
@@ -81,14 +91,16 @@ void missile::update (float time, world& w) {
 			//pokrocily draci utok
 		case missile_dragon_ball:
 			//pokud strela zasahla cil, preda se ke smazani
-			if (w.es.try_to_damage_enemy (pos, power, fire) || w.ob.try_to_damage_object (pos, power, fire) )
+			if (w.es.try_to_damage_enemy(pos, power, fire)
+			        || w.ob.try_to_damage_object(pos, power, fire))
+
 				deletable = true;
 
 			//pridani particlu do systemu
 			{
 				particle& p = w.ps.add_one();
 				p.pos = pos;
-				p.spd = vect (DFRAND, DFRAND, DFRAND);
+				p.spd = vect(DFRAND, DFRAND, DFRAND);
 				p.type = part_fireball;
 				p.life = 0.4;
 				p.r = 1;
@@ -100,14 +112,14 @@ void missile::update (float time, world& w) {
 			//utok nepratel
 		case missile_human_shot:
 			//pokud strela zasahla draka, preda se ke smazani
-			if (w.dr.try_to_damage_dragon (pos, power) )
+			if (w.dr.try_to_damage_dragon(pos, power))
 				deletable = true;
 
 			//pridani particlu do systemu
 			{
 				particle& p = w.ps.add_one();
 				p.pos = pos;
-				p.spd = vect (DFRAND, DFRAND, DFRAND);
+				p.spd = vect(DFRAND, DFRAND, DFRAND);
 				p.type = part_fire;
 				p.life = 0.4;
 				p.r = 1;
@@ -120,7 +132,8 @@ void missile::update (float time, world& w) {
 	}
 }
 
-void missile::draw (world &w, GLuint tex_fireball) {
+void missile::draw(world &w, GLuint tex_fireball)
+{
 	//priprava matice pro billboarding
 	float part_face[16];
 	for (int i = 0;i < 16;++i) part_face[i] = 0;
@@ -144,35 +157,33 @@ void missile::draw (world &w, GLuint tex_fireball) {
 	part_face[14] = 0;
 	part_face[15] = 1;
 
-	glEnable (GL_ALPHA_TEST);
-	glAlphaFunc (GL_GREATER, 0.3);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.3);
 
 	if (type == missile_dragon_ball) {
 		glPushMatrix();
-		glTranslatef (pos.x, pos.y, pos.z);
+		glTranslatef(pos.x, pos.y, pos.z);
 
-		glBindTexture (GL_TEXTURE_2D, tex_fireball);
-		glEnable (GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, tex_fireball);
+		glEnable(GL_TEXTURE_2D);
 
-		glMultMatrixf (part_face);
-		glBegin (GL_POLYGON);
+		glMultMatrixf(part_face);
+		glBegin(GL_POLYGON);
 		float rad, xcos, xsin;
 		for (int i = 0;i < 360;++i) {
 			rad = i * M_PI / 180;
-			xcos = cos (rad);
-			xsin = sin (rad);
+			xcos = cos(rad);
+			xsin = sin(rad);
 
-			glTexCoord2f (xcos * 0.5 + 0.5, xsin * 0.5 + 0.5);
-			glVertex2f (xcos, xsin);
+			glTexCoord2f(xcos * 0.5 + 0.5, xsin * 0.5 + 0.5);
+			glVertex2f(xcos, xsin);
 		}
 		glEnd();
 
-		glDisable (GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 
 		glPopMatrix();
 	}
-	glDisable (GL_ALPHA_TEST);
+	glDisable(GL_ALPHA_TEST);
 }
-
-
 

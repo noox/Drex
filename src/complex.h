@@ -4,7 +4,8 @@
 
 #include <math.h>
 
-class complex {
+class complex
+{
 public:
 	union {
 		struct {
@@ -16,7 +17,7 @@ public:
 	complex() {
 	}
 
-	complex (float X, float Y) {
+	complex(float X, float Y) {
 		x = X;
 		y = Y;
 	}
@@ -57,35 +58,36 @@ public:
 	}
 
 	complex operator+ (const complex& a) const {
-		return complex (x + a.x, y + a.y);
+		return complex(x + a.x, y + a.y);
 	}
 
 	complex operator- (const complex& a) const {
-		return complex (x -a.x, y - a.y);
+		return complex(x -a.x, y - a.y);
 	}
 
-	complex operator* (const complex& a) const {
-		return complex (x*a.x - y*a.y, x*a.y + y*a.x);
+	complex operator*(const complex& a) const {
+		return complex(x*a.x - y*a.y, x*a.y + y*a.x);
 	}
 
-	complex operator* (float a) const {
-		return complex (x*a, y*a);
+	complex operator*(float a) const {
+		return complex(x*a, y*a);
 	}
 
 	complex operator/ (float a) const {
-		return complex (x / a, y / a);
+		return complex(x / a, y / a);
 	}
 
 	float length() const {
-		return sqrtf (x*x + y*y);
+		return sqrtf(x*x + y*y);
 	}
 
 	complex normal() const {
-		return (*this) * (1 / (this->length() ) );
+		return (*this) * (1 / (this->length()));
 	}
 };
 
-inline complex operator* (float a, const complex& b) {
+inline complex operator*(float a, const complex& b)
+{
 	return b*a;
 }
 

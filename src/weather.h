@@ -4,8 +4,8 @@
 
 #include "world.h"
 
-void make_rain (world &w);
-void make_snow (world &w);
+void make_rain(world &w);
+void make_snow(world &w);
 
 #endif
 

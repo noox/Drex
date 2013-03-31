@@ -3,7 +3,8 @@
 
 #include "quaternion.h"
 
-void quat::gl_rotate() {
+void quat::gl_rotate()
+{
 	float m[4][4];
 	vect t;
 	t = vecx();
@@ -27,5 +28,6 @@ void quat::gl_rotate() {
 	m[3][2] = 0;
 	m[3][3] = 1;
 
-	glMultMatrixf (&m[0][0]);
+	glMultMatrixf(&m[0][0]);
 }
+

@@ -2,16 +2,17 @@
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <math.h>
-
 #include <iostream>
+
 using namespace std;
 
 #include "game.h"
 
 static SDL_Surface *surface;
 
-bool init() {
-	if (SDL_Init (SDL_INIT_VIDEO) < 0) {
+bool init()
+{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		cout << "SDL_Init failed: " << SDL_GetError() << endl;
 		return false;
 	}
@@ -30,53 +31,58 @@ bool init() {
 	else vidflags |= SDL_SWSURFACE;
 	if (videoinfo->blit_hw) vidflags |= SDL_HWACCEL;
 
-	SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute (SDL_GL_BUFFER_SIZE, 24);
-	SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
 	//povrch na kresleni (okno)
-	surface = SDL_SetVideoMode (800, 600, 24, vidflags);
+	surface = SDL_SetVideoMode(800, 600, 24, vidflags);
 	if (!surface) {
 		cout << "SDL_SetVideoMode failed: " << SDL_GetError() << endl;
 		return false;
 	}
 
 	//titulek okna
-	SDL_WM_SetCaption ("drex", NULL);
+	SDL_WM_SetCaption("drex", NULL);
 
-	glViewport (0, 0, 800, 600);
+	glViewport(0, 0, 800, 600);
 
-	//chyti a schova mys
-	SDL_WM_GrabInput (SDL_GRAB_ON);
-	SDL_ShowCursor (SDL_DISABLE);
+	//chyti a schova kurzor
+	SDL_WM_GrabInput(SDL_GRAB_ON);
+	SDL_ShowCursor(SDL_DISABLE);
 
 	return true;
 }
 
-void finish() {
+void finish()
+{
 	SDL_Quit();
 }
 
 static long int lasttime;
 
 //zmeri casovy usek v sekundach od minuleho volani timediff
-float timediff() {
+float timediff()
+{
 	Uint32 newtime = SDL_GetTicks();
 	float diff = (newtime - lasttime) / 1000.0;
 	lasttime = newtime;
 	return diff;
 }
 
-void sleep (float t) {
-	SDL_Delay ( (Uint32) (1000*t) );
+void sleep(float t)
+{
+	SDL_Delay((Uint32)(1000*t));
 }
 
-static bool space_down = false, tab_down = false, esc_down = false, left_mouse_down = false, right_mouse_down = false;
+static bool space_down = false, tab_down = false, esc_down = false, 
+	left_mouse_down = false, right_mouse_down = false;
 game global_game;
 
-bool update() {
+bool update()
+{
 	SDL_Event event;
-	while (SDL_PollEvent (&event) ) {
+	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT:
 			return false;
@@ -109,7 +115,6 @@ bool update() {
 				left_mouse_down = true;
 			if (event.button.button == SDL_BUTTON_RIGHT)
 				right_mouse_down = true;
-			//cout << "Mouse button " << (int)event.button.button << " pressed at " << event.button.x << ", " << event.button.y << endl;
 			break;
 		default:
 			break;
@@ -117,21 +122,23 @@ bool update() {
 	}
 
 	int mouse_x, mouse_y;
-	SDL_GetRelativeMouseState (&mouse_x, &mouse_y);
+	SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 
 	int mouse__x, mouse__y;
-	SDL_GetMouseState (&mouse__x, &mouse__y);
+	SDL_GetMouseState(&mouse__x, &mouse__y);
 
 	float td = timediff();
 	float min_td = global_game.get_min_timediff();
 
 	//kdyz chce hra omezovat fps a kdyz je co omezovat
 	if (min_td > 0 && td < min_td) {
-		sleep (min_td - td);
+		sleep(min_td - td);
 		td += timediff();
 	}
 
-	bool term = global_game.update (td, space_down, tab_down, esc_down, left_mouse_down, right_mouse_down, mouse_x, mouse_y, mouse__x, mouse__y);
+	bool term = global_game.update(td, space_down, tab_down, esc_down, 
+		left_mouse_down, right_mouse_down, mouse_x, mouse_y, mouse__x, 
+		mouse__y);
 	global_game.render();
 
 	//dalsi snimek
@@ -141,18 +148,19 @@ bool update() {
 }
 
 #ifndef __WIN32__
-int main (int argc, char **argv) {
+int main(int argc, char **argv)
+{
 #else
 #include <windows.h>
-int WinMain (HINSTANCE hi, HINSTANCE hpi, LPSTR lpcmdline, int nCmdShow) {
+int WinMain(HINSTANCE hi, HINSTANCE hpi, LPSTR lpcmdline, int nCmdShow) {
 #endif
-	if (!init() ) return 1;
+	if (!init()) return 1;
 	global_game.init();
 
 	//reset casovace
 	timediff();
 
-	while (update() );
+	while (update());
 
 	global_game.finish();
 	finish();
