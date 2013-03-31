@@ -30,36 +30,37 @@ void heightmap::draw() {
 
 void heightmap::load (const char* fn, game& g, world& w) {
 	free();
-	imageloader_load_map (fn, h, g, w);
-//	imageloader_load_heightmap (h, size_x, size_y);
-	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", "data/ice.png", c, h, g);
 
-	size_x = 256;
-	size_y = 256;
+	size_x = 512;
+	size_y = 512;
+
+	imageloader_load_map (fn, h, g, w, size_x, size_y);
+//	imageloader_load_heightmap (h, size_x, size_y);
+	imageloader_load_color ("data/water.png", "data/grass.png", "data/upland.png", "data/snow.png", "data/ice.png", c, h, g, size_x, size_y);
 
 	//spocita normaly
 	normal.resize (size_x*size_y);
 	int i, j, a, b, C, D;
-	for (i = 0;i < size_y;++i) {
+	for (i = 0;i < size_x;++i) {
 		a = i - 1;
 		if (a < 0) a = 0;
 		b = i + 1;
-		if (b >= size_y) b = size_y - 1;
-		for (j = 0;j < size_x;++j) {
+		if (b >= size_x) b = size_x - 1;
+		for (j = 0;j < size_y;++j) {
 			C = j - 1;
 			if (C < 0) C = 0;
 			D = j + 1;
-			if (D >= size_x) D = size_x - 1;
+			if (D >= size_y) D = size_y - 1;
 
-			vect A = vect (0, (D - C), tileheight * (h[i+D*size_y] - h[i+C*size_y]) ),
-			         B = vect ( (b - a), 0, tileheight * (h[b+j*size_y] - h[a+j*size_y]) );
+			vect A = vect (0, (D - C), tileheight * (h[i+D*size_x] - h[i+C*size_x]) ),
+			         B = vect ( (b - a), 0, tileheight * (h[b+j*size_x] - h[a+j*size_x]) );
 
-			normal[i+j*size_y] = (B ^ A).normal();
+			normal[i+j*size_x] = (B ^ A).normal();
 		}
 	}
 
 	glNewList (dl, GL_COMPILE);
-	for (i = 0;i < size_y;++i) {
+	for (i = 0;i < size_y - 1;++i) {
 		glBegin (GL_TRIANGLE_STRIP);
 		for (j = 0;j < size_x;++j) {
 			hm_vertex (i, j)
@@ -74,12 +75,12 @@ void heightmap::load (const char* fn, game& g, world& w) {
 //zjisti vysku terenu mapy na pozici x,y
 float heightmap::get_height (float x, float y) {
 	int tx = x / tilesize, ty = y / tilesize;
-	if (tx < 0 || tx >= size_x - 1 || ty < 0 || ty >= size_y - 1) return 0;
+	if ( (tx < 0) || (tx >= size_x - 1) || (ty < 0) || (ty >= size_y - 1) ) return 0;
 	float mx = x / tilesize - tx, my = y / tilesize - ty;
 	float h1, h2, h3;
-	h1 = h[tx+ty*size_x];
-	h3 = h[ (tx+1) + (ty+1) *size_x];
-	if (mx > my) h2 = h[ (tx+1) +ty*size_x];
+	h1 = h[tx + ty * size_x];
+	h3 = h[ (tx + 1) + (ty + 1) * size_x];
+	if (mx > my) h2 = h[ (tx + 1) + ty * size_x];
 	else {
 		h2 = h[tx+ (ty+1) *size_x];
 		float temp = mx;

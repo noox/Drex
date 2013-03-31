@@ -32,10 +32,11 @@ public:
 class creation {
 	OGLFT::TranslucentTexture *face, *face2;
 	int left_mouse_hit, esc_hit, status, type;
+	bool go_next;
 	vector<int> terrain, final_terrain, terrain_to_save, units;
 	int weather, daytime, difficulty, active_weather, active_daytime, active_difficulty;
 public:
-	int i, j, x, y, z, zz, cursor_pos_x, cursor_pos_y;
+	int i, j, x, y, z, zz, scale, cursor_pos_x, cursor_pos_y;
 	vector<types> data;
 	void init();
 	void set();
@@ -45,6 +46,7 @@ public:
 	int get_type();
 	void get_settings();
 	bool someone_on_map();
+	bool terrain_on_map();
 	bool update (float timediff, bool space_down, bool esc_down, bool left_mouse_down, bool right_mouse_down, int mouse__x, int mouse__y, game& g);
 	void make_quad (int empty);
 	void render();

@@ -14,15 +14,15 @@ using namespace std;
 
 void world::init (game &g) {
 	dr.init();
+	skyb.init();
 
 	//random pozice draka na pocatku
-	int px = hm.get_size (FRAND * 255), py = hm.get_size (FRAND * 255), pz = hm.get_height (px, py) + 50;
+	int px = hm.get_size (FRAND * 255 + 128), py = hm.get_size (FRAND * 255 + 128), pz = hm.get_height (px, py) + 50;
 	dr.set (vect (px, py, pz), quat (0.7, 0.7, 0, 0) );
 
 	cam.set (vect (px - 10, py - 10, pz - 10), quat (1, 0, 0, 0) );
 
 	hm.init (g, *this);
-	skyb.init();
 	es.init();
 	ob.init();
 	ps.init();
@@ -54,7 +54,7 @@ void world::init (game &g) {
 	//inicialni nastaveni pro mlhu
 	glHint (GL_FOG_HINT, GL_NICEST);
 	f.set_color (0.4, 0.6, 0.9);
-	f.set_distance (50, 200);
+	f.set_distance (80, 200);
 }
 
 void world::finish() {
@@ -157,10 +157,9 @@ void world::add_enemy (float u, float v) {
 		enemy& p = es.add_one();
 		p.pos.x = u + FRAND * rad;
 		p.pos.y = v + FRAND * rad;
-		cout << 255*5 << "\t" << 255*5 << endl;
-		cout << p.pos.x << "\t" << p.pos.y << endl;
-		cout << endl;
 		p.pos.z = hm.get_height (p.pos.x, p.pos.y);
+		cout << p.pos.x << "\t" << p.pos.y << "\t" << p.pos.z << endl;
+		cout << endl;
 		p.size_x = 3 + FRAND;
 		p.size_y = 3 + FRAND;
 		p.size_z = 3 + FRAND;

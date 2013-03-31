@@ -9,6 +9,8 @@ using namespace std;
 #include "imageloader.h"
 #include "game.h"
 
+class heightmap hm;
+
 bool imageloader_init() {
 	int flags = IMG_INIT_PNG;
 	int initted = IMG_Init (flags);
@@ -35,9 +37,7 @@ GLuint imageloader_load (const char* fn, int BPP, GLuint type) {
 }
 
 //loader mapoveho souboru (.map)
-void imageloader_load_map (const char* fn, vector<int> &h, game& g, world& w) {
-	int size_x = 256;
-	int size_y = 256;
+void imageloader_load_map (const char* fn, vector<int> &h, game& g, world& w, int size_x, int size_y) {
 	h.resize (size_x*size_y);
 	fstream f;
 	f.open (fn);
@@ -54,9 +54,9 @@ void imageloader_load_map (const char* fn, vector<int> &h, game& g, world& w) {
 		stringstream ss (line);
 		for (int j = 0;j < size_x;++j) {
 			ss >> h[i*size_y+j];
-			//	cout << h[i*size_y+j] << " ";
+			//cout << h[i*size_y+j] << " ";
 		}
-		//	cout << endl;
+		//cout << endl;
 	}
 	//jednotky
 	float u, v;
@@ -65,14 +65,14 @@ void imageloader_load_map (const char* fn, vector<int> &h, game& g, world& w) {
 		ss >> u >> v;
 		//	cout << "domy a jednotky: " << u << " " << v <<  endl;
 		if (u == -1 || v == -1) break;
-		else w.add_enemy (5*u, 5*v);
+		else w.add_enemy (hm.get_size (u), hm.get_size (v) );
 	}
 	//zbytek objektu v krajine
 	while (getline (f, line, '\n') ) {
 		stringstream ss (line);
 		ss >> u >> v;
 		//	cout << "stromy: " << u << " " << v <<  endl;
-		w.add_rest (5*u, 5*v);
+		w.add_rest (hm.get_size (u), hm.get_size (v) );
 	}
 	f.close();
 }
@@ -99,7 +99,7 @@ bool imageloader_load_heightmap (vector<int> &h, int &size_x, int &size_y) {
 }
 
 //loader barev mapy
-bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, const char* ice, vector<unsigned char> &c, vector<int> h, game& g) {
+bool imageloader_load_color (const char* water, const char* lowland, const char* upland, const char* mountain, const char* ice, vector<unsigned char> &c, vector<int> h, game& g, int size_x, int size_y) {
 	SDL_Surface *w, *l, *u, *m, *ic, *image;
 	w = IMG_Load (water);
 	l = IMG_Load (lowland);
@@ -108,8 +108,6 @@ bool imageloader_load_color (const char* water, const char* lowland, const char*
 	ic = IMG_Load (ice);
 	image = 0;
 	if (!w || !l || !u || !m || !ic) return false;
-	int size_x = 256;
-	int size_y = 256;
 	c.resize (size_x*size_y*3);
 	for (int i = 0;i < size_y;++i)
 		for (int j = 0;j < size_x;++j) {

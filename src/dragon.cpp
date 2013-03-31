@@ -79,21 +79,22 @@ void dragon::update (int mouse_x, int mouse_y, bool left_mouse_down, bool right_
 
 	//okraje mapy
 	float maxsx, maxsy;
+	int border = 128;
 	w.hm.get_sizes (maxsx, maxsy);
-	if (pos.x < 0) {
-		pos.x = 0;
+	if (pos.x < w.hm.get_size (border) ) {
+		pos.x = w.hm.get_size (border);
 		if (spd.x < 0) spd.x = 0;
 	}
-	if (pos.y < 0) {
-		pos.y = 0;
+	if (pos.y < w.hm.get_size (border) ) {
+		pos.y = w.hm.get_size (border);
 		if (spd.y < 0) spd.y = 0;
 	}
-	if (pos.x > maxsx) {
-		pos.x = maxsx;
+	if (pos.x > maxsx - w.hm.get_size (border) ) {
+		pos.x = maxsx - w.hm.get_size (border);
 		if (spd.x > 0) spd.x = 0;
 	}
-	if (pos.y > maxsy) {
-		pos.y = maxsy;
+	if (pos.y > maxsy - w.hm.get_size (border) ) {
+		pos.y = maxsy - w.hm.get_size (border);
 		if (spd.y > 0) spd.y = 0;
 	}
 	if (pos.z > (maxsx + maxsy) ) {

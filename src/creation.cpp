@@ -65,10 +65,11 @@ void creation::set() {
 	terrain_to_save.clear();
 	terrain.resize (8*8);
 	units.resize (16*16);
-	final_terrain.resize (256*256);
-	terrain_to_save.resize (256*256);
+	final_terrain.resize (scale*scale);
+	terrain_to_save.resize (scale*scale);
 
 	status = 0;
+	go_next = true;
 	type = water;
 }
 
@@ -79,6 +80,7 @@ void creation::init() {
 		cerr << "Could not construct face." << endl;
 		return;
 	}
+	scale = 512;
 	set();
 	left_mouse_hit = 0;
 	esc_hit = 0;
@@ -110,30 +112,21 @@ int creation::get_type () {
 		}
 }
 
-//blur mapy pro tupejsi hrany
+//blur mapy pro tupejsi hrany terenu
 void creation::blur() {
 	int s, rad, k, l;
 
 	rad = 16;
-	for (i = 0; i < 256; ++i) {
-		for (j = 0; j < 256; ++j) {
+	for (i = 0; i < scale; ++i) {
+		for (j = 0; j < scale; ++j) {
 			s = 0;
 			for (l = -rad; l <= rad; ++l)
 				for (k = -rad; k <= rad; ++k)
-					if ( (i + k >= 0) && (i + k <= 255) && (j + l >= 0) && (j + l <= 255) )
-						s += final_terrain[ (i + k) *256 + (j + l) ];
-			terrain_to_save[i*256+j] = s / ( (rad * 2 + 1) * (rad * 2 + 1) );
+					if ( (i + k >= 0) && (i + k <= scale - 1) && (j + l >= 0) && (j + l <= scale - 1) )
+						s += final_terrain[ (i + k) * scale + (j + l) ];
+			terrain_to_save[i*scale+j] = s / ( (rad * 2 + 1) * (rad * 2 + 1) );
 		}
 	}
-
-	/*
-		for (i=0;i<256;++i) {
-			for (j=0;j<256;++j) {
-				cout << terrain_to_save[i*256+j] << " ";
-			}
-			cout << endl;
-		}
-	*/
 }
 
 //ulozi mapu do souboru
@@ -143,22 +136,22 @@ void creation::save_map (game& g) {
 	//vyplni nastaveni mapy
 	f << "w\t" << weather << endl << "d\t" << daytime << endl << "f\t" << difficulty << endl;
 	//vyplni teren
-	for (i = 0;i < 256;++i) {
-		for (j = 0;j < 256;++j)
-			f << terrain_to_save[i*256+j] << " ";
+	for (i = 0;i < scale;++i) {
+		for (j = 0;j < scale;++j)
+			f << terrain_to_save[i*scale+j] << " ";
 		f << endl;
 	}
 	//vyplni nepratelske jednotky v meritku
 	for (i = 0;i < 16;++i)
 		for (j = 0;j < 16;++j)
 			if (units[i*16+j] == estate)
-				f << i*16 << "\t" << j*16 << endl;
+				f << i*16 + 128 << "\t" << j*16 + 128 << endl;
 	f << -1 << "\t" << -1 << endl;
 	//vyplni nepratelske jednotky v meritku
 	for (i = 0;i < 16;++i)
 		for (j = 0;j < 16;++j)
 			if (units[i*16+j] == estate)
-				f << i*16 << "\t" << j*16 << endl;
+				f << i*16 + 128 << "\t" << j*16 + 128 << endl;
 
 	f.close();
 	//a zresetuje seznam map
@@ -168,22 +161,25 @@ void creation::save_map (game& g) {
 
 //pripravi mapu pro ulozeni
 void creation::prepare_map() {
-	int p, k, l;
+	int p, k, l, m, n;
 
-	//zvetsi meritko mapy a doplni o finalni hodnoty
-	for (i = 0;i < 8;++i)
+	//zvetsi meritko mapy, prida okraje a doplni o finalni hodnoty
+	for (i = 0;i < 16;++i)
 		for (k = 0;k < 32;++k)
-			for (j = 0;j < 8;++j)
+			for (j = 0;j < 16;++j)
 				for (l = 0;l < 32;++l) {
-					p = terrain[i*8+j];
+					//prida vodu na okraje
+					if ( (i < 4) || (i > 11) || (j < 4) || (j > 11) ) p = 0;
+					//a teren mapy
+					else p = terrain[ (i-4) *8+ (j-4) ];
 					//hory
-					if (p == 3) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 255;
+					if (p == 3) final_terrain[ ( ( (i*32) +k) * scale) +j*32+l] = 255;
 					//pahorkatiny
-					if (p == 2) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 171;
+					if (p == 2) final_terrain[ ( ( (i*32) +k) * scale) +j*32+l] = 171;
 					//niziny
-					if (p == 1) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 85;
+					if (p == 1) final_terrain[ ( ( (i*32) +k) * scale) +j*32+l] = 85;
 					//voda
-					if (p == 0) final_terrain[ ( ( (i*32) +k) *256) +j*32+l] = 0;
+					if (p == 0) final_terrain[ ( ( (i*32) +k) * scale) +j*32+l] = 0;
 				}
 }
 
@@ -228,6 +224,14 @@ void creation::get_settings() {
 	}
 }
 
+//zkontroluje, zda je na mape nejaky teren
+bool creation::terrain_on_map() {
+	for (i = 0;i < 8;++i)
+		for (j = 0;j < 8;++j)
+			if (terrain[i*8+j] > water) return true;
+	return false;
+}
+
 //zkontroluje, zda jsou na mape nejaci nepratele
 bool creation::someone_on_map() {
 	for (i = 0;i < 16;++i)
@@ -270,12 +274,19 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 
 		//tlacitko "continue"
 		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
-			status = 1;
-			//defaultni stetec
-			data[type].active = false;
-			type = estate;
-			data[estate].active = true;
+			if (!terrain_on_map() ) go_next = false;
+			else {
+				go_next = true;
+				status = 1;
+				//defaultni stetec
+				data[type].active = false;
+				type = estate;
+				data[estate].active = true;
+			}
 		}
+		//tlacitko "exit"
+		if (left_just_pressed && (cursor_pos_x > x + 542 + 88 ) && (cursor_pos_x < x + 542 + 88 + 50) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) )
+			return false;
 
 	} else if (status == 1 ) {
 		//vyplneni mrizky jednotek
@@ -287,14 +298,19 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 
 		//tlacitko "continue"
 		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
-			status = 2;
-			//defaultni stetec
-			data[type].active = false;
-			type = -1;
+			if (!someone_on_map() ) go_next = false;
+			else {
+				go_next = true;
+				status = 2;
+				//defaultni stetec
+				data[type].active = false;
+				type = -1;
+			}
 		}
 		//tlacitko "back"
 		if (left_just_pressed && (cursor_pos_x > x + 542 + 88 ) && (cursor_pos_x < x + 542 + 88 + 50) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			status = 0;
+			go_next = true;
 			//defaultni stetec
 			data[type].active = false;
 			type = water;
@@ -307,22 +323,26 @@ bool creation::update (float timediff, bool space_down, bool esc_down, bool left
 
 		//tlacitko "save map"
 		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && (cursor_pos_x < x + 542 + 85) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
-			prepare_map();
-			blur();
-			if (weather != -1 && daytime != -1 && difficulty != -1 && someone_on_map() ) save_map (g);
-			else return true;
-			set();
-			return false;
+			if ( (weather == -1) || (daytime == -1) || (difficulty == -1) )
+				go_next = false;
+			else {
+				go_next = true;
+				prepare_map();
+				blur();
+				save_map (g);
+				set();
+				return false;
+			}
 		}
 		//tlacitko "back"
 		if (left_just_pressed && (cursor_pos_x > x + 542 + 88) && (cursor_pos_x < x + 542 + 88 + 50) && (cursor_pos_y < y - 470 + 5) && (cursor_pos_y > y - 470 - 10 - 5) ) {
 			status = 1;
+			go_next = true;
 			//defaultni stetec
 			data[type].active = false;
 			type = estate;
 			data[estate].active = true;
 		}
-
 	}
 	return true;
 }
@@ -584,15 +604,32 @@ void creation::render() {
 		glPopMatrix();
 	}
 
+	//prostor pro chybovou hlasku
+	if (!go_next) {
+		glPushMatrix();
+		glTranslatef (x + 542, y - 450, 0);
+		if (status == 0) {
+			face2->draw (0, 0, "Fill terrain.");
+		} else if (status == 1) {
+			face2->draw (0, 0, "Add estate.");
+		} else {
+			glTranslatef ( 0, 20, 0);
+			face2->draw (0, 0, "Choose game");
+			glTranslatef ( 0, -20, 0);
+			face2->draw (0, 0, "properties.");
+		}
+		glPopMatrix();
+	}
+
 	//napisy pro prechody a save
 	glPushMatrix();
 	glTranslatef (x + 542, y - 480, 0);
 	face2->setForegroundColor (1, 1, 1, 1);
-	if (status == 0) face2->draw (0, 0, "continue");
-	else if (status == 1) {
+	if ( (status == 0) || (status == 1) ) {
 		face2->draw (0, 0, "continue");
 		glTranslatef (90, 0, 0);
-		face2->draw (0, 0, "back");
+		if (status == 0) face2->draw (0, 0, "exit");
+		else face2->draw (0, 0, "back");
 	} else {
 		face2->draw (0, 0, "save map");
 		glTranslatef (90, 0, 0);

@@ -39,7 +39,7 @@ void skybox::draw (vect pos, bool night) {
 	glColor3fv (bottom_color);
 	glTexCoord2f (0.5, 1);
 	glVertex3f (-1, -1, -1);
-	glTexCoord2f (0.25, 0.1);
+	glTexCoord2f (0.25, 1);
 	glVertex3f (1, -1, -1);
 	glTexCoord2f (0.25, 0.666666);
 	glVertex3f (1, 1, -1);
