@@ -42,6 +42,7 @@ public:
 	void add_enemy(float u, float v);
 	void add_rest(float u, float v);
 	void remove_object(int c);
+	void dragon_body_hit(vect missile_spd);
 };
 
 #endif

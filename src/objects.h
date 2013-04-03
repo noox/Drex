@@ -9,6 +9,7 @@ using namespace std;
 class world;
 
 #include "vector.h"
+#include "frand.h"
 
 enum object_type {
 	object_person,
@@ -29,7 +30,7 @@ public:
 
 	object() {
 		burning = 0;
-		reload = 0;
+		reload = -15 * FRAND;
 	}
 
 	void create();

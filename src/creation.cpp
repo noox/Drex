@@ -76,12 +76,30 @@ void creation::set()
 
 void creation::init()
 {
-	face = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
-	face2 = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
-	if (face == 0 || face2 == 0 || !face->isValid() || !face2->isValid()) {
+	title_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
+	grey_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	white_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	red_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	if (title_font == 0 || grey_font == 0 || white_font == 0 || red_font == 0 || 
+		!title_font->isValid() || !grey_font->isValid() || !white_font->isValid() ||
+		!red_font->isValid()) {
 		cerr << "Could not construct face." << endl;
 		return;
 	}
+
+	title_font->setForegroundColor(0, 0.75, 0.75, 1);
+	title_font->setBackgroundColor(0, 0.75, 0.75, 0);
+	title_font->setHorizontalJustification(OGLFT::Face::CENTER);
+	grey_font->setForegroundColor(0.8, 0.8, 0.8, 1);
+	grey_font->setBackgroundColor(0.8, 0.8, 0.8, 0);
+	grey_font->setHorizontalJustification(OGLFT::Face::LEFT);
+	white_font->setForegroundColor(1, 1, 1, 1);
+	white_font->setBackgroundColor(1, 1, 1, 0);
+	white_font->setHorizontalJustification(OGLFT::Face::LEFT);
+	red_font->setForegroundColor(1, 0, 0, 1);
+	red_font->setBackgroundColor(1, 0, 0, 0);
+	red_font->setHorizontalJustification(OGLFT::Face::LEFT);
+
 	scale = 512;
 	set();
 	left_mouse_hit = 0;
@@ -163,8 +181,9 @@ void creation::blur()
 void creation::save_map(game& g)
 {
 	ofstream f;
-	f.open(("maps/" + userlist_get_name(g.get_userchosen()) +
-	        "-" + g.get_map_created() + ".map").c_str());
+	string tmp = "maps/" + userlist_get_name(g.get_userchosen()) +
+	        "-" + g.get_map_created() + ".map";
+	f.open(tmp.c_str());
 	
 	//vyplni nastaveni mapy
 	f << "w\t" << weather << endl << "d\t" << daytime << endl <<
@@ -472,13 +491,6 @@ void creation::render()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	face->setForegroundColor(0, 0.75, 0.75, 1);
-	face->setBackgroundColor(0, 0.75, 0.75, 0);
-	face->setHorizontalJustification(OGLFT::Face::CENTER);
-	face2->setForegroundColor(0.8, 0.8, 0.8, 1);
-	face2->setBackgroundColor(0.8, 0.8, 0.8, 0);
-	face2->setHorizontalJustification(OGLFT::Face::LEFT);
-
 	int a, b;
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -491,9 +503,9 @@ void creation::render()
 	//nadpis screenu
 	glPushMatrix();
 	glTranslatef(400, 540, 0);
-	if (status == 0) face->draw(0, 0, "create terrain");
-	else if (status == 1) face->draw(0, 0, "build estate");
-	else face->draw(0, 0, "choose conditions");
+	if (status == 0) title_font->draw(0, 0, "create terrain");
+	else if (status == 1) title_font->draw(0, 0, "build estate");
+	else title_font->draw(0, 0, "choose conditions");
 	glPopMatrix();
 
 	glDisable(GL_BLEND);
@@ -598,13 +610,11 @@ void creation::render()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			if (data[i].active) {
-				face2->setForegroundColor(1, 0, 0, 1);
-				if (i == no_estate) face2->draw(0, 0, "eraser");
-				else face2->draw(0, 0, (data[i].name).c_str());
-				face2->setForegroundColor(0.8, 0.8, 0.8, 1);
+				if (i == no_estate) red_font->draw(0, 0, "eraser");
+				else red_font->draw(0, 0, (data[i].name).c_str());
 			} else {
-				if (i == no_estate) face2->draw(0, 0, "eraser");
-				else face2->draw(0, 0, (data[i].name).c_str());
+				if (i == no_estate) grey_font->draw(0, 0, "eraser");
+				else grey_font->draw(0, 0, (data[i].name).c_str());
 			}
 			glDisable(GL_BLEND);
 			glDisable(GL_TEXTURE_2D);
@@ -646,19 +656,24 @@ void creation::render()
 	else glTranslatef(x + 542, y - 10, 0);
 
 	if (status != 2) {
-		face2->draw(0, 0, ("Use " + data[type].color).c_str());
+		string tmp = "Use" + data[type].color;
+		grey_font->draw(0, 0, tmp.c_str());
 		glTranslatef(0, -20, 0);
-		if (type == no_estate) face2->draw(0, 0, "to remove");
-		else face2->draw(0, 0, "to arrange");
+		if (type == no_estate) grey_font->draw(0, 0, "to remove");
+		else grey_font->draw(0, 0, "to arrange");
 		glTranslatef(0, -20, 0);
-		if (type != water && type != estate && type != no_estate) 
-			face2->draw(0, 0, (data[type].name + "s.").c_str());
-		else face2->draw(0, 0, (data[type].name + ".").c_str());
+		if (type != water && type != estate && type != no_estate) { 
+			tmp = data[type].name + "s.";
+			grey_font->draw(0, 0, tmp.c_str());
+		} else {
+			tmp = data[type].name + ".";
+			grey_font->draw(0, 0, tmp.c_str());
+		}
 	}
 	if (status == 2) {
-		face2->draw(0, 0, "Choose the game");
+		grey_font->draw(0, 0, "Choose the game");
 		glTranslatef(0, -20, 0);
-		face2->draw(0, 0, "properties.");
+		grey_font->draw(0, 0, "properties.");
 	}
 	glPopMatrix();
 
@@ -690,35 +705,29 @@ void creation::render()
 		glPushMatrix();
 		glTranslatef(x + 542, y - 70, 0);
 
-		face2->setForegroundColor(1, 1, 1, 1);
-		face2->draw(0, 0, ("weather"));
-		face2->setForegroundColor(0.8, 0.8, 0.8, 1);
+		white_font->draw(0, 0, ("weather"));
 		glTranslatef(20, -20, 0);
-		face2->draw(0, 0, ("sunny"));
+		grey_font->draw(0, 0, ("sunny"));
 		glTranslatef(0, -20, 0);
-		face2->draw(0, 0, ("rainy"));
+		grey_font->draw(0, 0, ("rainy"));
 		glTranslatef(0, -20, 0);
-		face2->draw(0, 0, ("snowy"));
+		grey_font->draw(0, 0, ("snowy"));
 		glTranslatef(-20, -30, 0);
 
-		face2->setForegroundColor(1, 1, 1, 1);
-		face2->draw(0, 0, ("daytime"));
-		face2->setForegroundColor(0.8, 0.8, 0.8, 1);
+		white_font->draw(0, 0, ("daytime"));
 		glTranslatef(20, -20, 0);
-		face2->draw(0, 0, ("day"));
+		grey_font->draw(0, 0, ("day"));
 		glTranslatef(0, -20, 0);
-		face2->draw(0, 0, ("night"));
+		grey_font->draw(0, 0, ("night"));
 		glTranslatef(-20, -30, 0);
 
-		face2->setForegroundColor(1, 1, 1, 1);
-		face2->draw(0, 0, ("difficulty"));
-		face2->setForegroundColor(0.8, 0.8, 0.8, 1);
+		white_font->draw(0, 0, ("difficulty"));
 		glTranslatef(20, -20, 0);
-		face2->draw(0, 0, ("easy"));
+		grey_font->draw(0, 0, ("easy"));
 		glTranslatef(0, -20, 0);
-		face2->draw(0, 0, ("medium"));
+		grey_font->draw(0, 0, ("medium"));
 		glTranslatef(0, -20, 0);
-		face2->draw(0, 0, ("hard"));
+		grey_font->draw(0, 0, ("hard"));
 		glPopMatrix();
 	}
 
@@ -727,14 +736,14 @@ void creation::render()
 		glPushMatrix();
 		glTranslatef(x + 542, y - 450, 0);
 		if (status == 0) {
-			face2->draw(0, 0, "Fill terrain.");
+			grey_font->draw(0, 0, "Fill terrain.");
 		} else if (status == 1) {
-			face2->draw(0, 0, "Add estate.");
+			grey_font->draw(0, 0, "Add estate.");
 		} else {
 			glTranslatef(0, 20, 0);
-			face2->draw(0, 0, "Choose game");
+			grey_font->draw(0, 0, "Choose game");
 			glTranslatef(0, -20, 0);
-			face2->draw(0, 0, "properties.");
+			grey_font->draw(0, 0, "properties.");
 		}
 		glPopMatrix();
 	}
@@ -742,16 +751,15 @@ void creation::render()
 	//napisy pro prechody a save
 	glPushMatrix();
 	glTranslatef(x + 542, y - 480, 0);
-	face2->setForegroundColor(1, 1, 1, 1);
 	if ((status == 0) || (status == 1)) {
-		face2->draw(0, 0, "continue");
+		white_font->draw(0, 0, "continue");
 		glTranslatef(90, 0, 0);
-		if (status == 0) face2->draw(0, 0, "exit");
-		else face2->draw(0, 0, "back");
+		if (status == 0) white_font->draw(0, 0, "exit");
+		else white_font->draw(0, 0, "back");
 	} else {
-		face2->draw(0, 0, "save map");
+		white_font->draw(0, 0, "save map");
 		glTranslatef(90, 0, 0);
-		face2->draw(0, 0, "back");
+		white_font->draw(0, 0, "back");
 	}
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);

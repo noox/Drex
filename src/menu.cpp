@@ -12,15 +12,42 @@ using namespace std;
 
 void menu::init()
 {
-	face = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 150);
-	face2 = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
-	face3 = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 30);
-	if (face == 0 || face2 == 0 || face3 == 0 || !face->isValid() || 
-		!face2->isValid() || !face3->isValid()) {
+	title_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 150);
+	username_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 21);
+	blue_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
+	blue_alpha_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
+	white_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	
+	if (title_font == 0 || username_font == 0 || blue_font == 0 || 
+		blue_alpha_font == 0 || white_font == 0 ||
+		!title_font->isValid() || !username_font->isValid() || 
+		!blue_font->isValid() || !blue_alpha_font->isValid() ||
+		!white_font->isValid()) {
 
 		cerr << "Could not construct face." << endl;
 		return;
 	}
+
+	title_font->setForegroundColor(1, 0, 0, 1);
+	title_font->setBackgroundColor(1, 0, 0, 0);
+	title_font->setHorizontalJustification(OGLFT::Face::CENTER);
+	username_font->setForegroundColor(1, 0, 0, 0.95);
+	username_font->setBackgroundColor(1, 0, 0, 0);
+	username_font->setHorizontalJustification(OGLFT::Face::LEFT);
+	blue_font->setForegroundColor(0, 0.75, 0.75, 1);
+	blue_font->setBackgroundColor(0, 0.75, 0.75, 0);
+	blue_font->setHorizontalJustification(OGLFT::Face::CENTER);
+	blue_alpha_font->setForegroundColor(0, 0.75, 0.75, 0.75);
+	blue_alpha_font->setBackgroundColor(0, 0.75, 0.75, 0);
+	blue_alpha_font->setHorizontalJustification(OGLFT::Face::CENTER);
+	white_font->setBackgroundColor(1, 1, 1, 0);
+	white_font->setForegroundColor(1, 1, 1, 1);
+	white_font->setHorizontalJustification(OGLFT::Face::LEFT);
 
 	name_file_init();
 	left_mouse_hit = 0;
@@ -28,6 +55,7 @@ void menu::init()
 	cursor_pos = 0;
 	set_menu(0);
 	name = "";
+	new_one = false;
 
 	sensitivities.push_back("0.01");
 	sensitivities.push_back("0.05");
@@ -179,16 +207,25 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	case 0:
 		switch (item) {
 		case 0:
-			set_menu(1);
+			if (username == "") {
+				new_one = true;
+				set_menu(0);
+			} else set_menu(1);
 			break;
 		case 1:
-			set_menu(2);
+			if (username == "") {
+				new_one = true;
+				set_menu(0);
+			} else set_menu(2);
 			break;
 		case 2:
 			set_menu(3);
 			break;
 		case 3:
-			g.create_map();
+			if (username == "") {
+				new_one = true;
+				set_menu(0);
+			} else g.create_map();
 			break;
 		case 4:
 			g.save_user();
@@ -452,6 +489,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 				g.save_user();
 				g.change_userchosen(make_user(name));
 				username = name;
+				new_one = false;
 				set_menu(8);
 			}
 			break;
@@ -563,50 +601,48 @@ void menu::render()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	face->setBackgroundColor(1, 0, 0, 0);
-	face2->setBackgroundColor(0, 0.75, 0.75, 0);
-	face3->setBackgroundColor(0, 1, 0.5, 0);
-	face->setForegroundColor(1, 0, 0, 1);
-	face2->setForegroundColor(0, 0.75, 0.75, 1);
-	face3->setForegroundColor(0, 1, 0.5, 1);
-	face2->setHorizontalJustification(OGLFT::Face::CENTER);
-	face3->setHorizontalJustification(OGLFT::Face::CENTER);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glColor3f(1, 0, 1);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	string tmp;
+
+	//uzivatelske jmeno
 	if (username != "") {
 		glPushMatrix();
 		glTranslatef(250, 545, 0);
-		glScalef(0.15, 0.15, 1);
-		face->setHorizontalJustification(OGLFT::Face::LEFT);
-		face->setForegroundColor(1, 0, 0, 0.95);
-		face->draw(0, 0, (username + "'s").c_str());
-		face->setForegroundColor(1, 0, 0, 1);
+		tmp = username + "'s";
+		username_font->draw(0, 0, tmp.c_str());
+		glPopMatrix();
+	}
+
+	//nadpis
+	glPushMatrix();
+	glTranslatef(400, 415, 0);
+	title_font->draw(0, 0, "drex");
+	glPopMatrix();
+
+	//napoveda pro zacatecniky
+	if (new_one && menustatus == 0) {
+		glPushMatrix();
+		glTranslatef(20, 280, 0);
+		white_font->draw(0, 0, "Create account");
+		glTranslatef(0, -20, 0);
+		white_font->draw(0, 0, "in options.");
 		glPopMatrix();
 	}
 
 	glPushMatrix();
-	glTranslatef(400, 415, 0);
-	face->setHorizontalJustification(OGLFT::Face::CENTER);
-	face->draw(0, 0, "drex");
-	glPopMatrix();
-
-	glPushMatrix();
 	glTranslatef(400, 325, 0);
 	for (int i = 0;i < items.size();++i) {
-		string t = items[i].first;
+		tmp = items[i].first;
 		if (cursor_pos / 100 == i)
-			t = "+ " + t + " +";
-		if (items[i].second == 1) {
-			face2->setBackgroundColor(0, 0.75, 0.75, 0);
-			face2->setForegroundColor(0, 0.75, 0.75, 0.75);
-		}
-		face2->draw(0, 0, t.c_str());
-		face2->setBackgroundColor(0, 0.75, 0.75, 0);
-		face2->setForegroundColor(0, 0.75, 0.75, 1);
+			tmp = "+ " + tmp + " +";
+		if (items[i].second == 1)
+			blue_alpha_font->draw(0, 0, tmp.c_str());
+		else blue_font->draw(0, 0, tmp.c_str());
 		glTranslatef(0, -60, 0);
 	}
 	glPopMatrix();

@@ -24,8 +24,8 @@ public:
 		ori.normalize();
 		spd = vect(0, 0, 0);
 		mom = quat(0, 0, 0, 0);
-		reload_dragon_fire = 0;
-		reload_dragon_ball = 0;
+		reload_dragon_fire = -0.3;
+		reload_dragon_ball = -5;
 		hp = 100;
 	}
 
@@ -34,7 +34,8 @@ public:
 	            bool right_mouse_down, bool space, float timediff, 
 		    world &w);
 	void draw();
-	bool try_to_damage_dragon(vect missile_pos, float dmg);
+	bool try_to_damage_dragon(vect missile_pos, float dmg, 
+		vect missile_spd);
 	vect camera_pos();
 	bool in_range(vect e_pos);
 	bool collides(vect missile_pos);

@@ -32,7 +32,8 @@ public:
 
 class creation
 {
-	OGLFT::TranslucentTexture *face, *face2;
+	OGLFT::TranslucentTexture *title_font, *grey_font, *white_font,
+		*red_font;
 	int left_mouse_hit, esc_hit, status, type;
 	bool go_next;
 	vector<int> terrain, final_terrain, terrain_to_save, units;

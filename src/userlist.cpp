@@ -104,7 +104,8 @@ int make_user(string name)
 {
 	if (name == "") return usernames.size() - 1;
 	ofstream f;
-	f.open(("users/" + name + ".usr").c_str());
+	string tmp = "users/" + name + ".usr";
+	f.open(tmp.c_str());
 	f << "c\t0" << endl << "m" << endl << "d\t0" << endl << "w\t0" << 
 		endl << "f\t0" << endl << "s\t4" << endl << "z\t0" << endl;
 	f.close();

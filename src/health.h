@@ -4,6 +4,6 @@
 
 class world;
 
-void make_healthstatus(float timediff, world &w);
+void make_healthstatus(world &w);
 
 #endif

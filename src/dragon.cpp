@@ -9,6 +9,7 @@ using namespace std;
 #include "imageloader.h"
 #include "world.h"
 #include "wings.h"
+#include "frand.h"
 
 void dragon::init()
 {
@@ -204,6 +205,7 @@ void dragon::draw()
 	point(12)
 	point(14)
 	glEnd();
+
 	//prave kridlo shora
 	glBegin(GL_TRIANGLE_FAN);
 	point(19)
@@ -219,6 +221,7 @@ void dragon::draw()
 	point(8)
 	point(15)
 	glEnd();
+
 	//telo zprava zdola
 	glBegin(GL_TRIANGLE_FAN);
 	point(21)
@@ -244,8 +247,8 @@ void dragon::draw()
 	point(23)
 	point(11)
 	glEnd();
+
 	//prave kridlo zdola
-	glPushMatrix();
 	glRotatef(180, 0, 1, 0);
 	glScalef(-1, 1, -1);
 	glBegin(GL_TRIANGLE_FAN);
@@ -262,7 +265,6 @@ void dragon::draw()
 	point(8)
 	point(9)
 	glEnd();
-	glPopMatrix();
 
 	glScalef(-1, 1, 1);
 
@@ -291,6 +293,7 @@ void dragon::draw()
 	point(10)
 	point(11)
 	glEnd();
+
 	//leve kridlo shora
 	glBegin(GL_TRIANGLE_FAN);
 	point(19)
@@ -331,8 +334,8 @@ void dragon::draw()
 	point(23)
 	point(14)
 	glEnd();
+
 	//leve kridlo zdola
-	glPushMatrix();
 	glRotatef(180, 0, 1, 0);
 	glScalef(-1, 1, -1);
 	glBegin(GL_TRIANGLE_FAN);
@@ -349,7 +352,6 @@ void dragon::draw()
 	point(18)
 	point(9)
 	glEnd();
-	glPopMatrix();
 
 	glPopMatrix();
 
@@ -359,10 +361,17 @@ void dragon::draw()
 }
 
 //zajistuje kolizi strel nepratel s drakem
-bool dragon::try_to_damage_dragon(vect missile_pos, float dmg)
+bool dragon::try_to_damage_dragon(vect missile_pos, float dmg, vect missile_spd)
 {
 	if (collides(missile_pos)) {
 		accept_damage(dmg);
+	//	w.dragon_body_hit(missile_spd);
+
+		cout << "missile: " << missile_spd.x << " " << missile_spd.y << " " << missile_spd.z << endl;
+		cout << "dragon: " << spd.x << " " << spd.y << " " << spd.z << endl;
+		cout << endl;
+
+		//spd += vect(missile_spd.x, missile_spd.y, missile_spd.z);
 		return true;
 	}
 	return false;
@@ -377,7 +386,7 @@ vect dragon::camera_pos()
 //zjisteni, zda je drak na dostrel nepratelum
 bool dragon::in_range(vect e_pos)
 {
-	if ((pos - e_pos).length() < 150) return true;
+	if ((pos - e_pos).length() < 120) return true;
 	return false;
 }
 

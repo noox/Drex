@@ -94,6 +94,7 @@ int world::update(float timediff, bool space_down, bool tab_down,
 	//pro navigaci po mape k nepriteli
 	if (tab_just_pressed) help_on = true;
 
+	//zmeni barvu mlhy v noci
 	if (daytime == night) f.set_color(0, 0, 0);
 
 	//pro ukonceni hry vyhrou
@@ -140,9 +141,7 @@ void world::render()
 	f.turn_off();
 
 	glDisable(GL_LIGHTING);
-	ms.draw(*this);
-	ps.draw(*this);
-
+	
 	//navigace k nepriteli
 	if (help_on) {
 		vect en = es.one_enemy();
@@ -155,8 +154,15 @@ void world::render()
 		glVertex3f(en.x, en.y, en.z);
 		glEnd();
 		glPopMatrix;
+
 		help_on = false;
 	}
+
+	ms.draw(*this);
+	ps.draw(*this);
+
+	//2D hud pres obrazovku informujici o hp draka
+//	make_healthstatus(*this);	
 }
 
 //prida domy a jednotky
@@ -236,4 +242,12 @@ void world::remove_object(int c)
 {
 	ob.delete_object(c);
 }
+
+/*
+//efekt 
+void world::dragon_body_hit(vect missile_spd)
+{
+	cam.pos+=
+}
+*/
 

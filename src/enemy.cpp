@@ -130,7 +130,7 @@ void enemy::update(float time, world& w)
 			//partikly pro horeni poskozenych domu
 			particle& p = w.ps.add_one();
 			p.pos = pos + vect(DFRAND * size_x, DFRAND * size_y,
-			                   size_z + FRAND * roof_size / 3);
+			                   size_z + FRAND * roof_size / 2);
 			p.spd = vect(DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 			p.type = part_burning;
 			p.life = 1;

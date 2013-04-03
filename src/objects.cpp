@@ -6,7 +6,6 @@ using namespace std;
 
 #include "objects.h"
 #include "world.h"
-#include "frand.h"
 #include "imageloader.h"
 
 //inicializace stromu a lidi

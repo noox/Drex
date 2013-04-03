@@ -18,7 +18,7 @@ void particle_system::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	tex_burning = imageloader_load("data/particle_burning.png", 1,
-	                               GL_LUMINANCE);
+		GL_LUMINANCE);
 	glBindTexture(GL_TEXTURE_2D, tex_burning);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -26,7 +26,7 @@ void particle_system::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	tex_smoke = imageloader_load("data/particle_smoke.png", 1,
-	                             GL_LUMINANCE);
+		GL_LUMINANCE);
 	glBindTexture(GL_TEXTURE_2D, tex_smoke);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -81,6 +81,29 @@ void particle_system::draw(world &w)
 	part_face[13] = 0;
 	part_face[14] = 0;
 	part_face[15] = 1;
+	
+	//priprava matice pro billboarding particlu horeni
+	float part_face2[16];
+	for (int i = 0;i < 16;++i) part_face2[i] = 0;
+	temp = (vect(0, 0, 1)^w.cam.ori.vecz()).normal();
+	part_face2[0] = temp.x;
+	part_face2[1] = temp.y;
+	part_face2[2] = temp.z;
+	part_face2[3] = 0;
+	temp = vect(0, 0, 1);
+	part_face2[4] = temp.x;
+	part_face2[5] = temp.y;
+	part_face2[6] = temp.z;
+	part_face2[7] = 0;
+	temp = (vect(0, 0, 1)^vect(1, 0, 0)).normal();
+	part_face2[8] = temp.x;
+	part_face2[9] = temp.y;
+	part_face2[10] = temp.z;
+	part_face2[11] = 0;
+	part_face2[12] = 0;
+	part_face2[13] = 0;
+	part_face2[14] = 0;
+	part_face2[15] = 1;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -91,9 +114,14 @@ void particle_system::draw(world &w)
 		glPushMatrix();
 		glTranslatef(i->pos.x, i->pos.y, i->pos.z);
 		glColor4f(i->r, i->g, i->b, 1 - (i->age / i->life));
+
 		switch (i->type) {
+		
+		//pokrocily utok draka
 		case part_fireball:
 			glScalef(4, 4, 4);
+
+		//zakladni strelba draka
 		case part_fire:
 			glBindTexture(GL_TEXTURE_2D, tex_burning);
 			glEnable(GL_TEXTURE_2D);
@@ -110,12 +138,16 @@ void particle_system::draw(world &w)
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
+
+		//horeni keru	
 		case part_small_burning:
 			glScalef(1, 1, 0.3);
+
+		//horeni stromu a domu
 		case part_burning:
 			glBindTexture(GL_TEXTURE_2D, tex_burning);
 			glEnable(GL_TEXTURE_2D);
-			glMultMatrixf(part_face);
+			glMultMatrixf(part_face2);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
 			glVertex3f(-1, 0, 0);
@@ -128,13 +160,17 @@ void particle_system::draw(world &w)
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
+
+		//pro vybuchy, "cara"
 		case part_spark:
 			glBegin(GL_LINES);
 			glVertex3f(0, 0, 0);
 			glColor4f(0, 0, 0, 0);
-			glVertex3f(- (i->spd.x), - (i->spd.y), - (i->spd.z));
+			glVertex3f(-(i->spd.x), -(i->spd.y), -(i->spd.z));
 			glEnd();
 			break;
+
+		//kour a snih
 		case part_smoke:
 		case part_snow:
 			glBindTexture(GL_TEXTURE_2D, tex_smoke);
@@ -152,6 +188,8 @@ void particle_system::draw(world &w)
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 			break;
+
+		//dest
 		case part_rain:
 			glBegin(GL_LINES);
 			glVertex3f(0, 0, -2);

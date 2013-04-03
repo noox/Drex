@@ -1,15 +1,14 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <iostream>
+
+using namespace std;
 
 #include "health.h"
 #include "vector.h"
-#include "world.h"
 
-#include <iostream>
-using namespace std;
-
-void make_healthstatus(float timediff, world &w)
+void make_healthstatus(world &w)
 {
 	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
@@ -26,10 +25,10 @@ void make_healthstatus(float timediff, world &w)
 	glEnable(GL_BLEND);
 	glColor4f(0.5, 0.5, 0.5, 0.2);
 	glBegin(GL_QUADS);
-	glVertex2f(50, 50);
-	glVertex2f(50, 100);
-	glVertex2f(100, 100);
-	glVertex2f(100, 50);
+	glVertex2f(20, 20);
+	glVertex2f(20, 580);
+	glVertex2f(780, 580);
+	glVertex2f(780, 20);
 	glEnd();
 	glDisable(GL_BLEND);
 
@@ -41,3 +40,4 @@ void make_healthstatus(float timediff, world &w)
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
 }
+

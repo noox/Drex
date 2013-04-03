@@ -13,14 +13,16 @@ using namespace std;
 
 class menu
 {
-	OGLFT::TranslucentTexture *face, *face2, *face3;
+	OGLFT::TranslucentTexture *title_font, *username_font, *blue_font,
+		*blue_alpha_font, *white_font;
 	int menustatus;
 	int cursor_pos;
 	int left_mouse_hit, esc_hit;
 	int sens_id, dayt_id, weat_id, diff_id;
 	string mapname, username, name, sens, dayt, weat, diff;
-	vector< pair <string, int> > items;
+	vector<pair<string, int> > items;
 	vector<string> daytime, weather, difficulty, sensitivities;
+	bool new_one;
 public:
 	void init();
 	void finish();
