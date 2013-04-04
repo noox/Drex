@@ -44,8 +44,6 @@ void object_system::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-	reload = 0;
 }
 
 //pridani jednoho objektu
@@ -62,8 +60,7 @@ void object_system::update(float time, world& w)
 	for (list<object>::iterator i = objects.begin();
 		i != objects.end();++i) {
 		
-		reload += time;
-		i->update(time, w, reload);
+		i->update(time, w);
 		if (i->deletable()) todel.push_back(i);
 	}
 	while (!todel.empty()) {
@@ -124,7 +121,7 @@ void object_system::delete_object(int x)
 
 /* =========================================================== */
 
-void object::update(float time, world& w, float &reload)
+void object::update(float time, world& w)
 {
 	float border;
 
