@@ -361,17 +361,13 @@ void dragon::draw()
 }
 
 //zajistuje kolizi strel nepratel s drakem
-bool dragon::try_to_damage_dragon(vect missile_pos, float dmg, vect missile_spd)
+bool dragon::try_to_damage_dragon(vect missile_pos, float dmg, world& w)
 {
 	if (collides(missile_pos)) {
 		accept_damage(dmg);
-	//	w.dragon_body_hit(missile_spd);
+		w.dragon_damaged();
 
-		cout << "missile: " << missile_spd.x << " " << missile_spd.y << " " << missile_spd.z << endl;
-		cout << "dragon: " << spd.x << " " << spd.y << " " << spd.z << endl;
-		cout << endl;
-
-		//spd += vect(missile_spd.x, missile_spd.y, missile_spd.z);
+		cout << "hit" << endl;
 		return true;
 	}
 	return false;

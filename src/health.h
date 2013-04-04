@@ -5,5 +5,6 @@
 class world;
 
 void make_healthstatus(world &w);
+void make_dragon_hit();
 
 #endif

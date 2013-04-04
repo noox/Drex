@@ -38,6 +38,7 @@ void world::init(game &g)
 
 	tab_hit = 0;
 	help_on = false;
+	dragon_hit = 0;
 	weather = g.get_weather();
 	daytime = g.get_daytime();
 	difficulty = g.get_difficulty();
@@ -162,7 +163,13 @@ void world::render()
 	ps.draw(*this);
 
 	//2D hud pres obrazovku informujici o hp draka
-//	make_healthstatus(*this);	
+	//make_healthstatus(*this);	
+	
+	//screen cervene problikne pri zasahu draka neprateli
+	if (dragon_hit > 0) {
+		make_dragon_hit();
+		dragon_hit--;
+	}
 }
 
 //prida domy a jednotky
@@ -243,11 +250,9 @@ void world::remove_object(int c)
 	ob.delete_object(c);
 }
 
-/*
-//efekt 
-void world::dragon_body_hit(vect missile_spd)
+//meni promennou pro efekt pri zasahu draka pro render
+void world::dragon_damaged()
 {
-	cam.pos+=
+	dragon_hit = 5;
 }
-*/
 

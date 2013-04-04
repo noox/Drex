@@ -30,7 +30,7 @@ public:
 	int tab_hit;
 	bool help_on;
 	int weather, daytime, difficulty;
-	int cu, rad;
+	int cu, rad, dragon_hit;
 
 	int texture;
 	void init(game& g);
@@ -42,7 +42,7 @@ public:
 	void add_enemy(float u, float v);
 	void add_rest(float u, float v);
 	void remove_object(int c);
-	void dragon_body_hit(vect missile_spd);
+	void dragon_damaged();
 };
 
 #endif

@@ -30,7 +30,7 @@ public:
 
 	object() {
 		burning = 0;
-		reload = -15 * FRAND;
+		reload = 0;
 	}
 
 	void create();

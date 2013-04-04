@@ -112,7 +112,7 @@ void missile::update(float time, world& w)
 			//utok nepratel
 		case missile_human_shot:
 			//pokud strela zasahla draka, preda se ke smazani
-			if (w.dr.try_to_damage_dragon(pos, power, spd))
+			if (w.dr.try_to_damage_dragon(pos, power, w))
 				deletable = true;
 
 			//pridani particlu do systemu

@@ -34,8 +34,7 @@ public:
 	            bool right_mouse_down, bool space, float timediff, 
 		    world &w);
 	void draw();
-	bool try_to_damage_dragon(vect missile_pos, float dmg, 
-		vect missile_spd);
+	bool try_to_damage_dragon(vect missile_pos, float dmg, world& w);
 	vect camera_pos();
 	bool in_range(vect e_pos);
 	bool collides(vect missile_pos);
