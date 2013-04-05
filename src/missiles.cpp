@@ -1,6 +1,9 @@
 
 #include <GL/gl.h>
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 #include "missiles.h"
 #include "frand.h"
@@ -128,7 +131,7 @@ void missile::update(float time, world& w)
 			}
 			break;
 		}
-		reload -= 0.01;
+		reload -= 0.02;
 	}
 }
 

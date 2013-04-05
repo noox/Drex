@@ -40,6 +40,7 @@ public:
 	bool collides(vect missile_pos);
 	void accept_damage(float dmg);
 	bool dead();
+	float get_hp();
 	void finish();
 };
 

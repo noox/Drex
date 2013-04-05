@@ -169,7 +169,7 @@ void enemy::update(float time, world& w)
 				}
 			}
 		*/
-		reload -= 0.01;
+		reload -= 0.02;
 	}
 }
 

@@ -8,9 +8,9 @@ using namespace std;
 #include "world.h"
 #include "frand.h"
 #include "imageloader.h"
-#include "health.h"
 #include "weather.h"
 #include "maplist.h"
+#include "health.h"
 
 void world::init(game &g)
 {
@@ -163,7 +163,7 @@ void world::render()
 	ps.draw(*this);
 
 	//2D hud pres obrazovku informujici o hp draka
-	//make_healthstatus(*this);	
+	make_healthstatus(*this);	
 	
 	//screen cervene problikne pri zasahu draka neprateli
 	if (dragon_hit > 0) {

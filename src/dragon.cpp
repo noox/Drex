@@ -366,8 +366,6 @@ bool dragon::try_to_damage_dragon(vect missile_pos, float dmg, world& w)
 	if (collides(missile_pos)) {
 		accept_damage(dmg);
 		w.dragon_damaged();
-
-		cout << "hit" << endl;
 		return true;
 	}
 	return false;
@@ -397,6 +395,11 @@ bool dragon::collides(vect missile_pos)
 void dragon::accept_damage(float dmg)
 {
 	hp -= dmg;
+}
+
+float dragon::get_hp() 
+{
+	return hp;
 }
 
 bool dragon::dead()
