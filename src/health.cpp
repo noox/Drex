@@ -1,9 +1,6 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <iostream>
-
-using namespace std;
 
 #include "health.h"
 #include "world.h"
@@ -13,8 +10,6 @@ using namespace std;
 void make_healthstatus(world &w)
 {
 	float dragon_hp = w.dr.get_hp();
-	cout << dragon_hp << endl;
-
 	if (dragon_hp > 100) dragon_hp = 100;
 	float dhp = dragon_hp / 100;
 

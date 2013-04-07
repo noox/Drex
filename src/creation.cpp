@@ -76,13 +76,20 @@ void creation::set()
 
 void creation::init()
 {
-	title_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
-	grey_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
-	white_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
-	red_font = new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
-	if (title_font == 0 || grey_font == 0 || white_font == 0 || red_font == 0 || 
-		!title_font->isValid() || !grey_font->isValid() || !white_font->isValid() ||
+	title_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
+	grey_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	white_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	red_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	
+	if (title_font == 0 || grey_font == 0 || white_font == 0 || 
+		red_font == 0 || !title_font->isValid() || 
+		!grey_font->isValid() || !white_font->isValid() ||
 		!red_font->isValid()) {
+		
 		cerr << "Could not construct face." << endl;
 		return;
 	}
@@ -610,11 +617,15 @@ void creation::render()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			if (data[i].active) {
-				if (i == no_estate) red_font->draw(0, 0, "eraser");
-				else red_font->draw(0, 0, (data[i].name).c_str());
+				if (i == no_estate) 
+					red_font->draw(0, 0, "eraser");
+				else red_font->draw(0, 0, 
+					(data[i].name).c_str());
 			} else {
-				if (i == no_estate) grey_font->draw(0, 0, "eraser");
-				else grey_font->draw(0, 0, (data[i].name).c_str());
+				if (i == no_estate) 
+					grey_font->draw(0, 0, "eraser");
+				else grey_font->draw(0, 0, 
+					(data[i].name).c_str());
 			}
 			glDisable(GL_BLEND);
 			glDisable(GL_TEXTURE_2D);

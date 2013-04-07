@@ -202,30 +202,22 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	int mapchosen = g.get_mapchosen();
 	int userchosen = g.get_userchosen();
 	if (esc_just_pressed) item = -1;
+	
 	switch (menustatus) {
 		//hlavni menu
 	case 0:
 		switch (item) {
 		case 0:
-			if (username == "") {
-				new_one = true;
-				set_menu(0);
-			} else set_menu(1);
+			set_menu(1);
 			break;
 		case 1:
-			if (username == "") {
-				new_one = true;
-				set_menu(0);
-			} else set_menu(2);
+			set_menu(2);
 			break;
 		case 2:
 			set_menu(3);
 			break;
 		case 3:
-			if (username == "") {
-				new_one = true;
-				set_menu(0);
-			} else g.create_map();
+			g.create_map();
 			break;
 		case 4:
 			g.save_user();
@@ -489,8 +481,10 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 				g.save_user();
 				g.change_userchosen(make_user(name));
 				username = name;
-				new_one = false;
-				set_menu(8);
+				if (new_one) {
+					set_menu(0);
+					new_one = false;
+				} else set_menu(8);
 			}
 			break;
 		case -1:
@@ -565,6 +559,7 @@ bool menu::update(float timediff, bool esc_down, bool left_mouse_down,
 	dayt = daytime[g.get_daytime()];
 	weat = weather[g.get_weather()];
 	diff = difficulty[g.get_difficulty()];
+
 	//urceni pozice kurzoru
 	cursor_pos += mouse_y;
 	if (cursor_pos >= (int)(items.size() *100)) 
@@ -581,7 +576,13 @@ bool menu::update(float timediff, bool esc_down, bool left_mouse_down,
 		if (!esc_hit)
 			esc_just_pressed = esc_hit = 1;
 	} else esc_hit = 0;
-
+	
+	//pro vytvoreni prvniho uzivatelskeho uctu pri prvnim spusteni hry
+	if ((username == "") && (menustatus != 10)) {
+		new_one = true;
+		set_menu(10);
+	}
+	
 	//vyber submenu
 	if (left_just_pressed || esc_just_pressed)
 		if (!handle_menu_click(cursor_pos / 100, g, esc_just_pressed))
@@ -624,13 +625,13 @@ void menu::render()
 	title_font->draw(0, 0, "drex");
 	glPopMatrix();
 
-	//napoveda pro zacatecniky
-	if (new_one && menustatus == 0) {
+	//text pri prvnim vytvareni uzivatelskeho uctu
+	if (username == "") {
 		glPushMatrix();
-		glTranslatef(20, 280, 0);
-		white_font->draw(0, 0, "Create account");
+		glTranslatef(20, 390, 0);
+		white_font->draw(0, 0, "Create your");
 		glTranslatef(0, -20, 0);
-		white_font->draw(0, 0, "in options.");
+		white_font->draw(0, 0, "account first.");
 		glPopMatrix();
 	}
 
