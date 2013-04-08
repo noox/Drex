@@ -19,7 +19,7 @@ class menu
 	int cursor_pos;
 	int left_mouse_hit, esc_hit;
 	int sens_id, dayt_id, weat_id, diff_id;
-	bool new_one;
+	bool new_one, new_one_plays;
 	string mapname, username, name, sens, dayt, weat, diff;
 	vector<pair<string, int> > items;
 	vector<string> daytime, weather, difficulty, sensitivities;

@@ -54,6 +54,7 @@ void menu::init()
 	set_menu(0);
 	name = "";
 	new_one = false;
+	new_one_plays = false;
 
 	sensitivities.push_back("0.01");
 	sensitivities.push_back("0.05");
@@ -230,6 +231,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	case 1:
 		switch (item) {
 		case 0:
+			if (new_one_plays) new_one_plays = false;
 			g.go_to_game();
 			break;
 		case 1:
@@ -482,6 +484,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 				if (new_one) {
 					set_menu(0);
 					new_one = false;
+					new_one_plays = true;
 				} else set_menu(8);
 			}
 			break;
@@ -630,6 +633,19 @@ void menu::render()
 		white_font->draw(0, 0, "Create your");
 		glTranslatef(0, -20, 0);
 		white_font->draw(0, 0, "account first.");
+		glPopMatrix();
+	}
+	//a pred prvni hrou
+	if (new_one_plays) {
+		glPushMatrix();
+		glTranslatef(20, 390, 0);
+		if (menustatus == 1)
+			white_font->draw(0, 0, "Start with the tutorial.");
+		else {
+			white_font->draw(0, 0, "Start with the tutorial");
+			glTranslatef(0, -20, 0);
+			white_font->draw(0, 0, "in the campaign submenu.");
+		}
 		glPopMatrix();
 	}
 
