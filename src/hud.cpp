@@ -21,10 +21,12 @@ void hud::init()
 
 	white_font->setBackgroundColor(1, 1, 1, 0);
 	white_font->setForegroundColor(1, 1, 1, 1);
-	white_font->setHorizontalJustification(OGLFT::Face::LEFT);
+	white_font->setHorizontalJustification(OGLFT::Face::CENTER);
+
+	counter = 0;
 }
 
-void hud::begining()
+void hud::beginning()
 {
 	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
@@ -58,7 +60,7 @@ void hud::make_healthstatus(float dragon_hp)
 	if (dragon_hp > 100) dragon_hp = 100;
 	float dhp = dragon_hp / 100;
 
-	begining();
+	beginning();
 
 	glTranslatef(397, 80, 0);
 	glScalef(3, -3, 0);
@@ -450,7 +452,7 @@ void hud::make_healthstatus(float dragon_hp)
 
 void hud::make_dragon_hit() 
 {
-	begining();
+	beginning();
 
 	glColor4f(1, 0.2, 0.2, 0.7);
 	glBegin(GL_QUADS);
@@ -463,18 +465,75 @@ void hud::make_dragon_hit()
 	ending();
 }
 
-void hud::draw_tutorial(world& w)
+void hud::draw_tutorial()
 {
-	begining();
+	int x = 500;
+
+	beginning();
 
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glTranslatef(400, 100, 0);
+	glScalef(1, -1, 1);
 	
-	glTranslatef(387, 80, 0);
-	white_font->draw(0, 0, "Welcome to the game of drex");
+	if ((counter >= 50) && (counter < x))
+		white_font->draw(0, 0, "Welcome to the drex!");
+
+	if ((counter >= x + 10) && (counter < 2 * x)) {
+		white_font->draw(0, 0, "Use your mouse to control the dragon.");
+		if (counter >= x + 100) {
+			glTranslatef(0, -20, 0);
+			white_font->draw(0, 0, "Use it as a pilot uses yoke.");
+			glTranslatef(0, 20, 0);
+		}
+	}
+
+	if ((counter >= 2 * x + 10) && (counter < 3 * x))
+		white_font->draw(0, 0, "Space bar will speed you up.");
+	
+	if ((counter >= 3 * x + 50) && (counter < 4 * x)) {
+		white_font->draw(0, 0, "What to do now?");
+		if (counter >= 3 * x + 150) {
+			glTranslatef(0, -20, 0);
+			white_font->draw(0, 0, "Better find the enemies!");
+			//TODO story part
+			glTranslatef(0, 20, 0);
+		}
+	}	
+
+	if ((counter >= 4 * x + 10) && (counter < 5 * x))
+		white_font->draw(0, 0, "Hit the Tab key to get navigated.");
+	
+	if ((counter >= 5 * x + 10) && (counter < 7 * x)) {
+		white_font->draw(0, 0, "Use the left mouse button to damage them.");
+		if (counter >= 6 * x) {
+			glTranslatef(0, -20, 0);
+			white_font->draw(0, 0, "..or the right mouse button for a stronger fireball.");
+			glTranslatef(0, 20, 0);
+		}
+	}
+
+	if ((counter >= 7 * x + 10) && (counter < 8 * x))
+		white_font->draw(0, 0, "You can destroy just the houses to win.");
+
+	if ((counter >= 9 * x) && (counter < 10 * x + 200)) {
+		white_font->draw(0, 0, "Beware of their shots.");
+		if (counter >= 9 * x + 200) {
+			glTranslatef(0, -20, 0);
+			white_font->draw(0, 0, "Control your health loss");
+			glTranslatef(0, -20, 0);
+			white_font->draw(0, 0, "by checking the little dragon up there.");
+			glTranslatef(0, 40, 0);
+		}
+	}
+
+	if ((counter >= 11 * x) && (counter < 12 * x)) 
+		white_font->draw(0, 0, "Enjoy the game!");
 
 	glDisable(GL_TEXTURE_2D);
-
 	ending();
+
+	if (counter < 12 * x) counter++;
 }
 

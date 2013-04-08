@@ -165,7 +165,7 @@ void world::render()
 
 	ms.draw(*this);
 	ps.draw(*this);
-
+	
 	//2D hud pres obrazovku informujici o hp draka
 	h.make_healthstatus(dr.get_hp());	
 	
@@ -176,7 +176,7 @@ void world::render()
 	}
 
 	//v tutorialu zobrazuje napovedu
-	if (tutorial) h.draw_tutorial(*this);
+	if (tutorial) h.draw_tutorial();
 }
 
 //prida domy a jednotky

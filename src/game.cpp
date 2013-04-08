@@ -54,10 +54,10 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 	//v menu
 	if (gamestatus == in_menu) {
-		//SDL_ShowCursor(SDL_DISABLE);
-		//SDL_WM_GrabInput(SDL_GRAB_ON);
-		SDL_ShowCursor(SDL_ENABLE);
-		SDL_WM_GrabInput(SDL_GRAB_OFF);
+		SDL_ShowCursor(SDL_DISABLE);
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+		//SDL_ShowCursor(SDL_ENABLE);
+		//SDL_WM_GrabInput(SDL_GRAB_OFF);
 		if (!m.update(timediff, esc_down, left_mouse_down, 
 			right_mouse_down, mouse_x, mouse_y, *this)) 
 			

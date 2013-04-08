@@ -8,14 +8,15 @@ class world;
 
 class hud
 {
+	int counter;
 	OGLFT::TranslucentTexture *white_font;
-	void begining();
+	void beginning();
 	void ending();
 public:
 	void init();
 	void make_healthstatus(float dargon_hp);
 	void make_dragon_hit();
-	void draw_tutorial(world& w);
+	void draw_tutorial();
 };
 
 #endif
