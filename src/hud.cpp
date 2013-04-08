@@ -1,18 +1,31 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <iostream>
 
-#include "health.h"
+using namespace std;
+
+#include "hud.h"
 #include "world.h"
 #include "vector.h"
 #include "imageloader.h"
 
-void make_healthstatus(world &w)
+void hud::init()
 {
-	float dragon_hp = w.dr.get_hp();
-	if (dragon_hp > 100) dragon_hp = 100;
-	float dhp = dragon_hp / 100;
+	white_font = 
+		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
+	if (white_font == 0 || !white_font->isValid()) {
+		cerr << "Could not construct face." << endl;
+		return;
+	}
 
+	white_font->setBackgroundColor(1, 1, 1, 0);
+	white_font->setForegroundColor(1, 1, 1, 1);
+	white_font->setHorizontalJustification(OGLFT::Face::LEFT);
+}
+
+void hud::begining()
+{
 	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
 
@@ -26,6 +39,26 @@ void make_healthstatus(world &w)
 	glColor4f(1, 1, 1, 1);
 
 	glEnable(GL_BLEND);
+}
+
+void hud::ending()
+{
+	glDisable(GL_BLEND);
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+}
+
+void hud::make_healthstatus(float dragon_hp)
+{
+	if (dragon_hp > 100) dragon_hp = 100;
+	float dhp = dragon_hp / 100;
+
+	begining();
 
 	glTranslatef(397, 80, 0);
 	glScalef(3, -3, 0);
@@ -412,33 +445,13 @@ void make_healthstatus(world &w)
 	glVertex2f(-1, 18);
 	glEnd();
 */
-
-	glDisable(GL_BLEND);
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
+	ending();
 }
 
-void make_dragon_hit() 
+void hud::make_dragon_hit() 
 {
-	glDepthMask(GL_FALSE);
-	glDisable(GL_DEPTH_TEST);
+	begining();
 
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(0, 800, 600, 0, -1, 1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glColor4f(1, 1, 1, 1);
-
-	glEnable(GL_BLEND);
 	glColor4f(1, 0.2, 0.2, 0.7);
 	glBegin(GL_QUADS);
 	glVertex2f(0, 0);
@@ -446,14 +459,22 @@ void make_dragon_hit()
 	glVertex2f(800, 600);
 	glVertex2f(800, 0);
 	glEnd();
-	glDisable(GL_BLEND);
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
 	
+	ending();
+}
+
+void hud::draw_tutorial(world& w)
+{
+	begining();
+
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	glTranslatef(387, 80, 0);
+	white_font->draw(0, 0, "Welcome to the game of drex");
+
+	glDisable(GL_TEXTURE_2D);
+
+	ending();
 }
 

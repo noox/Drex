@@ -11,8 +11,6 @@ using namespace std;
 #include "userlist.h"
 #include "maplist.h"
 
-#include "../vendor/OGLFT.h"
-
 void creation::set()
 {
 	data.resize(6);
@@ -396,7 +394,7 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 						(cursor_pos_y < (y - 512 - 1) + 
 						(i + 1) + (i + 1) * (zz - 1)))
 
-						units[(15-i) *16+j] = type;
+						units[(15 - i) * 16 + j] = type;
 
 		//tlacitko "continue"
 		if (left_just_pressed && (cursor_pos_x > x + 542 - 2) && 

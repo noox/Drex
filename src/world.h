@@ -13,6 +13,7 @@
 #include "objects.h"
 #include "particles.h"
 #include "missiles.h"
+#include "hud.h"
 
 class world
 {
@@ -26,9 +27,10 @@ public:
 	object_system ob;
 	particle_system ps;
 	missile_system ms;
+	hud h;
 
 	int tab_hit;
-	bool help_on;
+	bool help_on, tutorial;
 	int weather, daytime, difficulty;
 	int cu, rad, dragon_hit;
 

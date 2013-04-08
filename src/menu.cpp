@@ -8,8 +8,6 @@ using namespace std;
 #include "maplist.h"
 #include "userlist.h"
 
-#include "../vendor/OGLFT.h"
-
 void menu::init()
 {
 	title_font = 

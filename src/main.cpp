@@ -2,6 +2,7 @@
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <math.h>
+
 #include <iostream>
 
 using namespace std;

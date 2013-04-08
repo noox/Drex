@@ -10,7 +10,6 @@ using namespace std;
 #include "imageloader.h"
 #include "weather.h"
 #include "maplist.h"
-#include "health.h"
 
 void world::init(game &g)
 {
@@ -35,6 +34,11 @@ void world::init(game &g)
 	rad = 70;
 
 	hm.load(maplist_get_file_name(g.get_mapchosen()), g, *this);
+
+	if (maplist_get_name(g.get_mapchosen()) == "tutorial") {
+		tutorial = true;
+		h.init();
+	} else tutorial = false;
 
 	tab_hit = 0;
 	help_on = false;
@@ -163,13 +167,16 @@ void world::render()
 	ps.draw(*this);
 
 	//2D hud pres obrazovku informujici o hp draka
-	make_healthstatus(*this);	
+	h.make_healthstatus(dr.get_hp());	
 	
 	//screen cervene problikne pri zasahu draka neprateli
 	if (dragon_hit > 0) {
-		make_dragon_hit();
+		h.make_dragon_hit();
 		dragon_hit--;
 	}
+
+	//v tutorialu zobrazuje napovedu
+	if (tutorial) h.draw_tutorial(*this);
 }
 
 //prida domy a jednotky

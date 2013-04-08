@@ -15,8 +15,8 @@ public:
 	vect pos, spd;
 	quat ori, mom;
 	float hp, reload_dragon_fire, reload_dragon_ball;
-	GLuint texture;
 	int wings;
+	GLuint texture;
 
 	void set(const vect &Pos, const quat &Ori) {
 		pos = Pos;
