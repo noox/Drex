@@ -43,6 +43,8 @@ public:
 	int get_userchosen();
 	void change_mapchosen(int Mapchosen);
 	int get_mapchosen();
+	void change_campaign_status(int Campaign_status);
+	int get_campaign_status();
 	void change_sensitivity(int Sensitivity);
 	int get_sensitivity();
 	void change_daytime(int Daytime);

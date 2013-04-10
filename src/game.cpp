@@ -84,7 +84,7 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 			mouse_x / sensitivity, mouse_y / sensitivity);
 		if (state == win) {
 			go_to_menu();
-			m.go_to_winscreen();
+			m.go_to_winscreen(*this);
 		} else if (state == fail) {
 			go_to_menu();
 			m.go_to_failscreen();
@@ -259,6 +259,18 @@ void game::change_mapchosen(int Mapchosen)
 int game::get_mapchosen()
 {
 	return mapchosen;
+}
+
+//zmeni level kampane, podle pokroku uzivatele
+void game::change_campaign_status(int Campaign_status)
+{
+	campaign_status = Campaign_status;
+}
+
+//vrati aktualni level kampane
+int game::get_campaign_status()
+{
+	return campaign_status;
 }
 
 //zmeni citlivost mysi, dle volby uzivatele

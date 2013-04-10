@@ -55,6 +55,7 @@ void menu::init()
 	name = "";
 	new_one = false;
 	new_one_plays = false;
+	active = true;
 
 	sensitivities.push_back("0.01");
 	sensitivities.push_back("0.05");
@@ -85,6 +86,18 @@ void menu::init()
 	difficulty.push_back("hard");
 	diff_id = easy;
 	diff = difficulty[diff_id];
+
+	maps_in_campaign = 0;
+
+	campaign.push_back("tutorial");
+	for (int i = 1;i <= maps_in_campaign;++i) { 
+		ostringstream ss;
+		ss << i;
+		string tmp = "mission" + ss.str();
+		campaign.push_back(tmp);
+	}
+	camp_id = 0;
+	camp = campaign[camp_id];
 }
 
 void menu::finish()
@@ -94,6 +107,7 @@ void menu::finish()
 	daytime.clear();
 	weather.clear();
 	difficulty.clear();
+	campaign.clear();
 }
 
 void menu::set_menu(int newstatus)
@@ -111,10 +125,10 @@ void menu::set_menu(int newstatus)
 		break;
 		//kampan
 	case 1:
-		items.push_back(make_pair("tutorial", 0));
-		items.push_back(make_pair("mission 1", 0));
-		items.push_back(make_pair("mission 2", 0));
-		items.push_back(make_pair("back", 0));
+		items.push_back(make_pair("previous", 1));
+		if (active) items.push_back(make_pair(camp, 0));
+		else items.push_back(make_pair(camp, 1));
+		items.push_back(make_pair("next", 1));
 		break;
 		//jednotlive mise
 	case 2:
@@ -189,10 +203,9 @@ void menu::set_menu(int newstatus)
 		break;
 	}
 
-	if ((newstatus != 4) && (newstatus != 5) && (newstatus != 6) && 
-		(newstatus != 7) && (newstatus != 9) && (newstatus != 11)) 
-		
-		cursor_pos = 0;
+	if ((newstatus != 1) && (newstatus != 4) && (newstatus != 5) && 
+		(newstatus != 6) && (newstatus != 7) && (newstatus != 9) &&
+		(newstatus != 11)) cursor_pos = 0;
 }
 
 bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
@@ -231,17 +244,30 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	case 1:
 		switch (item) {
 		case 0:
-			if (new_one_plays) new_one_plays = false;
-			g.go_to_game();
+			//posuvnik nahoru
+			camp_id--;
+			if (camp_id < 0) camp_id = 0;
+			g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
+			if (camp_id > g.get_campaign_status()) active = false;
+			else active = true;
+			camp = campaign[camp_id];
+			set_menu(1);
 			break;
 		case 1:
-			g.go_to_game();
+			//zkontroluje mozny pristup do dalsich levelu kampane
+			if (camp_id > g.get_campaign_status()) set_menu(1);
+			else g.go_to_game();
 			break;
 		case 2:
-			g.go_to_game();
-			break;
-		case 3:
-			set_menu(0);
+			//posuvnik dolu
+			camp_id++;
+			if (camp_id > campaign.size() - 1) 
+				camp_id = campaign.size() - 1;
+			g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
+			if (camp_id > g.get_campaign_status()) active = false;
+			else active = true;
+			camp = campaign[camp_id];
+			set_menu(1);
 			break;
 		case -1:
 			set_menu(0);
@@ -303,9 +329,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			set_menu(4);
 			break;
 		case 1:
-			//nazev mapy k vyberu
-			g.change_mapchosen(mapchosen);
-			mapname = maplist_get_name(mapchosen);
 			set_menu(2);
 			break;
 		case 2:
@@ -334,9 +357,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			set_menu(5);
 			break;
 		case 1:
-			//konkretni denni doba k vyberu
-			g.change_daytime(dayt_id);
-			dayt = daytime[dayt_id];
 			set_menu(2);
 			break;
 		case 2:
@@ -365,9 +385,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			set_menu(6);
 			break;
 		case 1:
-			//konkretni pocasi k vyberu
-			g.change_weather(weat_id);
-			weat = weather[weat_id];
 			set_menu(2);
 			break;
 		case 2:
@@ -396,9 +413,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			set_menu(7);
 			break;
 		case 1:
-			//konkretni obtiznost k vyberu
-			g.change_difficulty(diff_id);
-			diff = difficulty[diff_id];
 			set_menu(2);
 			break;
 		case 2:
@@ -446,9 +460,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			set_menu(9);
 			break;
 		case 1:
-			//sensitivita mysi k vyberu
-			g.change_sensitivity(sens_id);
-			sens = sensitivities[sens_id];
 			set_menu(3);
 			break;
 		case 2:
@@ -539,8 +550,14 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	return true;
 }
 
-void menu::go_to_winscreen()
+void menu::go_to_winscreen(game& g)
 {
+	//postup do dalsich levelu kampane
+	for (int i = 0;i < campaign.size();++i)
+		if (maplist_get_name(g.get_mapchosen()).compare(campaign[i]) 
+			== 0) 
+			if (i != campaign.size() - 1) 
+				g.change_campaign_status(i + 1);
 	set_menu(12);
 }
 

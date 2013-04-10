@@ -41,12 +41,23 @@ const char* maplist_get_file_name(int mapid)
 	} else return "";
 }
 
-//funkce pro zjisteni nazvu mapy samotneho
+//funkce pro zjisteni nazvu mapy bez pripony
 string maplist_get_name(int mapid)
 {
 	if (maps.size() > 0)
 		return maps[mapid].substr(0, maps[mapid].length() - 4);
 	else return "";
+}
+
+//vrati mapid mapy
+int maplist_get_mapid(string mapname)
+{
+	string tmp;
+	for (int i = 0;i < maplist_count();++i) {
+		tmp = mapname + ".map";
+		if (tmp.compare(maps[i]) == 0) return i;
+	}
+	return 0;
 }
 
 //funkce pripravujici adresar map
