@@ -246,7 +246,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 0:
 			//posuvnik nahoru
 			camp_id--;
-			if (camp_id < 0) camp_id = 0;
+			if (camp_id < 0) camp_id = campaign.size() - 1;
 			g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
 			if (camp_id > g.get_campaign_status()) active = false;
 			else active = true;
@@ -256,13 +256,15 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 1:
 			//zkontroluje mozny pristup do dalsich levelu kampane
 			if (camp_id > g.get_campaign_status()) set_menu(1);
-			else g.go_to_game();
+			else {
+				g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
+				g.go_to_game();
+			}
 			break;
 		case 2:
 			//posuvnik dolu
 			camp_id++;
-			if (camp_id > campaign.size() - 1) 
-				camp_id = campaign.size() - 1;
+			if (camp_id > campaign.size() - 1) camp_id = 0;
 			g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
 			if (camp_id > g.get_campaign_status()) active = false;
 			else active = true;
@@ -323,7 +325,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 0:
 			//posuvnik nahoru
 			mapchosen--;
-			if (mapchosen < 0) mapchosen = 0;
+			if (mapchosen < 0) mapchosen = maplist_count() - 1;
 			g.change_mapchosen(mapchosen);
 			mapname = maplist_get_name(mapchosen);
 			set_menu(4);
@@ -334,8 +336,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 2:
 			//posuvnik dolu
 			mapchosen++;
-			if (mapchosen > maplist_count() - 1) 
-				mapchosen = maplist_count() - 1;
+			if (mapchosen > maplist_count() - 1) mapchosen = 0;
 			g.change_mapchosen(mapchosen);
 			mapname = maplist_get_name(mapchosen);
 			set_menu(4);
@@ -351,7 +352,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 0:
 			//posuvnik nahoru
 			dayt_id--;
-			if (dayt_id < 0) dayt_id = 0;
+			if (dayt_id < 0) dayt_id = daytime.size() - 1;
 			g.change_daytime(dayt_id);
 			dayt = daytime[dayt_id];
 			set_menu(5);
@@ -362,8 +363,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 2:
 			//posuvnik dolu
 			dayt_id++;
-			if (dayt_id > daytime.size() - 1) 
-				dayt_id = daytime.size() - 1;
+			if (dayt_id > daytime.size() - 1) dayt_id = 0;
 			g.change_daytime(dayt_id);
 			dayt = daytime[dayt_id];
 			set_menu(5);
@@ -379,7 +379,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 0:
 			//posuvnik nahoru
 			weat_id--;
-			if (weat_id < 0) weat_id = 0;
+			if (weat_id < 0) weat_id = weather.size() - 1;
 			g.change_weather(weat_id);
 			weat = weather[weat_id];
 			set_menu(6);
@@ -390,8 +390,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 2:
 			//posuvnik dolu
 			weat_id++;
-			if (weat_id > weather.size() - 1) 
-				weat_id = weather.size() - 1;
+			if (weat_id > weather.size() - 1) weat_id = 0;
 			g.change_weather(weat_id);
 			weat = weather[weat_id];
 			set_menu(6);
@@ -407,7 +406,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 0:
 			//posuvnik nahoru
 			diff_id--;
-			if (diff_id < 0) diff_id = 0;
+			if (diff_id < 0) diff_id = difficulty.size() - 1;
 			g.change_difficulty(diff_id);
 			diff = difficulty[diff_id];
 			set_menu(7);
@@ -418,8 +417,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 2:
 			//posuvnik dolu
 			diff_id++;
-			if (diff_id > difficulty.size() - 1) 
-				diff_id = difficulty.size() - 1;
+			if (diff_id > difficulty.size() - 1) diff_id = 0;
 			g.change_difficulty(diff_id);
 			diff = difficulty[diff_id];
 			set_menu(7);
@@ -454,7 +452,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 0:
 			//posuvnik nahoru
 			sens_id--;
-			if (sens_id < 0) sens_id = 0;
+			if (sens_id < 0) sens_id = sensitivities.size() - 1;
 			g.change_sensitivity(sens_id);
 			sens = sensitivities[sens_id];
 			set_menu(9);
@@ -465,8 +463,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		case 2:
 			//posuvnik dolu
 			sens_id++;
-			if (sens_id > sensitivities.size() - 1) 
-				sens_id = sensitivities.size() - 1;
+			if (sens_id > sensitivities.size() - 1) sens_id = 0;
 			g.change_sensitivity(sens_id);
 			sens = sensitivities[sens_id];
 			set_menu(9);
@@ -511,7 +508,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik nahoru
 			g.save_user();
 			userchosen--;
-			if (userchosen < 0) userchosen = 0;
+			if (userchosen < 0) userchosen = userlist_count() - 1;
 			g.change_userchosen(userchosen);
 			username = userlist_get_name(userchosen);
 			set_menu(11);
@@ -525,8 +522,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik dolu
 			g.save_user();
 			userchosen++;
-			if (userchosen > userlist_count() - 1) 
-				userchosen = userlist_count() - 1;
+			if (userchosen > userlist_count() - 1) userchosen = 0;
 			g.change_userchosen(userchosen);
 			username = userlist_get_name(userchosen);
 			set_menu(11);

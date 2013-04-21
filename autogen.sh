@@ -5,7 +5,7 @@
 MY_CPPFLAGS="-I/usr/local/include -I\$(srcdir)/include/ -I/usr/include/freetype2"
 MY_CFLAGS="-Wall"
 MY_LDFLAGS="-L/usr/local/lib"
-MY_LDADD="-lGL -lGLU -lSDL -lSDL_image -lfreetype -lopenal -lvorbis -logg -lalut -lvorbisfile"
+MY_LDADD="-lGL -lGLU -lSDL -lSDL_image -lfreetype -lopenal"
 
 OUT=Makefile.am
 touch NEWS AUTHORS ChangeLog

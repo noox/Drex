@@ -186,9 +186,10 @@ void creation::blur()
 void creation::save_map(game& g)
 {
 	ofstream f;
-	string tmp = "maps/" + userlist_get_name(g.get_userchosen()) +
-	        "-" + g.get_map_created() + ".map";
-	f.open(tmp.c_str());
+	string tmp = userlist_get_name(g.get_userchosen()) + "-" + 
+		g.get_map_created();
+	string tmpp = "maps/" + tmp + ".map";
+	f.open(tmpp.c_str());
 	
 	//vyplni nastaveni mapy
 	f << "w\t" << weather << endl << "d\t" << daytime << endl <<
@@ -207,6 +208,8 @@ void creation::save_map(game& g)
 			if (units[i * 16 + j] == estate)
 				f << i * 16 + 128 << "\t" << j * 16 + 128 << 
 					endl;
+
+	//oddelovac
 	f << -1 << "\t" << -1 << endl;
 
 	//vyplni nepratelske jednotky v meritku - prvky krajiny
@@ -216,24 +219,10 @@ void creation::save_map(game& g)
 				f << i * 16 + 128 << "\t" << j * 16 + 128 <<
 					endl;
 
-	//prida dalsi prvky krajiny
-	for (i = 0;i < 8;++i)
-		for (j = 0;j < 8;++j)
-			if (terrain[i * 8 + j] == lowland) {
-				f << 2 * i * 16 + 128 << "\t" << 2 * j * 16 + 
-					128 << endl;
-				f << 2 * (i + 1) * 16 + 128 << "\t" << 2 * j * 
-					16 + 128 << endl;
-				f << 2 * i * 16 + 128 << "\t" << 2 * (j + 1) * 
-					16 + 128 << endl;
-				f << 2 * (i + 1) * 16 + 128 << "\t" << 2 * 
-					(j + 1) * 16 + 128 << endl;
-			}
-
 	f.close();
 	//a zresetuje seznam map
 	maplist_init();
-	g.change_mapchosen(maplist_count() - 1);
+	g.change_mapchosen(maplist_get_mapid(tmp));
 }
 
 //pripravi mapu pro ulozeni
