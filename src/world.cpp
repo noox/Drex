@@ -13,6 +13,7 @@ using namespace std;
 
 void world::init(game &g)
 {
+	snd.init();
 	dr.init();
 	skyb.init();
 
@@ -44,6 +45,10 @@ void world::init(game &g)
 	help_on = false;
 	dragon_hit = 0;
 	weather = g.get_weather();
+
+	if (weather == rainy) snd.play_rain(dr);
+	if (weather == sunny) snd.play_wind(dr);
+
 	daytime = g.get_daytime();
 	difficulty = g.get_difficulty();
 
@@ -67,6 +72,7 @@ void world::init(game &g)
 
 void world::finish()
 {
+	snd.finish();
 	hm.finish();
 	skyb.finish();
 	dr.finish();
@@ -135,7 +141,7 @@ void world::render()
 		glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
 	}
 	f.turn_on();
-	dr.draw();
+	dr.draw(*this);
 	hm.draw();
 	es.draw();
 	ob.draw(*this);

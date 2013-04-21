@@ -16,11 +16,13 @@ public:
 	vect pos;
 	float hp, burning, reload;
 	float size_x, size_y, size_z, roof_size, rot;
+	bool noise;
 
 	enemy() {
 		burning = 0;
 		reload = 0;
 		hp = 20;
+		noise = false;
 	}
 
 	void create();

@@ -1,13 +1,16 @@
 
+#include "world.h"
 #include "wings.h"
 
 float past_posz = -10;
 
 //zmeny tvaru pro mavani kridel
-void wings_movement(vect points[][2], int &wings, float posz)
+void wings_movement(vect points[][2], int &wings, float posz, world& w)
 {
 	int x, jump = 4;
+	//pokud drak stoupa, mava kridly
 	if (posz >= past_posz) x = 5;
+	//pokud klesa, tak jen plachti
 	else x = 1000;
 	past_posz = posz;
 
@@ -18,6 +21,7 @@ void wings_movement(vect points[][2], int &wings, float posz)
 		points[17][0] = vect(3.5, 8, -0.5);
 		points[18][0] = vect(5.5, 8, -1);
 		points[19][0] = vect(8, 6, -2);
+		w.snd.play_wing(w.dr);
 		wings++;
 	}
 	if ((wings >= x + jump) && (wings < x + 2 * jump)) {

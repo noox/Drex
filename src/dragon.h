@@ -33,7 +33,7 @@ public:
 	void update(int mouse_x, int mouse_y, bool left_mouse_down,
 	            bool right_mouse_down, bool space, float timediff, 
 		    world &w);
-	void draw();
+	void draw(world& w);
 	bool try_to_damage_dragon(vect missile_pos, float dmg, world& w);
 	vect camera_pos();
 	bool in_range(vect e_pos);

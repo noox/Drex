@@ -114,6 +114,7 @@ void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down,
 		m.power = 0.1;
 		m.fire = 0.5;
 		reload_dragon_fire -= 0.3;
+		w.snd.play_fireball1(*this, m);
 	}
 	if (right_mouse_down && reload_dragon_ball >= 0) {
 		missile& m = w.ms.add_one();
@@ -123,10 +124,11 @@ void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down,
 		m.power = 0.3;
 		m.fire = 1.5;
 		reload_dragon_ball -= 5;
+		w.snd.play_fireball2(*this, m);
 	}
 }
 
-void dragon::draw()
+void dragon::draw(world& w)
 {
 	glPushMatrix();
 	glTranslatef(pos.x, pos.y, pos.z);
@@ -166,7 +168,7 @@ void dragon::draw()
 		{vect(0, 4, -0.5), vect(0, 0, -1) },
 	};
 
-	wings_movement(points, wings, pos.z);
+	wings_movement(points, wings, pos.z, w);
 
 #define point(X) glNormal3fv(points[X - 1][1].v); glTexCoord2f(points[X - 1][0].x / 19,points[X - 1][0].y / 24); glVertex3fv(points[X - 1][0].v);
 

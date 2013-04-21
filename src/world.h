@@ -14,6 +14,7 @@
 #include "particles.h"
 #include "missiles.h"
 #include "hud.h"
+#include "sound.h"
 
 class world
 {
@@ -28,6 +29,7 @@ public:
 	particle_system ps;
 	missile_system ms;
 	hud h;
+	sound snd;
 
 	int tab_hit;
 	bool help_on, tutorial;

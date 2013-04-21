@@ -130,14 +130,19 @@ void enemy::update(float time, world& w)
 			//partikly pro horeni poskozenych domu
 			particle& p = w.ps.add_one();
 			p.pos = pos + vect(DFRAND * size_x, DFRAND * size_y,
-			                   size_z + FRAND * roof_size / 2);
+			                   size_z + DFRAND * roof_size / 5);
 			p.spd = vect(DFRAND * 0.2, DFRAND * 0.2, 2 + FRAND);
 			p.type = part_burning;
 			p.life = 1;
 			p.r = 1;
 			p.g = FRAND / 2;
 			p.b = 0.01;
-		}
+
+			if (!noise) {
+				w.snd.play_burn(w.dr, pos);
+				noise = true;
+			}
+		} else if (noise) noise = false;
 
 		/*	if (deletable() ) {
 				//vybuch z partiklu, pokud dum ztrati hp
@@ -176,7 +181,6 @@ void enemy::update(float time, world& w)
 void enemy::draw(GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof,
                  GLuint tex_burning_roof)
 {
-
 	float temp;
 
 	glPushMatrix();

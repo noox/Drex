@@ -197,24 +197,38 @@ void creation::save_map(game& g)
 	//vyplni teren
 	for (i = 0;i < scale;++i) {
 		for (j = 0;j < scale;++j)
-			f << terrain_to_save[i*scale+j] << " ";
+			f << terrain_to_save[i * scale + j] << " ";
 		f << endl;
 	}
 	
-	//vyplni nepratelske jednotky v meritku
+	//vyplni nepratelske jednotky v meritku - pro jednotky a domy
 	for (i = 0;i < 16;++i)
 		for (j = 0;j < 16;++j)
-			if (units[i*16+j] == estate)
+			if (units[i * 16 + j] == estate)
 				f << i * 16 + 128 << "\t" << j * 16 + 128 << 
 					endl;
 	f << -1 << "\t" << -1 << endl;
 
-	//vyplni nepratelske jednotky v meritku
+	//vyplni nepratelske jednotky v meritku - prvky krajiny
 	for (i = 0;i < 16;++i)
 		for (j = 0;j < 16;++j)
-			if (units[i*16+j] == estate)
+			if (units[i * 16 + j] == estate)
 				f << i * 16 + 128 << "\t" << j * 16 + 128 <<
 					endl;
+
+	//prida dalsi prvky krajiny
+	for (i = 0;i < 8;++i)
+		for (j = 0;j < 8;++j)
+			if (terrain[i * 8 + j] == lowland) {
+				f << 2 * i * 16 + 128 << "\t" << 2 * j * 16 + 
+					128 << endl;
+				f << 2 * (i + 1) * 16 + 128 << "\t" << 2 * j * 
+					16 + 128 << endl;
+				f << 2 * i * 16 + 128 << "\t" << 2 * (j + 1) * 
+					16 + 128 << endl;
+				f << 2 * (i + 1) * 16 + 128 << "\t" << 2 * 
+					(j + 1) * 16 + 128 << endl;
+			}
 
 	f.close();
 	//a zresetuje seznam map
