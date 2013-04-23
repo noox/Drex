@@ -503,10 +503,10 @@ void hud::draw_tutorial()
 	}	
 
 	if ((counter >= 4 * x + 10) && (counter < 5 * x))
-		white_font->draw(0, 0, "Hit the Tab key to get navigated.");
+		white_font->draw(0, 0, "Hit the Tab key for some navigation.");
 	
 	if ((counter >= 5 * x + 10) && (counter < 7 * x)) {
-		white_font->draw(0, 0, "Use the left mouse button to damage them.");
+		white_font->draw(0, 0, "Use the left mouse button to shoot fire.");
 		if (counter >= 6 * x) {
 			glTranslatef(0, -20, 0);
 			white_font->draw(0, 0, "..or the right mouse button for a stronger fireball.");
@@ -515,15 +515,15 @@ void hud::draw_tutorial()
 	}
 
 	if ((counter >= 7 * x + 10) && (counter < 8 * x))
-		white_font->draw(0, 0, "You can destroy just the houses to win.");
+		white_font->draw(0, 0, "To win, you only need to destroy the houses.");
 
 	if ((counter >= 9 * x) && (counter < 10 * x + 200)) {
-		white_font->draw(0, 0, "Beware of their shots.");
+		white_font->draw(0, 0, "Beware of enemies' missiles.");
 		if (counter >= 9 * x + 200) {
 			glTranslatef(0, -20, 0);
-			white_font->draw(0, 0, "Control your health loss");
+			white_font->draw(0, 0, "Monitor your health");
 			glTranslatef(0, -20, 0);
-			white_font->draw(0, 0, "by checking the little dragon up there.");
+			white_font->draw(0, 0, "by checking the little dragon up here.");
 			glTranslatef(0, 40, 0);
 		}
 	}
