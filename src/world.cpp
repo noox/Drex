@@ -142,7 +142,7 @@ void world::render()
 	f.turn_on();
 	dr.draw(*this);
 	hm.draw();
-	es.draw();
+	es.draw(*this);
 	ob.draw(*this);
 
 	if (weather == rainy) make_rain(*this);

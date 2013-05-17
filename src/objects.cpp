@@ -37,6 +37,22 @@ void object_system::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	//textura zasnezenych jehlicnatych stromu
+	tex_snowy_tree2 = imageloader_load("data/snowy-tree2.png", 4, GL_RGBA);
+	glBindTexture(GL_TEXTURE_2D, tex_snowy_tree2);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	//textura zasnezenych keru
+	tex_snowy_tree3 = imageloader_load("data/snowy-tree3.png", 4, GL_RGBA);
+	glBindTexture(GL_TEXTURE_2D, tex_snowy_tree3);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
 	//textura jednotek
 	tex_person = imageloader_load("data/catarcher.png", 4, GL_RGBA);
 	glBindTexture(GL_TEXTURE_2D, tex_person);
@@ -73,7 +89,8 @@ void object_system::update(float time, world& w)
 void object_system::draw(world &w)
 {
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i)
-		i->draw(tex_tree1, tex_tree2, tex_tree3, tex_person, w);
+		i->draw(tex_tree1, tex_tree2, tex_tree3, tex_snowy_tree2,
+			tex_snowy_tree3, tex_person, w);
 }
 
 //zajistuje kolize a ztratu hp objektu
@@ -95,6 +112,8 @@ void object_system::finish()
 	imageloader_free(tex_tree1);
 	imageloader_free(tex_tree2);
 	imageloader_free(tex_tree3);
+	imageloader_free(tex_snowy_tree2);
+	imageloader_free(tex_snowy_tree3);
 	imageloader_free(tex_person);
 }
 
@@ -212,7 +231,8 @@ void object::update(float time, world& w)
 }
 
 void object::draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
-	GLuint tex_person, world &w)
+	GLuint tex_snowy_tree2, GLuint tex_snowy_tree3, GLuint tex_person,
+	world &w)
 {
 
 	glEnable(GL_ALPHA_TEST);
@@ -333,12 +353,23 @@ void object::draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
-		if (type == object_tree1)
-			glBindTexture(GL_TEXTURE_2D, tex_tree1);
-		if (type == object_tree2)
-			glBindTexture(GL_TEXTURE_2D, tex_tree2);
-		if (type == object_tree3)
-			glBindTexture(GL_TEXTURE_2D, tex_tree3);
+		if (type == object_tree1) {
+			if (w.weather != snowy) 
+				glBindTexture(GL_TEXTURE_2D, tex_tree1);
+			else break;
+		}
+		if (type == object_tree2) {
+			if (w.weather != snowy)
+				glBindTexture(GL_TEXTURE_2D, tex_tree2);
+			else 
+				glBindTexture(GL_TEXTURE_2D, tex_snowy_tree2);
+		}
+		if (type == object_tree3) {
+			if (w.weather != snowy) 
+				glBindTexture(GL_TEXTURE_2D, tex_tree3);
+			else 
+				glBindTexture(GL_TEXTURE_2D, tex_snowy_tree3);
+		}
 
 		glBegin(GL_QUADS);
 		//prvni stena

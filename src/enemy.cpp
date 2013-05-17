@@ -34,6 +34,13 @@ void enemy_system::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	tex_snowy_roof = imageloader_load("data/snowy_roof.png", 3, GL_RGB);
+	glBindTexture(GL_TEXTURE_2D, tex_snowy_roof);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
 	tex_burning_roof = imageloader_load("data/burning_roof.png", 3,
 	                                    GL_RGB);
 	glBindTexture(GL_TEXTURE_2D, tex_burning_roof);
@@ -70,11 +77,11 @@ void enemy_system::update(float time, world& w)
 }
 
 //nakresleni vsech nepratel v case
-void enemy_system::draw()
+void enemy_system::draw(world& w)
 {
 	for (list<enemy>::iterator i = enemies.begin();i != enemies.end();++i)
-		i->draw(tex_wall, tex_red_roof, tex_black_roof,
-		        tex_burning_roof);
+		i->draw(tex_wall, tex_red_roof, tex_black_roof, tex_snowy_roof,
+		        tex_burning_roof, w);
 }
 
 //zajistuje kolize a ztratu hp nepratel
@@ -96,6 +103,7 @@ void enemy_system::finish()
 	imageloader_free(tex_wall);
 	imageloader_free(tex_red_roof);
 	imageloader_free(tex_black_roof);
+	imageloader_free(tex_snowy_roof);
 	imageloader_free(tex_burning_roof);
 }
 
@@ -179,7 +187,7 @@ void enemy::update(float time, world& w)
 }
 
 void enemy::draw(GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof,
-                 GLuint tex_burning_roof)
+	GLuint tex_snowy_roof, GLuint tex_burning_roof, world &w)
 {
 	float temp;
 
@@ -197,6 +205,8 @@ void enemy::draw(GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof,
 		glBindTexture(GL_TEXTURE_2D, tex_red_roof);
 		if ((int) pos.x % 2 != 0) 
 			glBindTexture(GL_TEXTURE_2D, tex_black_roof);
+		if (w.weather == snowy)
+			glBindTexture(GL_TEXTURE_2D, tex_snowy_roof);
 	}
 
 	temp = sqrt(roof_size * roof_size + size_y * size_y);
@@ -291,7 +301,7 @@ void enemy::accept_damage(float dmg, float fire)
 bool enemy::collides(vect missile_pos)
 {
 	if ((pos - missile_pos).length() < 
-		1.5*max(max(size_x, size_y), size_z + roof_size)) return true;
+		1.5 * max(max(size_x, size_y), size_z + roof_size)) return true;
 	return false;
 }
 

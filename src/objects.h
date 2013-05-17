@@ -36,7 +36,8 @@ public:
 	void create();
 	void update(float time, world& w);
 	void draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
-	          GLuint tex_person, world &w);
+		GLuint tex_snowy_tree2, GLuint tex_snowy_tree3,
+	        GLuint tex_person, world &w);
 	void accept_damage(float dmg, float fire);
 	bool collides(vect missile_pos);
 	bool deletable();
@@ -46,7 +47,8 @@ class object_system
 {
 public:
 	list<object> objects;
-	GLuint tex_tree1, tex_tree2, tex_tree3, tex_person;
+	GLuint tex_tree1, tex_tree2, tex_tree3, tex_snowy_tree2, 
+		tex_snowy_tree3, tex_person;
 
 	void init();
 	object& add_one();
