@@ -164,7 +164,7 @@ void creation::blur()
 {
 	int s, rad, k, l;
 
-	rad = 5;
+	rad = 4;
 	for (i = 0;i < scale;++i) {
 		for (j = 0;j < scale;++j) {
 			s = 0;
@@ -219,6 +219,28 @@ void creation::save_map(game& g)
 				f << j * 16 + 128 << "\t" << i * 16 + 128 <<
 					endl;
 
+	//oddelovac
+	f << -1 << "\t" << -1 << endl;
+
+	//vyplni prvky krajiny do nizin
+	for (i = 0;i < 8;++i)
+		for (j = 0;j < 8;++j)
+			if ((terrain[i * 8 + j] == lowland) ||
+				(terrain[i * 8 + j] == upland)) {
+				
+				f << j * 2 * 16 + 128 << "\t" 
+					<< i * 2 * 16 + 128 << endl;
+				if (FRAND > 0.25) 
+					f << (j * 2 + 1) * 16 + 128 << "\t" 
+					<< i * 2 * 16 + 128 << endl;
+				if (FRAND > 0.5) 
+					f << j * 2 * 16 + 128 << "\t" 
+					<< (i * 2 + 1) * 16 + 128 << endl;
+				if (FRAND > 0.75) 
+					f << (j * 2 + 1) * 16 + 128 << "\t" 
+					<< (i * 2 + 1) * 16 + 128 << endl;
+			}
+
 	f.close();
 	//a zresetuje seznam map
 	maplist_init();
@@ -254,10 +276,6 @@ void creation::prepare_map()
 					//voda
 					if (p == 0) final_terrain[(((i * 32) +
 						k) * scale) + j * 32 + l] = 0;
-				if (final_terrain[(((i * 32) + k) * scale) + j * 32 + l] != 0)
-					cout << final_terrain[(((i * 32) +
-						k) * scale) + j * 32 + l]
-						<< " ";
 				}
 }
 

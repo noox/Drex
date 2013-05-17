@@ -74,9 +74,17 @@ void imageloader_load_map(const char* fn, vector<int> &h, game& g, world& w,
 	while (getline(f, line, '\n')) {
 		stringstream ss(line);
 		ss >> u >> v;
-		w.add_rest(hm.get_size(u), hm.get_size(v));
+		if (u == -1 || v == -1) break;
+		else w.add_rest(hm.get_size(u), hm.get_size(v));
 	}
 	
+	//stromy volne v nizinach
+	while (getline(f, line, '\n')) {
+		stringstream ss(line);
+		ss >> u >> v;
+		w.add_rest(hm.get_size(u), hm.get_size(v));
+	}
+
 	f.close();
 }
 
