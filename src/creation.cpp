@@ -164,7 +164,7 @@ void creation::blur()
 {
 	int s, rad, k, l;
 
-	rad = 16;
+	rad = 5;
 	for (i = 0;i < scale;++i) {
 		for (j = 0;j < scale;++j) {
 			s = 0;
@@ -206,7 +206,7 @@ void creation::save_map(game& g)
 	for (i = 0;i < 16;++i)
 		for (j = 0;j < 16;++j)
 			if (units[i * 16 + j] == estate)
-				f << i * 16 + 128 << "\t" << j * 16 + 128 << 
+				f << j * 16 + 128 << "\t" << i * 16 + 128 << 
 					endl;
 
 	//oddelovac
@@ -216,7 +216,7 @@ void creation::save_map(game& g)
 	for (i = 0;i < 16;++i)
 		for (j = 0;j < 16;++j)
 			if (units[i * 16 + j] == estate)
-				f << i * 16 + 128 << "\t" << j * 16 + 128 <<
+				f << j * 16 + 128 << "\t" << i * 16 + 128 <<
 					endl;
 
 	f.close();
@@ -241,16 +241,23 @@ void creation::prepare_map()
 					//a teren mapy
 					else p = terrain[(i - 4) * 8 + (j - 4)];
 					//hory
-					if (p == 3) final_terrain[(((i * 32) +			                        	k) * scale) + j * 32 + l] = 255;
+					if (p == 3) final_terrain[(((i * 32) +			                        	k) * scale) + j * 32 + l] =
+						rand() % 255 + 86;
 					//pahorkatiny
 					if (p == 2) final_terrain[(((i * 32) +
-						k) * scale) + j * 32 + l] = 171;
+						k) * scale) + j * 32 + l] =
+						rand() % 255 + 1;
 					//niziny
 					if (p == 1) final_terrain[(((i * 32) +
-						k) * scale) + j * 32 + l] = 85;
+						k) * scale) + j * 32 + l] =
+						rand() % 128 + 1;
 					//voda
 					if (p == 0) final_terrain[(((i * 32) +
-						k) * scale) + j* 32 + l] = 0;
+						k) * scale) + j * 32 + l] = 0;
+				if (final_terrain[(((i * 32) + k) * scale) + j * 32 + l] != 0)
+					cout << final_terrain[(((i * 32) +
+						k) * scale) + j * 32 + l]
+						<< " ";
 				}
 }
 
@@ -668,7 +675,7 @@ void creation::render()
 	else glTranslatef(x + 542, y - 10, 0);
 
 	if (status != 2) {
-		string tmp = "Use" + data[type].color;
+		string tmp = "Use " + data[type].color;
 		grey_font->draw(0, 0, tmp.c_str());
 		glTranslatef(0, -20, 0);
 		if (type == no_estate) grey_font->draw(0, 0, "to remove");

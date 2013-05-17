@@ -54,6 +54,10 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 	//v menu
 	if (gamestatus == in_menu) {
+		//pusti a ukaze kurzor
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
+		SDL_ShowCursor(SDL_ENABLE);
+		
 		w.snd.stop_game_sound();
 		if (!m.update(timediff, esc_down, left_mouse_down, 
 			right_mouse_down, mouse_x, mouse_y, *this)) 
@@ -63,6 +67,10 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 		//v tvorbe map
 	} else if (gamestatus == in_creation) {
+		//pusti a ukaze kurzor
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
+		SDL_ShowCursor(SDL_ENABLE);
+	
 		if (!c.update(timediff, space_down, esc_down, left_mouse_down, 
 			right_mouse_down, mouse__x, mouse__y, *this)) 
 			
@@ -72,6 +80,10 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 		//ve hre
 	} else {
+		//chyti a schova kurzor
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+		SDL_ShowCursor(SDL_DISABLE);
+	
 		state = w.update(timediff, space_down, tab_down, esc_down, 
 			left_mouse_down, right_mouse_down, 
 			mouse_x / sensitivity, mouse_y / sensitivity);

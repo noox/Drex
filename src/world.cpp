@@ -52,6 +52,13 @@ void world::init(game &g)
 	daytime = g.get_daytime();
 	difficulty = g.get_difficulty();
 
+	//inicialni nastaveni pro mlhu
+	glHint(GL_FOG_HINT, GL_NICEST);
+	//zmeni barvu mlhy v noci
+	if (daytime == night) f.set_color(0, 0, 0);
+	else f.set_color(0.4, 0.6, 0.9);
+	f.set_distance(80, 200);
+
 	glShadeModel(GL_SMOOTH);
 	glFrontFace(GL_CCW);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -63,11 +70,6 @@ void world::init(game &g)
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
-
-	//inicialni nastaveni pro mlhu
-	glHint(GL_FOG_HINT, GL_NICEST);
-	f.set_color(0.4, 0.6, 0.9);
-	f.set_distance(80, 200);
 }
 
 void world::finish()
@@ -104,9 +106,6 @@ int world::update(float timediff, bool space_down, bool tab_down,
 	} else tab_hit = 0;
 	//pro navigaci po mape k nepriteli
 	if (tab_just_pressed) help_on = true;
-
-	//zmeni barvu mlhy v noci
-	if (daytime == night) f.set_color(0, 0, 0);
 
 	//pro ukonceni hry vyhrou
 	if (es.all_enemies_dead()) return win;

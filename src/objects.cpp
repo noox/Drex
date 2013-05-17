@@ -98,13 +98,6 @@ void object_system::finish()
 	imageloader_free(tex_person);
 }
 
-//funkce pro zjisteni zbytku objektu
-bool object_system::all_objects_dead()
-{
-	if (objects.empty()) return true;
-	return false;
-}
-
 //funkce pro zajisteni smazani nekterych objektu
 void object_system::delete_object(int x)
 {
