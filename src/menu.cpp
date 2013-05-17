@@ -213,6 +213,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	ostringstream ss;
 	int mapchosen = g.get_mapchosen();
 	int userchosen = g.get_userchosen();
+	int cp = g.get_campaign_status();
 	if (esc_just_pressed) item = -1;
 	
 	switch (menustatus) {
@@ -247,7 +248,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik nahoru
 			camp_id--;
 			if (camp_id < 0) camp_id = campaign.size() - 1;
-			g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
 			if (camp_id > g.get_campaign_status()) active = false;
 			else active = true;
 			camp = campaign[camp_id];
@@ -265,7 +265,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik dolu
 			camp_id++;
 			if (camp_id > campaign.size() - 1) camp_id = 0;
-			g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
 			if (camp_id > g.get_campaign_status()) active = false;
 			else active = true;
 			camp = campaign[camp_id];
@@ -276,7 +275,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//jednotlive mise
+		//samostatne mise mimo kampan
 	case 2:
 		switch (item) {
 		case 0:
@@ -326,8 +325,16 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik nahoru
 			mapchosen--;
 			if (mapchosen < 0) mapchosen = maplist_count() - 1;
-			g.change_mapchosen(mapchosen);
 			mapname = maplist_get_name(mapchosen);
+			while ((mapname[0] == 'm') && 
+				(mapname[mapname.length() - 1] > cp)) {
+				
+				mapchosen--;
+				if (mapchosen < 0) 
+					mapchosen = maplist_count() - 1;
+				mapname = maplist_get_name(mapchosen);
+			}
+			g.change_mapchosen(mapchosen);
 			set_menu(4);
 			break;
 		case 1:
@@ -337,8 +344,15 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik dolu
 			mapchosen++;
 			if (mapchosen > maplist_count() - 1) mapchosen = 0;
+			while ((mapname[0] == 'm') && 
+				(mapname[mapname.length() - 1] > cp)) {
+				
+				mapchosen++;
+				if (mapchosen > maplist_count() - 1)
+					mapchosen = 0;
+				mapname = maplist_get_name(mapchosen);
+			}
 			g.change_mapchosen(mapchosen);
-			mapname = maplist_get_name(mapchosen);
 			set_menu(4);
 			break;
 		case -1:
