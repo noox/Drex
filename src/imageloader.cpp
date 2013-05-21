@@ -61,7 +61,7 @@ void imageloader_load_map(const char* fn, vector<int> &h, game& g, world& w,
 			ss >> h[i*size_y+j];
 	}
 	
-	//jednotky
+	//zastavba
 	float u, v;
 	while (getline(f, line, '\n')) {
 		stringstream ss(line);
@@ -70,15 +70,7 @@ void imageloader_load_map(const char* fn, vector<int> &h, game& g, world& w,
 		else w.add_enemy(hm.get_size(u), hm.get_size(v));
 	}
 	
-	//zbytek objektu v krajine
-	while (getline(f, line, '\n')) {
-		stringstream ss(line);
-		ss >> u >> v;
-		if (u == -1 || v == -1) break;
-		else w.add_rest(hm.get_size(u), hm.get_size(v));
-	}
-	
-	//stromy volne v nizinach
+	//stromy volne v nizinach a pahorkatinach
 	while (getline(f, line, '\n')) {
 		stringstream ss(line);
 		ss >> u >> v;
