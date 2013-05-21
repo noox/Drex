@@ -69,8 +69,13 @@ namespace OGLFT {
     A, //!< The Alpha (or transparency) of a color
   };
 
+  /* Wat. */
+  #ifndef _WIN32
+  #define APIENTRY
+  #endif
+
   //! Callback from GLU tessellation routines.
-  typedef void (*GLUTessCallback)();
+  typedef void (APIENTRY *GLUTessCallback)();
 
   //! The FreeType library instance.
   /*!
