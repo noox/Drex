@@ -29,3 +29,7 @@ else()
 endif()
 
 add_subdirectory(src)
+
+install(DIRECTORY data DESTINATION "${DREX_INSTALL_DIR}")
+install(DIRECTORY maps DESTINATION "${DREX_INSTALL_DIR}")
+install(DIRECTORY users DESTINATION "${DREX_INSTALL_DIR}")
