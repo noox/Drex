@@ -212,17 +212,7 @@ void creation::save_map(game& g)
 	//oddelovac
 	f << -1 << "\t" << -1 << endl;
 
-	//vyplni nepratelske jednotky v meritku - prvky krajiny
-	for (i = 0;i < 16;++i)
-		for (j = 0;j < 16;++j)
-			if (units[i * 16 + j] == estate)
-				f << j * 16 + 128 << "\t" << i * 16 + 128 <<
-					endl;
-
-	//oddelovac
-	f << -1 << "\t" << -1 << endl;
-
-	//vyplni prvky krajiny do nizin
+	//vyplni prvky krajiny do nizin a pahorkatin
 	for (i = 0;i < 8;++i)
 		for (j = 0;j < 8;++j)
 			if ((terrain[i * 8 + j] == lowland) ||
