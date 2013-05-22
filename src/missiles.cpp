@@ -73,8 +73,8 @@ void missile::update(float time, world& w)
 		//zakladni draci utok
 		case missile_dragon_fire:
 			//pokud strela zasahla cil, preda se ke smazani
-			if (w.es.try_to_damage_enemy(pos, power, fire)
-			        || w.ob.try_to_damage_object(pos, power, fire))
+			if (w.es.try_to_damage_enemy(pos, power)
+			        || w.ob.try_to_damage_object(pos, power))
 
 				deletable = true;
 
@@ -94,8 +94,8 @@ void missile::update(float time, world& w)
 		//pokrocily draci utok
 		case missile_dragon_ball:
 			//pokud strela zasahla cil, preda se ke smazani
-			if (w.es.try_to_damage_enemy(pos, power, fire)
-			        || w.ob.try_to_damage_object(pos, power, fire))
+			if (w.es.try_to_damage_enemy(pos, power)
+			        || w.ob.try_to_damage_object(pos, power))
 
 				deletable = true;
 

@@ -86,13 +86,12 @@ void enemy_system::draw(world& w)
 }
 
 //zajistuje kolize a ztratu hp nepratel
-bool enemy_system::try_to_damage_enemy(vect missile_pos, float dmg,
-	float fire)
+bool enemy_system::try_to_damage_enemy(vect missile_pos, float dmg)
 {
 
 	for (list<enemy>::iterator i = enemies.begin();i != enemies.end();++i)
 		if (i->collides(missile_pos)) {
-			i->accept_damage(dmg, fire);
+			i->accept_damage(dmg);
 			return true;
 		}
 	return false;
@@ -125,17 +124,10 @@ vect enemy_system::one_enemy()
 
 void enemy::update(float time, world& w)
 {
-	//zkraceni horeni objektu za deste a snehu
-	if (w.weather == rainy) burning *= 0.75;
-	if (w.weather == snowy) burning *= 0.85;
-
-	burning -= time;
 	reload += time;
-	if (burning < 0) burning = 0;
-	else hp -= time;
 
 	while (reload > 0) {
-		if (burning > 0)  {
+		if (hp < 20)  {
 			//partikly pro horeni poskozenych domu
 			particle& p = w.ps.add_one();
 			p.pos = pos + vect(DFRAND * size_x, DFRAND * size_y,
@@ -261,10 +253,9 @@ void enemy::draw(GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof,
 }
 
 //prijeti poskozeni a horeni
-void enemy::accept_damage(float dmg, float fire)
+void enemy::accept_damage(float dmg)
 {
 	hp -= dmg;
-	burning += fire;
 }
 
 #define max(a,b) (((a)>(b))?(a):(b))

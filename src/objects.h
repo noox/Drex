@@ -23,13 +23,10 @@ class object
 public:
 	vect pos, spd;
 	int type;
-	float size, hp, burning, reload;
-
-	//vlastnost lidi
+	float size, hp, reload;
 	vect start_pos;
 
 	object() {
-		burning = 0;
 		reload = 0;
 	}
 
@@ -38,7 +35,7 @@ public:
 	void draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
 		GLuint tex_snowy_tree2, GLuint tex_snowy_tree3,
 	        GLuint tex_person, world &w);
-	void accept_damage(float dmg, float fire);
+	void accept_damage(float dmg);
 	bool collides(vect missile_pos);
 	bool deletable();
 };
@@ -54,7 +51,7 @@ public:
 	object& add_one();
 	void update(float time, world& w);
 	void draw(world &w);
-	bool try_to_damage_object(vect missile_pos, float dmg, float fire);
+	bool try_to_damage_object(vect missile_pos, float dmg);
 	void finish();
 	void delete_object(int x);
 };

@@ -94,13 +94,12 @@ void object_system::draw(world &w)
 }
 
 //zajistuje kolize a ztratu hp objektu
-bool object_system::try_to_damage_object(vect missile_pos, float dmg,
-                                         float fire)
+bool object_system::try_to_damage_object(vect missile_pos, float dmg)
 {
 
 	for (list<object>::iterator i = objects.begin();i != objects.end();++i)
 		if (i->collides(missile_pos)) {
-			i->accept_damage(dmg, fire);
+			i->accept_damage(dmg);
 			return true;
 		}
 	return false;
@@ -137,13 +136,7 @@ void object::update(float time, world& w)
 {
 	float border;
 
-	if (w.weather == rainy) burning *= 0.75;
-	if (w.weather == snowy) burning *= 0.85;
-
-	burning -= time;
 	reload += time;
-	if (burning < 0) burning = 0;
-	else hp -= time;
 
 	while (reload > 0) {
 		switch (type) {
@@ -185,12 +178,12 @@ void object::update(float time, world& w)
 				        | (10 + 5 * w.difficulty);
 
 				m.type = missile_human_shot;
-				m.power = 1;
+				m.power = (2 + w.difficulty) * 1.5;
 				reload -= 15 / ((w.difficulty + 1) * 2) * FRAND;
 				w.snd.play_arrow(w.dr, m);
 			}
 
-			if (burning > 0) {
+			if (hp < 10) {
 				//partikly pro horeni poskozenych jednotek
 				particle& p = w.ps.add_one();
 				p.pos = pos + vect(DFRAND, DFRAND, 0);
@@ -208,7 +201,7 @@ void object::update(float time, world& w)
 		case object_tree1:
 		case object_tree2:
 		case object_tree3:
-			if (burning > 0) {
+			if (hp < 50) {
 				//partikly pro horeni poskozenych stromu
 				particle& p = w.ps.add_one();
 				p.pos = pos + vect(DFRAND, DFRAND, 0);
@@ -390,10 +383,9 @@ void object::draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
 }
 
 //prijeti poskozeni a horeni
-void object::accept_damage(float dmg, float fire)
+void object::accept_damage(float dmg)
 {
 	hp -= dmg;
-	burning += fire;
 }
 
 //kolize objektu se strelami

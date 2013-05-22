@@ -117,8 +117,7 @@ void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down,
 		m.pos = pos;
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_fire;
-		m.power = 0.1;
-		m.fire = 0.5;
+		m.power = 1;
 		reload_dragon_fire -= 0.3;
 		w.snd.play_fireball1(*this, m);
 	}
@@ -127,8 +126,7 @@ void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down,
 		m.pos = pos;
 		m.spd = -20 * VZ;
 		m.type = missile_dragon_ball;
-		m.power = 0.3;
-		m.fire = 1.5;
+		m.power = 5;
 		reload_dragon_ball -= 5;
 		w.snd.play_fireball2(*this, m);
 	}

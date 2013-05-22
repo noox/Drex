@@ -35,6 +35,7 @@ public:
 	void render();
 	bool handle_menu_click(int item, game& g, int esc_just_pressed);
 	void set_menu(int newstatus);
+	float get_sensitivity(int s);
 };
 
 #endif

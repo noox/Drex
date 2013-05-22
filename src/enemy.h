@@ -14,12 +14,11 @@ class enemy
 {
 public:
 	vect pos;
-	float hp, burning, reload;
+	float hp, reload;
 	float size_x, size_y, size_z, roof_size, rot;
 	bool noise;
 
 	enemy() {
-		burning = 0;
 		reload = 0;
 		hp = 20;
 		noise = false;
@@ -29,7 +28,7 @@ public:
 	void update(float time, world& w);
 	void draw(GLuint tex_wall, GLuint tex_red_roof, GLuint tex_black_roof,
 	          GLuint tex_snowy_roof, GLuint tex_burning_roof, world& w);
-	void accept_damage(float dmg, float fire);
+	void accept_damage(float dmg);
 	bool collides(vect missile_pos);
 	bool deletable();
 };
@@ -45,7 +44,7 @@ public:
 	enemy& add_one();
 	void update(float time, world& w);
 	void draw(world& w);
-	bool try_to_damage_enemy(vect missile_pos, float dmg, float fire);
+	bool try_to_damage_enemy(vect missile_pos, float dmg);
 	void finish();
 	bool all_enemies_dead();
 	vect one_enemy();

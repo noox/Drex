@@ -270,6 +270,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			else {
 				g.change_mapchosen(maplist_get_mapid(campaign[camp_id]));
 				g.go_to_game();
+				new_one_plays = false;
 			}
 			break;
 		case 2:
@@ -731,5 +732,14 @@ void menu::render()
 	glDisable(GL_TEXTURE_2D);
 
 	glEnable(GL_DEPTH_TEST);
+}
+
+//vrati hodnotu senzitivity mysi pro game
+float menu::get_sensitivity(int s)
+{
+	stringstream ss(sensitivities[s]);
+	float output;
+	ss >> output;
+	return output;
 }
 
