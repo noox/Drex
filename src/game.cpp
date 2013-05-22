@@ -82,7 +82,7 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 		//ve hre
 	} else {
 		//chytne a schova kurzor
-		SDL_WM_GrabInput(SDL_GRAB_ON);
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
 		SDL_ShowCursor(SDL_DISABLE);
 	
 		state = w.update(timediff, space_down, tab_down, cheat_down,
@@ -94,7 +94,10 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 		} else if (state == fail) {
 			go_to_menu();
 			m.go_to_failscreen();
-		} else if (esc_just_pressed) go_to_menu();
+		} else if (esc_just_pressed) {
+			m.go_to_menu_or_back();
+			go_to_menu();
+		}
 		return true;
 	}
 }

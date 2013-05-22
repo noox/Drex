@@ -67,6 +67,9 @@ public:
 			w.init(*this);
 		}
 	}
+	void go_back_to_game() {
+		gamestatus = in_game;                                    
+	}
 	void create_map() {
 		gamestatus = in_creation;
 		c.init();

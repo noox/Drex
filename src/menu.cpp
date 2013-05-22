@@ -204,6 +204,11 @@ void menu::set_menu(int newstatus)
 	case 13:
 		items.push_back(make_pair("failure", 0));
 		break;
+	//screen po Esc ze hry
+	case 14:
+		items.push_back(make_pair("return to game", 0));
+		items.push_back(make_pair("cancel mission", 0));
+		break;
 	}
 
 	//pro udrzeni kurzoru na te same pozici
@@ -561,6 +566,19 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 		set_menu(0);
 		if (item == -1) set_menu(0);
 		break;
+	//menu po zmackuti Esc ze hry
+	case 14:
+		switch(item) {
+		case 0: 
+			g.go_back_to_game();
+			break;
+		case 1:
+			set_menu(0);
+			break;
+		case -1:
+			g.go_back_to_game();
+			break;
+		}
 	}
 	return true;
 }
@@ -579,6 +597,11 @@ void menu::go_to_winscreen(game& g)
 void menu::go_to_failscreen()
 {
 	set_menu(13);
+}
+
+void menu::go_to_menu_or_back()
+{
+	set_menu(14);
 }
 
 

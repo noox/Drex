@@ -31,6 +31,7 @@ public:
 		bool right_mouse_down, int mouse_x, int mouse_y, game& g);
 	void go_to_winscreen(game& g);
 	void go_to_failscreen();
+	void go_to_menu_or_back();
 	void render();
 	bool handle_menu_click(int item, game& g, int esc_just_pressed);
 	void set_menu(int newstatus);
