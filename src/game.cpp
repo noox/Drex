@@ -89,8 +89,6 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 		SDL_ShowCursor(SDL_DISABLE);
 		glViewport(0, 0, width, height);
 
-		cout << sensitivity << endl;
-	
 		state = w.update(timediff, space_down, tab_down, cheat_down,
 			left_mouse_down, right_mouse_down, 
 			mouse_x / m.get_sensitivity(sensitivity),
