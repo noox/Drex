@@ -10,6 +10,7 @@ void particle_system::init()
 {
 	particles.clear();
 
+	//priprava textur
 	tex_fire = imageloader_load("data/particle_fire.png", 1, GL_LUMINANCE);
 	glBindTexture(GL_TEXTURE_2D, tex_fire);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

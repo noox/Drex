@@ -26,6 +26,7 @@ void hud::init()
 	counter = 0;
 }
 
+//pripravi vykreslovani pruhledoveho displeje
 void hud::beginning()
 {
 	glDepthMask(GL_FALSE);
@@ -55,6 +56,7 @@ void hud::ending()
 	glDepthMask(GL_TRUE);
 }
 
+//vykresli polopruhledneho dracka v horni casti okna na zaklade hp draka
 void hud::make_healthstatus(float dragon_hp)
 {
 	if (dragon_hp > 100) dragon_hp = 100;
@@ -77,6 +79,7 @@ void hud::make_healthstatus(float dragon_hp)
 	glVertex2f(-2, 16);
 	glVertex2f(-1, 15);
 	glEnd();
+
 	//telo, ocas a krk draka
 	glBegin(GL_POLYGON);
 	glVertex2f(0, 0);
@@ -89,6 +92,7 @@ void hud::make_healthstatus(float dragon_hp)
 	glVertex2f(-2, 11);
 	glVertex2f(-2, 8);
 	glEnd();
+	
 	//vrchni cast praveho kridla
 	glBegin(GL_POLYGON);
 	glVertex2f(2, 8);
@@ -98,6 +102,7 @@ void hud::make_healthstatus(float dragon_hp)
 	glVertex2f(5, 12);
 	glVertex2f(2, 11);
 	glEnd();
+	
 	//vrchni cast leveho kridla
 	glBegin(GL_POLYGON);
 	glVertex2f(-2, 8);
@@ -107,12 +112,14 @@ void hud::make_healthstatus(float dragon_hp)
 	glVertex2f(-10, 9);
 	glVertex2f(-10.3, 8);
 	glEnd();
+	
 	//spodni cast praveho kridla
 	glBegin(GL_POLYGON);
 	glVertex2f(11, 6);
 	glVertex2f(10.3, 8);
 	glVertex2f(7, 8);
 	glEnd();
+	
 	//spodni cast leveho kridla
 	glBegin(GL_POLYGON);
 	glVertex2f(-11, 6);
@@ -418,38 +425,10 @@ void hud::make_healthstatus(float dragon_hp)
 		glEnd();
 	}
 
-/* 
-	//kontura
-	glBegin(GL_LINE_STRIP);
-	glVertex2f(-1, 18);
-	glVertex2f(-2, 16);
-	glVertex2f(-1, 15);
-	glVertex2f(-1, 13);
-	glVertex2f(-2, 11);
-	glVertex2f(-5, 12);
-	glVertex2f(-8, 11);
-	glVertex2f(-10, 9);
-	glVertex2f(-11, 6);
-	glVertex2f(-7, 8);
-	glVertex2f(-2, 8);
-	glVertex2f(0, 0);
-	glVertex2f(2, 8);
-	glVertex2f(7, 8);
-	glVertex2f(11, 6);
-	glVertex2f(10, 9);
-	glVertex2f(8, 11);
-	glVertex2f(5, 12);
-	glVertex2f(2, 11);
-	glVertex2f(1, 13);
-	glVertex2f(1, 15);
-	glVertex2f(2, 16);
-	glVertex2f(1, 18);
-	glVertex2f(-1, 18);
-	glEnd();
-*/
 	ending();
 }
 
+//pokud je drak zasazen pruhledovy displej na okamzik zrudne
 void hud::make_dragon_hit() 
 {
 	beginning();
@@ -465,6 +444,7 @@ void hud::make_dragon_hit()
 	ending();
 }
 
+//vypisuje napovedu v tutorialu
 void hud::draw_tutorial()
 {
 	int x = 500;
@@ -497,7 +477,6 @@ void hud::draw_tutorial()
 		if (counter >= 3 * x + 150) {
 			glTranslatef(0, -20, 0);
 			white_font->draw(0, 0, "Better find the enemies!");
-			//TODO story part
 			glTranslatef(0, 20, 0);
 		}
 	}	

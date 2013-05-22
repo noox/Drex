@@ -13,6 +13,7 @@ void enemy_system::init()
 {
 	enemies.clear();
 
+	//nacteni textur 
 	tex_wall = imageloader_load("data/wall.png", 3, GL_RGB);
 	glBindTexture(GL_TEXTURE_2D, tex_wall);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -57,7 +58,7 @@ enemy& enemy_system::add_one()
 	return enemies.back();
 }
 
-//update vsech nepratel v case
+//aktualizace vsech nepratel v case
 void enemy_system::update(float time, world& w)
 {
 	int c = 0;
@@ -86,7 +87,7 @@ void enemy_system::draw(world& w)
 
 //zajistuje kolize a ztratu hp nepratel
 bool enemy_system::try_to_damage_enemy(vect missile_pos, float dmg,
-                                       float fire)
+	float fire)
 {
 
 	for (list<enemy>::iterator i = enemies.begin();i != enemies.end();++i)
@@ -152,36 +153,6 @@ void enemy::update(float time, world& w)
 			}
 		} else if (noise) noise = false;
 
-		/*	if (deletable() ) {
-				//vybuch z partiklu, pokud dum ztrati hp
-				for (int i = 0;i < 100;++i) {
-					{
-						particle& p = w.ps.add_one();
-						p.pos = pos;
-						p.spd = vect (DFRAND, DFRAND, 
-							DFRAND).normal() * 5;
-						p.type = part_burning;
-						p.life = 1;
-						p.r = 1;
-						p.g = FRAND / 2;
-						p.b = 0.01;
-					}
-					{
-						particle& p = w.ps.add_one();
-						p.pos = pos + vect (DFRAND, 
-							DFRAND, DFRAND) * 3 * 
-							FRAND;
-						p.spd = vect (DFRAND, DFRAND, 
-							DFRAND).normal() * 0.5;
-						p.type = part_smoke;
-						p.life = 3;
-						p.r = 0.5;
-						p.g = 0.5;
-						p.b = 0.5;
-					}
-				}
-			}
-		*/
 		reload -= 0.02;
 	}
 }

@@ -8,7 +8,7 @@ using namespace std;
 
 int sound::error_message(string msg)
 {
-	cout << msg << endl;
+	//cout << msg << endl;
 	return 0;
 }
 
@@ -40,7 +40,7 @@ int sound::init()
 	for (int i = 0;i < files_count;++i) {
 		//nacte vsechny potrebne wav soubory
 		t = "data/" + files[i] + ".wav";
-		cout << endl << t << endl;
+		//cout << endl << t << endl;
 		FILE *f = fopen(t.c_str(), "rb"); 
 		if (!f) return error_message("failed to open file");
 
@@ -78,6 +78,7 @@ int sound::init()
 
 		tmp = fread(&data_size, sizeof(unsigned int), 1, f);
 
+		/*
 		//zobrazeni informaci o souboru
 		cout << "chunk size: " << chunk_size << endl; //
 		cout << "format type: " << format_type << endl; //
@@ -88,6 +89,7 @@ int sound::init()
 		cout << "bytes per sample: " << bytes_per_sample << endl; //
 		cout << "bits per sample: " << bits_per_sample << endl;
 		cout << "data size: " << data_size << endl;
+		*/
 		 
 		buf = new unsigned char[data_size];
 		tmp = fread(buf, sizeof(char), data_size, f);
@@ -119,6 +121,7 @@ int sound::init()
 		return 0;
 }
 
+//stop zvuku pro menu
 void sound::stop_game_sound()
 {
 	for (int i = 0;i < files_count;++i) 
@@ -352,5 +355,8 @@ void sound::finish()
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(context);
 	alcCloseDevice(device);
+
+	buffer.clear();
+	source.clear();
 }
 

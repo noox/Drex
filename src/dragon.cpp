@@ -13,15 +13,18 @@ using namespace std;
 
 void dragon::init()
 {
+	//nacteni textury
 	texture = imageloader_load("data/drak.png", 3, GL_RGB);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
 	wings = 0;
 }
 
+//aktualizacni funkce
 void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down, 
 	bool right_mouse_down, bool space, float timediff, world &w)
 {
@@ -128,6 +131,7 @@ void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down,
 	}
 }
 
+//vykreslovaci funkce
 void dragon::draw(world& w)
 {
 	glPushMatrix();
@@ -168,6 +172,7 @@ void dragon::draw(world& w)
 		{vect(0, 4, -0.5), vect(0, 0, -1) },
 	};
 
+	//mavani kridel
 	wings_movement(points, wings, pos.z, w);
 
 #define point(X) glNormal3fv(points[X - 1][1].v); glTexCoord2f(points[X - 1][0].x / 19,points[X - 1][0].y / 24); glVertex3fv(points[X - 1][0].v);
@@ -177,7 +182,6 @@ void dragon::draw(world& w)
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0, -10, 0);
 	glColor3f(1, 1, 1);
-	//glColor3f(0.2,0.5,0.1);
 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -311,6 +315,7 @@ void dragon::draw(world& w)
 	point(8)
 	point(9)
 	glEnd();
+
 	//telo zleva zdola
 	glBegin(GL_TRIANGLE_FAN);
 	point(21)
@@ -399,11 +404,13 @@ void dragon::accept_damage(float dmg)
 	hp -= dmg;
 }
 
+//vrati stav zivota draka
 float dragon::get_hp() 
 {
 	return hp;
 }
 
+//vrati, zdali je drak mrtvy
 bool dragon::dead()
 {
 	if (hp <= 0) return true;

@@ -7,6 +7,7 @@
 
 void skybox::init()
 {
+	//priprava textury
 	sky = imageloader_load("data/skybox.png", 3, GL_RGB);
 	glBindTexture(GL_TEXTURE_2D, sky);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -27,6 +28,7 @@ void skybox::draw(vect pos, bool night)
 	float bottom_color[] = {0.7, 0.8, 0.9};
 	float top_color[] = {0.1, 0.4, 1};
 
+	//v noci je skybox tmavsi
 	if (night) {
 		bottom_color[0] = 0;
 		bottom_color[1] = 0.3;

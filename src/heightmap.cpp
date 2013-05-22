@@ -36,9 +36,9 @@ void heightmap::load(const char* fn, game& g, world& w)
 
 	size_x = 512;
 	size_y = 512;
-
+	
+	//nacteni vyskove mapy a textury terenu
 	imageloader_load_map(fn, h, g, w, size_x, size_y);
-//	imageloader_load_heightmap (h, size_x, size_y);
 	imageloader_load_color("data/water.png", "data/grass.png", 
 		"data/upland.png", "data/snow.png", "data/ice.png", 
 		c, h, g, size_x, size_y);

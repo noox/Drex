@@ -53,6 +53,7 @@ public:
 	int get_weather();
 	void change_difficulty(int Difficulty);
 	int get_difficulty();
+
 	float get_min_timediff();
 	void go_to_menu() {
 		gamestatus = in_menu;

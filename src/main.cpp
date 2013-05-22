@@ -4,6 +4,9 @@
 #include <math.h>
 
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -28,6 +31,7 @@ bool init()
 
 	//vlastnosti videa
 	int vidflags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE;
+
 	if (videoinfo->hw_available) vidflags |= SDL_HWSURFACE;
 	else vidflags |= SDL_SWSURFACE;
 	if (videoinfo->blit_hw) vidflags |= SDL_HWACCEL;

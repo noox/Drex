@@ -54,11 +54,9 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 	//v menu
 	if (gamestatus == in_menu) {
-		//pusti a ukaze kurzor
+		//chytne a schova kurzor
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 		SDL_ShowCursor(SDL_DISABLE);
-		//SDL_WM_GrabInput(SDL_GRAB_ON);
-		//SDL_ShowCursor(SDL_ENABLE);
 		
 		w.snd.stop_game_sound();
 		if (!m.update(timediff, esc_down, left_mouse_down, 
@@ -69,10 +67,10 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 		//v tvorbe map
 	} else if (gamestatus == in_creation) {
-		//ukaze kurzor
-		SDL_WM_GrabInput(SDL_GRAB_ON);
+		//pusti a ukaze kurzor
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
 		SDL_ShowCursor(SDL_ENABLE);
-	
+
 		if (!c.update(timediff, space_down, esc_down, left_mouse_down, 
 			right_mouse_down, mouse__x, mouse__y, *this)) 
 			
@@ -82,7 +80,7 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 
 		//ve hre
 	} else {
-		//schova a chytne kurzor
+		//chytne a schova kurzor
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 		SDL_ShowCursor(SDL_DISABLE);
 	
@@ -113,7 +111,7 @@ void game::render()
 	else c.render();
 }
 
-//nahraje data hry
+//nahraje data programu
 void game::load_game()
 {
 	string line;
@@ -126,7 +124,7 @@ void game::load_game()
 	read_user_info();
 }
 
-//ulozi stav cele hry
+//ulozi stav celeho programu
 void game::save_game()
 {
 	ofstream f;
@@ -211,6 +209,7 @@ string game::get_map_created()
 	return ss.str();
 }
 
+//zjisti vlastnosti mise mapy
 void game::get_map_data()
 {
 	fstream f;

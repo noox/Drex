@@ -147,7 +147,8 @@ void object::update(float time, world& w)
 
 	while (reload > 0) {
 		switch (type) {
-			//jednotky
+		
+		//jednotky
 		case object_person:
 			//pohyb jednotek
 			pos += spd * time;
@@ -203,7 +204,7 @@ void object::update(float time, world& w)
 			}
 			break;
 
-			//stromy
+		//stromy
 		case object_tree1:
 		case object_tree2:
 		case object_tree3:
@@ -242,7 +243,8 @@ void object::draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
 	glPushMatrix();
 	glTranslatef(pos.x, pos.y, pos.z);
 	switch (type) {
-		//jednotky
+	
+	//jednotky
 	case object_person:
 		glBindTexture(GL_TEXTURE_2D, tex_person);
 
@@ -311,45 +313,9 @@ void object::draw(GLuint tex_tree1, GLuint tex_tree2, GLuint tex_tree3,
 		glVertex3f(0, size, 0);
 		glEnd();
 
-/*
-		glColor3f (1, 1, 1);
-		//telo
-		glBegin (GL_LINE_STRIP);
-		glVertex3f (-size / 2, 0, 0);
-		glVertex3f (0, 0, size / 2);
-		glVertex3f (size / 2, 0, 0);
-		glVertex3f (0, 0, size / 2);
-		glVertex3f (0, 0, size);
-		glVertex3f (size / 2, 0, 3*size / 4);
-		glVertex3f (0, 0, size);
-		glVertex3f (-size / 2, 0, 3*size / 4);
-		glVertex3f (0, 0, size);
-		glVertex3f (0, 0, 3*size / 2);
-		glEnd();
-
-		//hlava
-		glColor3f (1, 0, 0);
-		glBegin (GL_TRIANGLE_FAN);
-		glVertex3f (0, 0, 3*size / 2);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glVertex3f (-size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, size / 4, size + 3*size / 4);
-		glVertex3f (size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glEnd();
-		glColor3f (1, 1, 0);
-		glBegin (GL_TRIANGLE_FAN);
-		glNormal3f (0, 0, 1);
-		glVertex3f (0, 0, 2*size);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glVertex3f (size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, size / 4, size + 3*size / 4);
-		glVertex3f (-size / 4, 0, size + 3*size / 4);
-		glVertex3f (0, -size / 4, size + 3*size / 4);
-		glEnd();
 		break;
-*/
-		break;
+	
+	//stromy
 	case object_tree1:
 	case object_tree2:
 	case object_tree3:
@@ -443,7 +409,7 @@ bool object::collides(vect missile_pos)
 	return false;
 }
 
-//funkce pro overeni smazatelnosti strely
+//funkce pro overeni smazatelnosti objektu
 bool object::deletable()
 {
 	if (hp <= 0) return true;

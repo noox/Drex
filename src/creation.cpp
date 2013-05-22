@@ -11,6 +11,7 @@ using namespace std;
 #include "userlist.h"
 #include "maplist.h"
 
+//cast inicializace, nastaveni pro vykreslovaci funkci
 void creation::set()
 {
 	data.resize(6);
@@ -74,6 +75,7 @@ void creation::set()
 
 void creation::init()
 {
+	//nastaveni fontu
 	title_font = 
 		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 50);
 	grey_font = 
@@ -136,6 +138,7 @@ void creation::finish()
 int creation::get_type()
 {
 	if ((cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 60))
+		//4 typy prvku krajiny
 		if (status == 0) {
 			if ((cursor_pos_y < y - 10) &&
 			        (cursor_pos_y > y - 10 - 30))
@@ -149,6 +152,8 @@ int creation::get_type()
 			if ((cursor_pos_y < y - 10 - 3 * 55) &&
 			        (cursor_pos_y > y - 10 - 30 - 3 * 55))
 				type = mountain;
+
+		//zastavba budov, nebo stetec na mazani
 		} else if (status == 1) {
 			if ((cursor_pos_y < y - 10) &&
 			        (cursor_pos_y > y - 10 - 30))
@@ -232,6 +237,7 @@ void creation::save_map(game& g)
 			}
 
 	f.close();
+
 	//a zresetuje seznam map
 	maplist_init();
 	g.change_mapchosen(maplist_get_mapid(tmp));
@@ -250,6 +256,7 @@ void creation::prepare_map()
 					//prida vodu na okraje
 					if ((i < 4) || (i > 11) || (j < 4) ||
 					        (j > 11)) p = 0;
+					
 					//a teren mapy
 					else p = terrain[(i - 4) * 8 + (j - 4)];
 					//hory
@@ -273,7 +280,7 @@ void creation::prepare_map()
 void creation::get_settings()
 {
 	if ((cursor_pos_x > x + 542) && (cursor_pos_x < x + 542 + 100)) {
-		//weather
+		//pocasi
 		if ((cursor_pos_y < y - 80) && (cursor_pos_y > y - 90)) {
 			weather = 0;
 			active_weather = 0;
@@ -286,7 +293,7 @@ void creation::get_settings()
 			weather = 2;
 			active_weather = 2;
 		}
-		//daytime
+		//denni doba
 		if ((cursor_pos_y < y - 170) && (cursor_pos_y > y - 180)) {
 			daytime = 0;;
 			active_daytime = 3;;
@@ -295,7 +302,7 @@ void creation::get_settings()
 			daytime = 1;
 			active_daytime = 4;
 		}
-		//difficulty
+		//obtiznost mise
 		if ((cursor_pos_y < y - 240) && (cursor_pos_y > y - 250)) {
 			difficulty = 0;
 			active_difficulty = 5;
@@ -333,6 +340,7 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 	bool left_mouse_down, bool right_mouse_down, int mouse__x, 
 	int mouse__y, game& g)
 {
+	//sjednoceni souradnic v okne pro vykreslovani
 	cursor_pos_x = mouse__x;
 	cursor_pos_y = 600 - mouse__y;
 
@@ -378,7 +386,7 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 			(cursor_pos_y < y - 470 + 5) && 
 			(cursor_pos_y > y - 470 - 10 - 5)) {
 			
-			//pokud neni vyplnen zadnay teren, nelze jit dal
+			//pokud neni vyplnen zadny teren, nelze jit dal
 			if (!terrain_on_map()) go_next = false;
 			else {
 				go_next = true;
@@ -487,7 +495,7 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 	return true;
 }
 
-//nakresli ctverecek ci zaskrtnuty ctverecek
+//nakresli ctverecek ci zaskrtnuty ctverecek, pro volbu vlastnosti mise
 void creation::make_quad(int empty)
 {
 	glPushMatrix();
@@ -505,6 +513,7 @@ void creation::make_quad(int empty)
 //vykresli sekci pro tvorbu map
 void creation::render()
 {
+	//nastaveni okna
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -523,7 +532,7 @@ void creation::render()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//nadpis screenu
+	//nadpis obsahu okna
 	glPushMatrix();
 	glTranslatef(400, 540, 0);
 	if (status == 0) title_font->draw(0, 0, "create terrain");
@@ -615,12 +624,13 @@ void creation::render()
 	}
 	glPopMatrix();
 
-	//tlacitka
+	//tlacitka na volbu stetce
 	//v priprave terenu
 	if (status == 0) {
 		a = 0;
 		b = 4;
-		//v dodani jednotek
+	
+	//v dodani jednotek
 	} else if (status == 1) {
 		a = 4;
 		b = 6;
@@ -632,6 +642,7 @@ void creation::render()
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//nadpisy stetcu
 			if (data[i].active) {
 				if (i == no_estate) 
 					red_font->draw(0, 0, "eraser");
@@ -647,7 +658,8 @@ void creation::render()
 			glDisable(GL_TEXTURE_2D);
 
 			glTranslatef(0, -3, 0);
-
+			
+			//policko stetce
 			if (i == no_estate) glColor3f(0, 0, 0);
 			else glColor3f(data[i].r, data[i].g, data[i].b);
 			glBegin(GL_QUADS);
@@ -657,6 +669,7 @@ void creation::render()
 			glVertex2f(60, 0);
 			glEnd();
 
+			//obrys policka stetce
 			if (i == no_estate) {
 				glBegin(GL_LINE_LOOP);
 				glColor3f(data[i].r, data[i].g, data[i].b);
@@ -672,7 +685,7 @@ void creation::render()
 		glPopMatrix();
 	}
 
-	//legenda
+	//legenda pod stetci
 	glPushMatrix();
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);

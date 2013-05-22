@@ -10,6 +10,7 @@ using namespace std;
 
 void menu::init()
 {
+	//nacteni a nastaveni fontu
 	title_font = 
 		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 150);
 	username_font = 
@@ -57,6 +58,7 @@ void menu::init()
 	new_one_plays = false;
 	active = true;
 
+	//inicializace retezcu pro vypisy ve vykreslovaci funkci
 	sensitivities.push_back("0.01");
 	sensitivities.push_back("0.05");
 	sensitivities.push_back("0.1");
@@ -87,7 +89,7 @@ void menu::init()
 	diff_id = easy;
 	diff = difficulty[diff_id];
 
-	maps_in_campaign = 0;
+	maps_in_campaign = 9;
 
 	campaign.push_back("tutorial");
 	for (int i = 1;i <= maps_in_campaign;++i) { 
@@ -115,7 +117,8 @@ void menu::set_menu(int newstatus)
 	menustatus = newstatus;
 	items.clear();
 	switch (newstatus) {
-		//hlavni menu
+		
+	//hlavni menu
 	case 0:
 		items.push_back(make_pair("campaign", 0));
 		items.push_back(make_pair("missions", 0));
@@ -123,14 +126,14 @@ void menu::set_menu(int newstatus)
 		items.push_back(make_pair("map creation", 0));
 		items.push_back(make_pair("exit", 0));
 		break;
-		//kampan
+	//kampan
 	case 1:
 		items.push_back(make_pair("previous", 1));
 		if (active) items.push_back(make_pair(camp, 0));
 		else items.push_back(make_pair(camp, 1));
 		items.push_back(make_pair("next", 1));
 		break;
-		//jednotlive mise
+	//jednotlive mise
 	case 2:
 		items.push_back(make_pair("choose map", 0));
 		items.push_back(make_pair("daytime", 0));
@@ -139,70 +142,71 @@ void menu::set_menu(int newstatus)
 		items.push_back(make_pair("play", 0));
 		items.push_back(make_pair("back", 0));
 		break;
-		//nastaveni
+	//nastaveni
 	case 3:
 		items.push_back(make_pair("player", 0));
 		items.push_back(make_pair("mouse sensitivity", 0));
 		items.push_back(make_pair("back", 0));
 		break;
-		//vyber mapy
+	//vyber mapy
 	case 4:
 		items.push_back(make_pair("previous", 1));
 		items.push_back(make_pair(mapname, 0));
 		items.push_back(make_pair("next", 1));
 		break;
-		//denni doba
+	//denni doba
 	case 5:
 		items.push_back(make_pair("previous", 1));
 		items.push_back(make_pair(dayt, 0));
 		items.push_back(make_pair("next", 1));
 		break;
-		//pocasi
+	//pocasi
 	case 6:
 		items.push_back(make_pair("previous", 1));
 		items.push_back(make_pair(weat, 0));
 		items.push_back(make_pair("next", 1));
 		break;
-		//obtiznost hry
+	//obtiznost hry
 	case 7:
 		items.push_back(make_pair("previous", 1));
 		items.push_back(make_pair(diff, 0));
 		items.push_back(make_pair("next", 1));
 		break;
-		//hrac
+	//hrac
 	case 8:
 		items.push_back(make_pair("new player", 0));
 		items.push_back(make_pair("choose account", 0));
 		items.push_back(make_pair("back", 0));
 		break;
-		//nastaveni mysi
+	//nastaveni mysi
 	case 9:
 		items.push_back(make_pair("higher", 1));
 		items.push_back(make_pair(sens, 0));
 		items.push_back(make_pair("lower", 1));
 		break;
-		//novy hrac
+	//novy hrac
 	case 10:
 		items.push_back(make_pair("get name", 0));
 		items.push_back(make_pair(name, 0));
 		items.push_back(make_pair("ok", 0));
 		break;
-		//vyber accountu
+	//vyber accountu
 	case 11:
 		items.push_back(make_pair("previous", 1));
 		items.push_back(make_pair(username, 0));
 		items.push_back(make_pair("next", 1));
 		break;
-		//vitezny screen
+	//vitezny screen
 	case 12:
 		items.push_back(make_pair("victory", 0));
 		break;
-		//prohrany screen
+	//prohrany screen
 	case 13:
 		items.push_back(make_pair("failure", 0));
 		break;
 	}
 
+	//pro udrzeni kurzoru na te same pozici
 	if ((newstatus != 1) && (newstatus != 4) && (newstatus != 5) && 
 		(newstatus != 6) && (newstatus != 7) && (newstatus != 9) &&
 		(newstatus != 11)) cursor_pos = 0;
@@ -217,7 +221,8 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 	if (esc_just_pressed) item = -1;
 	
 	switch (menustatus) {
-		//hlavni menu
+	
+	//hlavni menu
 	case 0:
 		switch (item) {
 		case 0:
@@ -241,7 +246,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//kampan
+	//kampan
 	case 1:
 		switch (item) {
 		case 0:
@@ -275,7 +280,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//samostatne mise mimo kampan
+	//samostatne mise mimo kampan
 	case 2:
 		switch (item) {
 		case 0:
@@ -301,7 +306,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//nastaveni
+	//nastaveni
 	case 3:
 		switch (item) {
 		case 0:
@@ -318,7 +323,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//vyber mapy
+	//vyber mapy
 	case 4:
 		switch (item) {
 		case 0:
@@ -360,7 +365,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//denni doba
+	//denni doba
 	case 5:
 		switch (item) {
 		case 0:
@@ -387,7 +392,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//pocasi
+	//pocasi
 	case 6:
 		switch (item) {
 		case 0:
@@ -414,7 +419,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//obtiznost hry
+	//obtiznost hry
 	case 7:
 		switch (item) {
 		case 0:
@@ -441,7 +446,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//hrac
+	//hrac
 	case 8:
 		switch (item) {
 		case 0:
@@ -460,7 +465,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//nastaveni mysi
+	//nastaveni mysi
 	case 9:
 		switch (item) {
 		case 0:
@@ -487,7 +492,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//novy hrac
+	//novy hrac
 	case 10:
 		switch (item) {
 		case 0:
@@ -515,7 +520,7 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//vyber accountu
+	//vyber accountu
 	case 11:
 		switch (item) {
 		case 0:
@@ -546,12 +551,12 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		}
 		break;
-		//vitezny screen
+	//vitezny screen
 	case 12:
 		set_menu(0);
 		if (item == -1) set_menu(0);
 		break;
-		//prohrany screen
+	//prohrany screen
 	case 13:
 		set_menu(0);
 		if (item == -1) set_menu(0);
@@ -676,12 +681,15 @@ void menu::render()
 		glPopMatrix();
 	}
 
+	//polozky menu
 	glPushMatrix();
 	glTranslatef(400, 325, 0);
 	for (int i = 0;i < items.size();++i) {
 		tmp = items[i].first;
+		//oznacena polozka
 		if (cursor_pos / 100 == i)
 			tmp = "+ " + tmp + " +";
+		//kdyz je polozka posuvnik, je polopruhledna
 		if (items[i].second == 1)
 			blue_alpha_font->draw(0, 0, tmp.c_str());
 		else blue_font->draw(0, 0, tmp.c_str());

@@ -36,6 +36,7 @@ void world::init(game &g)
 
 	hm.load(maplist_get_file_name(g.get_mapchosen()), g, *this);
 
+	//pokud je zvolen tutorial
 	if (maplist_get_name(g.get_mapchosen()) == "tutorial") {
 		tutorial = true;
 		h.init();
@@ -88,6 +89,7 @@ int world::update(float timediff, bool space_down, bool tab_down,
 	bool esc_down, bool left_mouse_down, bool right_mouse_down,
         int mouse_x, int mouse_y)
 {
+	//aktualizace podmodulu
 	dr.update(mouse_x, mouse_y, left_mouse_down, right_mouse_down,
 		space_down, timediff, *this);
 	es.update(timediff, *this);
@@ -131,6 +133,7 @@ void world::render()
 	if (daytime == night) skyb.draw(cam.pos, true);
 	else skyb.draw(cam.pos, false);
 
+	//zapnuti a nastaveni svetla
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
@@ -139,12 +142,16 @@ void world::render()
 		if (daytime == night) light_direction[3] = 0.5;
 		glLightfv(GL_LIGHT0, GL_POSITION, light_direction);
 	}
+	//mlha
 	f.turn_on();
+
+	//vykresleni podmodulu
 	dr.draw(*this);
 	hm.draw();
 	es.draw(*this);
 	ob.draw(*this);
 
+	//pokud prsi nebo snezi
 	if (weather == rainy) make_rain(*this);
 	if (weather == snowy) make_snow(*this);
 

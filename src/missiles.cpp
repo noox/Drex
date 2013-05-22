@@ -70,7 +70,7 @@ void missile::update(float time, world& w)
 
 		switch (type) {
 
-			//zakladni draci utok
+		//zakladni draci utok
 		case missile_dragon_fire:
 			//pokud strela zasahla cil, preda se ke smazani
 			if (w.es.try_to_damage_enemy(pos, power, fire)
@@ -91,7 +91,7 @@ void missile::update(float time, world& w)
 			}
 			break;
 
-			//pokrocily draci utok
+		//pokrocily draci utok
 		case missile_dragon_ball:
 			//pokud strela zasahla cil, preda se ke smazani
 			if (w.es.try_to_damage_enemy(pos, power, fire)
@@ -112,7 +112,7 @@ void missile::update(float time, world& w)
 			}
 			break;
 
-			//utok nepratel
+		//utok nepratel
 		case missile_human_shot:
 			//pokud strela zasahla draka, preda se ke smazani
 			if (w.dr.try_to_damage_dragon(pos, power, w))
@@ -173,6 +173,8 @@ void missile::draw(world &w, GLuint tex_fireball)
 		glMultMatrixf(part_face);
 		glBegin(GL_POLYGON);
 		float rad, xcos, xsin;
+
+		//otexturovana kruznice fireballu
 		for (int i = 0;i < 360;++i) {
 			rad = i * M_PI / 180;
 			xcos = cos(rad);

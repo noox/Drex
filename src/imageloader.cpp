@@ -80,28 +80,6 @@ void imageloader_load_map(const char* fn, vector<int> &h, game& g, world& w,
 	f.close();
 }
 
-
-//loader heightmapy - vysek terenu - z .png
-bool imageloader_load_heightmap(vector<int> &h, int &size_x, int &size_y)
-{
-	SDL_Surface *image;
-	image = IMG_Load("data/hm3.png");
-	if (!image) return false;
-	
-	size_x = image->w;
-	size_y = image->h;
-	h.resize(size_x*size_y);
-	
-	for (int i = 0;i < size_y;++i)
-		for (int j = 0;j < size_x;++j)
-			h[i*size_y+j] = * ((unsigned char*) image->pixels + 
-				i * image->pitch + j);
-	
-	SDL_FreeSurface(image);
-	
-	return true;
-}
-
 //loader barev mapy
 bool imageloader_load_color(const char* water, const char* lowland, 
 	const char* upland, const char* mountain, const char* ice, 
@@ -109,6 +87,7 @@ bool imageloader_load_color(const char* water, const char* lowland,
 	int size_y)
 {
 	SDL_Surface *w, *l, *u, *m, *ic, *image;
+	//priprava textur pro ruzne typy krajiny
 	w = IMG_Load(water);
 	l = IMG_Load(lowland);
 	u = IMG_Load(upland);
