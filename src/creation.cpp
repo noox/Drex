@@ -402,10 +402,11 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 		}
 
 		//tlacitko "exit"
-		if (left_just_pressed && (cursor_pos_x > x + 542 + 88) && 
+		if (esc_just_pressed || (left_just_pressed && 
+			(cursor_pos_x > x + 542 + 88) && 
 			(cursor_pos_x < x + 542 + 88 + 50) && 
 			(cursor_pos_y < y - 470 + 5) && 
-			(cursor_pos_y > y - 470 - 10 - 5)) return false;
+			(cursor_pos_y > y - 470 - 10 - 5))) return false;
 	
 	//screen pridavani jednotek
 	} else if (status == 1) {
@@ -443,10 +444,11 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 		}
 
 		//tlacitko "back"
-		if (left_just_pressed && (cursor_pos_x > x + 542 + 88) && 
+		if (esc_just_pressed || (left_just_pressed && 
+			(cursor_pos_x > x + 542 + 88) && 
 			(cursor_pos_x < x + 542 + 88 + 50) && 
 			(cursor_pos_y < y - 470 + 5) && 
-			(cursor_pos_y > y - 470 - 10 - 5)) {
+			(cursor_pos_y > y - 470 - 10 - 5))) {
 
 			status = 0;
 			go_next = true;
@@ -481,10 +483,11 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 		}
 
 		//tlacitko "back"
-		if (left_just_pressed && (cursor_pos_x > x + 542 + 88) && 
+		if (esc_just_pressed || (left_just_pressed && 
+			(cursor_pos_x > x + 542 + 88) && 
 			(cursor_pos_x < x + 542 + 88 + 50) && 
 			(cursor_pos_y < y - 470 + 5) && 
-			(cursor_pos_y > y - 470 - 10 - 5)) {
+			(cursor_pos_y > y - 470 - 10 - 5))) {
 			
 			status = 1;
 			go_next = true;

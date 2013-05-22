@@ -13,9 +13,13 @@ using namespace std;
 
 void world::init(game &g)
 {
+	width = g.get_width();
+	height = g.get_height();
+	
 	snd.init();
 	dr.init();
 	skyb.init();
+	h.init(*this);
 
 	//random pozice draka na pocatku
 	int px = hm.get_size(FRAND * 255 + 128);
@@ -30,7 +34,6 @@ void world::init(game &g)
 	ob.init();
 	ps.init();
 	ms.init();
-	h.init(*this);
 
 	cu = 8;
 	rad = 70;
@@ -40,6 +43,7 @@ void world::init(game &g)
 	//pokud je zvolen tutorial
 	if (maplist_get_name(g.get_mapchosen())[0] == 't') tutorial = true;
 	else tutorial = false;
+
 
 	tab_hit = 0;
 	cheat = false;
@@ -52,9 +56,6 @@ void world::init(game &g)
 
 	daytime = g.get_daytime();
 	difficulty = g.get_difficulty();
-
-	width = g.get_width();
-	height = g.get_height();
 
 	//inicialni nastaveni pro mlhu
 	glHint(GL_FOG_HINT, GL_NICEST);
@@ -89,8 +90,8 @@ void world::finish()
 }
 
 int world::update(float timediff, bool space_down, bool tab_down,
-	bool cheat_down, bool esc_down, bool left_mouse_down, 
-	bool right_mouse_down, int mouse_x, int mouse_y)
+	bool cheat_down, bool left_mouse_down, bool right_mouse_down, 
+	int mouse_x, int mouse_y)
 {
 	//aktualizace podmodulu
 	dr.update(mouse_x, mouse_y, left_mouse_down, right_mouse_down,

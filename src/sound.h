@@ -43,6 +43,7 @@ public:
 	int error_message(string msg);
 	int init();
 	void stop_game_sound();
+	void start_game_sound();
 	int play_fireball1(dragon& dr, missile& m);
 	int play_fireball2(dragon& dr, missile& m);
 	int play_arrow(dragon& dr, missile& m);

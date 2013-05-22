@@ -58,12 +58,11 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 
 	//v menu
 	if (gamestatus == in_menu) {
-		//chytne a schova kurzor
+		//chytne a schova kurzor a nastavi rozliseni
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 		SDL_ShowCursor(SDL_DISABLE);
 		glViewport((width - 800) / 2, (height - 600) / 2, 800, 600);
 		
-		w.snd.stop_game_sound();
 		if (!m.update(timediff, esc_down, left_mouse_down, 
 			right_mouse_down, mouse_x, mouse_y, *this)) 
 			
@@ -72,7 +71,7 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 
 		//v tvorbe map
 	} else if (gamestatus == in_creation) {
-		//pusti a ukaze kurzor
+		//pusti a ukaze kurzor a nastavi rozliseni
 		SDL_WM_GrabInput(SDL_GRAB_OFF);
 		SDL_ShowCursor(SDL_ENABLE);
 		glViewport((width - 800) / 2, (height - 600) / 2, 800, 600);
@@ -81,18 +80,17 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 			right_mouse_down, mouse__x, mouse__y, *this)) 
 			
 			go_to_menu();
-		if (esc_just_pressed) go_to_menu();
 		return true;
 
 		//ve hre
 	} else {
-		//chytne a schova kurzor
+		//chytne a schova kurzor, a nastavi rozliseni
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 		SDL_ShowCursor(SDL_DISABLE);
 		glViewport(0, 0, width, height);
 	
 		state = w.update(timediff, space_down, tab_down, cheat_down,
-			esc_down, left_mouse_down, right_mouse_down, 
+			left_mouse_down, right_mouse_down, 
 			mouse_x / sensitivity, mouse_y / sensitivity);
 		if (state == win) {
 			go_to_menu();

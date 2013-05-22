@@ -64,6 +64,7 @@ public:
 	float get_min_timediff();
 
 	void go_to_menu() {
+		w.snd.stop_game_sound();
 		gamestatus = in_menu;
 	}
 	void go_to_game() {
@@ -75,6 +76,7 @@ public:
 		}
 	}
 	void go_back_to_game() {
+		w.snd.start_game_sound();
 		gamestatus = in_game;                                    
 	}
 	void create_map() {

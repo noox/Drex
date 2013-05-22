@@ -42,8 +42,8 @@ public:
 	void init(game& g);
 	void finish();
 	int update(float timediff, bool space_down, bool tab_down,
-		bool cheat_down, bool esc_down, bool left_mouse_down,
-		bool right_mouse_down, int mouse_x, int mouse_y);
+		bool cheat_down, bool left_mouse_down, bool right_mouse_down,
+		int mouse_x, int mouse_y);
 	void render();
 	void add_enemy(float u, float v);
 	void add_rest(float u, float v);

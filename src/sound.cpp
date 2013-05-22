@@ -122,11 +122,18 @@ int sound::init()
 		return 0;
 }
 
-//stop zvuku pro menu
+//pauza zvuku pro menu
 void sound::stop_game_sound()
 {
 	for (int i = 0;i < files_count;++i) 
-		alSourceStop(source[i]);
+		alSourcePause(source[i]);
+}
+
+//obnoveni zvuku pro menu
+void sound::start_game_sound()
+{
+	for (int i = 0;i < files_count;++i) 
+		alSourcePlay(source[i]);
 }
 
 int sound::play_fireball1(dragon& dr, missile& m)
