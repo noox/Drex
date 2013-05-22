@@ -16,6 +16,7 @@ public:
 	void init();
 	void make_healthstatus(float dargon_hp);
 	void make_dragon_hit();
+	void draw_cheat();
 	void draw_tutorial();
 };
 

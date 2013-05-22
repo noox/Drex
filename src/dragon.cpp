@@ -32,6 +32,9 @@ void dragon::update(int mouse_x, int mouse_y, bool left_mouse_down,
 	hp += 0.005;
 	if (hp > 110) hp = 110;
 
+	//cheat nesmrtelnosti
+	if (w.cheating()) hp = 110;
+
 	vect VX, VY, VZ;
 	ori.normalize();
 	VX = ori.vecx();

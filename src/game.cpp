@@ -39,9 +39,10 @@ void game::finish()
 	userlist_finish();
 }
 
-bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
-	bool left_mouse_down, bool right_mouse_down, int mouse_x, int mouse_y, 
-	int mouse__x, int mouse__y)
+bool game::update(float timediff, bool space_down, bool tab_down,
+	bool cheat_down,bool esc_down, bool left_mouse_down, 
+	bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x, 
+	int mouse__y)
 {
 	int state = playing;
 
@@ -55,8 +56,8 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 	//v menu
 	if (gamestatus == in_menu) {
 		//chytne a schova kurzor
-		SDL_WM_GrabInput(SDL_GRAB_ON);
-		SDL_ShowCursor(SDL_DISABLE);
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
+		SDL_ShowCursor(SDL_ENABLE);
 		
 		w.snd.stop_game_sound();
 		if (!m.update(timediff, esc_down, left_mouse_down, 
@@ -84,8 +85,8 @@ bool game::update(float timediff, bool space_down, bool tab_down, bool esc_down,
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 		SDL_ShowCursor(SDL_DISABLE);
 	
-		state = w.update(timediff, space_down, tab_down, esc_down, 
-			left_mouse_down, right_mouse_down, 
+		state = w.update(timediff, space_down, tab_down, cheat_down,
+			esc_down, left_mouse_down, right_mouse_down, 
 			mouse_x / sensitivity, mouse_y / sensitivity);
 		if (state == win) {
 			go_to_menu();

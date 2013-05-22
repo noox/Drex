@@ -118,6 +118,7 @@ int sound::init()
 			return error_message("error loading ALBuffer");
 
 	}
+		delete[] buf;
 		return 0;
 }
 
@@ -347,7 +348,6 @@ int sound::play_rain(dragon& dr)
 
 void sound::finish()
 {
-	delete[] buf;
 	for (int i = 0;i < files_count;++i) {
 		alDeleteBuffers(1, &buffer[i]);
 		alDeleteSources(1, &source[i]);

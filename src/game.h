@@ -30,8 +30,9 @@ public:
 	void init();
 	void finish();
 	bool update(float timediff, bool space_down, bool tab_down, 
-		bool esc_down, bool left_mouse_down, bool right_mouse_down, 
-		int mouse_x, int mouse_y, int mouse__x, int mouse__y);
+		bool cheat_down, bool esc_down, bool left_mouse_down, 
+		bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x,
+		int mouse__y);
 	void render();
 	void save_game();
 	void save_user();
@@ -62,6 +63,7 @@ public:
 		if (maplist_get_name(mapchosen) == "") go_to_menu();
 		else {
 			gamestatus = in_game;
+			w.finish();
 			w.init(*this);
 		}
 	}

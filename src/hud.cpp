@@ -444,6 +444,23 @@ void hud::make_dragon_hit()
 	ending();
 }
 
+//pokud je drak zasazen pruhledovy displej na okamzik zrudne
+void hud::draw_cheat() 
+{
+	beginning();
+	
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glTranslatef(400, 100, 0);
+	glScalef(1, -1, 1);
+	
+	white_font->draw(0, 0, "Cheating mode on.");
+	
+	glDisable(GL_TEXTURE_2D);
+	ending();
+}
+
 //vypisuje napovedu v tutorialu
 void hud::draw_tutorial()
 {

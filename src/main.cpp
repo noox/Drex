@@ -80,8 +80,8 @@ void sleep(float t)
 	SDL_Delay((Uint32)(1000*t));
 }
 
-static bool space_down = false, tab_down = false, esc_down = false, 
-	left_mouse_down = false, right_mouse_down = false;
+static bool space_down = false, tab_down = false, cheat_down = false, 
+	esc_down = false, left_mouse_down = false, right_mouse_down = false;
 game global_game;
 
 bool update()
@@ -98,6 +98,8 @@ bool update()
 				esc_down = false;
 			if (event.key.keysym.sym == SDLK_TAB)
 				tab_down = false;
+			if (event.key.keysym.sym == SDLK_p)
+				cheat_down = false;
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE)
@@ -106,6 +108,8 @@ bool update()
 				esc_down = true;
 			if (event.key.keysym.sym == SDLK_TAB)
 				tab_down = true;
+			if (event.key.keysym.sym == SDLK_p)
+				cheat_down = true;
 			if (event.key.keysym.sym == SDLK_F12)
 				return false;
 			break;
@@ -141,9 +145,9 @@ bool update()
 		td += timediff();
 	}
 
-	bool term = global_game.update(td, space_down, tab_down, esc_down, 
-		left_mouse_down, right_mouse_down, mouse_x, mouse_y, mouse__x, 
-		mouse__y);
+	bool term = global_game.update(td, space_down, tab_down, cheat_down,
+		esc_down, left_mouse_down, right_mouse_down, mouse_x, mouse_y,
+		mouse__x, mouse__y);
 	global_game.render();
 
 	//dalsi snimek

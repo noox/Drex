@@ -37,12 +37,13 @@ void world::init(game &g)
 	hm.load(maplist_get_file_name(g.get_mapchosen()), g, *this);
 
 	//pokud je zvolen tutorial
-	if (maplist_get_name(g.get_mapchosen()) == "tutorial") {
+	if (maplist_get_name(g.get_mapchosen())[0] == 't') {
 		tutorial = true;
 		h.init();
 	} else tutorial = false;
 
 	tab_hit = 0;
+	cheat = false;
 	help_on = false;
 	dragon_hit = 0;
 	weather = g.get_weather();
@@ -86,8 +87,8 @@ void world::finish()
 }
 
 int world::update(float timediff, bool space_down, bool tab_down,
-	bool esc_down, bool left_mouse_down, bool right_mouse_down,
-        int mouse_x, int mouse_y)
+	bool cheat_down, bool esc_down, bool left_mouse_down, 
+	bool right_mouse_down, int mouse_x, int mouse_y)
 {
 	//aktualizace podmodulu
 	dr.update(mouse_x, mouse_y, left_mouse_down, right_mouse_down,
@@ -100,14 +101,23 @@ int world::update(float timediff, bool space_down, bool tab_down,
 	cam.follow_pos(dr.camera_pos(), 0.1, timediff);
 	cam.collide_with_heightmap(hm);
 
-	int tab_just_pressed = 0;
+	int tab_just_pressed = 0, cheat_just_pressed = 0;
 	//proti sekvencim stisknutych tlacitek
 	if (tab_down) {
-		if (!tab_hit)
-			tab_just_pressed = tab_hit = 1;
+		if (!tab_hit) tab_just_pressed = tab_hit = 1;
 	} else tab_hit = 0;
+	if (cheat_down) {
+		if (!cheat_hit) cheat_just_pressed = cheat_hit = 1;
+	} else cheat_hit = 0;
+
 	//pro navigaci po mape k nepriteli
 	if (tab_just_pressed) help_on = true;
+
+	//zapnuti/vypnuti hracovy nesmrtelnosti
+	if (cheat_just_pressed) {
+		if (cheat) cheat = false;
+		else cheat = true;
+	}
 
 	//pro ukonceni hry vyhrou
 	if (es.all_enemies_dead()) return win;
@@ -186,6 +196,9 @@ void world::render()
 		h.make_dragon_hit();
 		dragon_hit--;
 	}
+
+	//pokud je zapnuty cheat, pise o tom na screen
+	if (cheat) h.draw_cheat();
 
 	//v tutorialu zobrazuje napovedu
 	if (tutorial) h.draw_tutorial();
@@ -273,5 +286,12 @@ void world::remove_object(int c)
 void world::dragon_damaged()
 {
 	dragon_hit = 5;
+}
+
+//pokud je zapnuty cheat nesmrtelnosti
+bool world::cheating()
+{
+	if (cheat) return true;
+	return false;
 }
 
