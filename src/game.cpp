@@ -69,7 +69,7 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 			return false;
 		return true;
 
-		//v tvorbe map
+	//v tvorbe map
 	} else if (gamestatus == in_creation) {
 		//pusti a ukaze kurzor a nastavi rozliseni
 		SDL_WM_GrabInput(SDL_GRAB_OFF);
@@ -82,7 +82,7 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 			go_to_menu();
 		return true;
 
-		//ve hre
+	//ve hre
 	} else {
 		//chytne a schova kurzor, a nastavi rozliseni
 		SDL_WM_GrabInput(SDL_GRAB_ON);

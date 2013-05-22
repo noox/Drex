@@ -219,10 +219,11 @@ void menu::set_menu(int newstatus)
 
 bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 {
-	ostringstream ss;
+	stringstream ss;
 	int mapchosen = g.get_mapchosen();
 	int userchosen = g.get_userchosen();
 	int cp = g.get_campaign_status();
+	int tmp_cp;
 	if (esc_just_pressed) item = -1;
 	
 	switch (menustatus) {
@@ -336,13 +337,17 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			mapchosen--;
 			if (mapchosen < 0) mapchosen = maplist_count() - 1;
 			mapname = maplist_get_name(mapchosen);
-			while ((mapname[0] == 'm') && 
-				(mapname[mapname.length() - 1] > cp)) {
-				
-				mapchosen--;
-				if (mapchosen < 0) 
-					mapchosen = maplist_count() - 1;
-				mapname = maplist_get_name(mapchosen);
+			while (mapname[0] == 'm') {
+				ss.clear();
+				ss << mapname[mapname.length() - 1];
+				ss >> tmp_cp;
+				if (tmp_cp > cp) {
+					mapchosen--;
+					if (mapchosen < 0) 
+						mapchosen = maplist_count() - 1;
+					mapname = maplist_get_name(mapchosen);
+				}
+				else break;
 			}
 			g.change_mapchosen(mapchosen);
 			set_menu(4);
@@ -354,13 +359,18 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			//posuvnik dolu
 			mapchosen++;
 			if (mapchosen > maplist_count() - 1) mapchosen = 0;
-			while ((mapname[0] == 'm') && 
-				(mapname[mapname.length() - 1] > cp)) {
-				
-				mapchosen++;
-				if (mapchosen > maplist_count() - 1)
-					mapchosen = 0;
-				mapname = maplist_get_name(mapchosen);
+			mapname = maplist_get_name(mapchosen);
+			while (mapname[0] == 'm') {
+				ss.clear();
+				ss << mapname[mapname.length() - 1];
+				ss >> tmp_cp;
+				if (tmp_cp > cp) {
+					mapchosen++;
+					if (mapchosen > maplist_count() - 1)
+						mapchosen = 0;
+					mapname = maplist_get_name(mapchosen);
+				}
+				else break;
 			}
 			g.change_mapchosen(mapchosen);
 			set_menu(4);
@@ -574,9 +584,6 @@ bool menu::handle_menu_click(int item, game& g, int esc_just_pressed)
 			break;
 		case 1:
 			set_menu(0);
-			break;
-		case -1:
-			g.go_back_to_game();
 			break;
 		}
 	}
