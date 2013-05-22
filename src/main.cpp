@@ -13,6 +13,7 @@ using namespace std;
 #include "game.h"
 
 static SDL_Surface *surface;
+int width = 800, height = 600, fullscreen = 1;
 
 bool init()
 {
@@ -29,8 +30,26 @@ bool init()
 		return false;
 	}
 
+	//nacteni vlastnosti okna z configu
+	fstream f;
+	f.open("data/game-config.txt");
+	string line;
+	getline(f, line, '\n');
+	stringstream ss1(line);
+	ss1 >> fullscreen;
+	getline(f, line, '\n');
+	stringstream ss2(line);
+	ss2 >> width;
+	if (width < 800) width = 800;
+	getline(f, line, '\n');
+	stringstream ss3(line);
+	ss3 >> height;
+	if(height < 600) height = 600;
+	f.close();
+
 	//vlastnosti videa
 	int vidflags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE;
+	if (fullscreen == 0) vidflags |= SDL_FULLSCREEN;
 
 	if (videoinfo->hw_available) vidflags |= SDL_HWSURFACE;
 	else vidflags |= SDL_SWSURFACE;
@@ -41,7 +60,13 @@ bool init()
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
 	//povrch na kresleni (okno)
-	surface = SDL_SetVideoMode(800, 600, 24, vidflags);
+	if (fullscreen == 0) {
+		const SDL_VideoInfo* info = SDL_GetVideoInfo();
+		width = info->current_w;
+		height = info->current_h; 
+	}
+	
+	surface = SDL_SetVideoMode(width, height, 24, vidflags);
 	if (!surface) {
 		cout << "SDL_SetVideoMode failed: " << SDL_GetError() << endl;
 		return false;
@@ -50,7 +75,7 @@ bool init()
 	//titulek okna
 	SDL_WM_SetCaption("drex", NULL);
 
-	glViewport(0, 0, 800, 600);
+	glViewport((width - 800) / 2, (height - 600) / 2, 800, 600);
 
 	//chyti a schova kurzor
 	SDL_WM_GrabInput(SDL_GRAB_ON);
@@ -164,7 +189,7 @@ int main(int argc, char **argv)
 int WinMain(HINSTANCE hi, HINSTANCE hpi, LPSTR lpcmdline, int nCmdShow) {
 #endif
 	if (!init()) return 1;
-	global_game.init();
+	global_game.init(width, height);
 
 	//reset casovace
 	timediff();

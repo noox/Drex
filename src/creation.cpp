@@ -73,7 +73,7 @@ void creation::set()
 	type = water;
 }
 
-void creation::init()
+void creation::init(game& g)
 {
 	//nastaveni fontu
 	title_font = 
@@ -111,6 +111,9 @@ void creation::init()
 	set();
 	left_mouse_hit = 0;
 	esc_hit = 0;
+
+	width = g.get_width();
+	height = g.get_height();
 
 	x = 90;
 	y = 520;
@@ -341,9 +344,9 @@ bool creation::update(float timediff, bool space_down, bool esc_down,
 	int mouse__y, game& g)
 {
 	//sjednoceni souradnic v okne pro vykreslovani
-	cursor_pos_x = mouse__x;
-	cursor_pos_y = 600 - mouse__y;
-
+	cursor_pos_x = mouse__x - (width - 800) / 2;
+	cursor_pos_y = 600 - (mouse__y - (height - 600) / 2);
+	
 	int left_just_pressed = 0, esc_just_pressed = 0;
 	//proti sekvencim stisknutych tlacitek
 	if (left_mouse_down) {

@@ -10,7 +10,7 @@ using namespace std;
 #include "vector.h"
 #include "imageloader.h"
 
-void hud::init()
+void hud::init(world& w)
 {
 	white_font = 
 		new OGLFT::TranslucentTexture("data/DK Northumbria.otf", 10);
@@ -23,6 +23,8 @@ void hud::init()
 	white_font->setForegroundColor(1, 1, 1, 1);
 	white_font->setHorizontalJustification(OGLFT::Face::CENTER);
 
+	width = w.get_width();
+	height = w.get_height();
 	counter = 0;
 }
 
@@ -35,7 +37,7 @@ void hud::beginning()
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, 800, 600, 0, -1, 1);
+	glOrtho(0, width, height, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -64,7 +66,7 @@ void hud::make_healthstatus(float dragon_hp)
 
 	beginning();
 
-	glTranslatef(397, 80, 0);
+	glTranslatef(400 + (width - 800) / 2, 80, 0);
 	glScalef(3, -3, 0);
 	
 	glColor4f(0.1, 0.1, 0.1, 0.5);
@@ -436,15 +438,15 @@ void hud::make_dragon_hit()
 	glColor4f(1, 0.2, 0.2, 0.7);
 	glBegin(GL_QUADS);
 	glVertex2f(0, 0);
-	glVertex2f(0, 600);
-	glVertex2f(800, 600);
-	glVertex2f(800, 0);
+	glVertex2f(0, height);
+	glVertex2f(width, height);
+	glVertex2f(width, 0);
 	glEnd();
 	
 	ending();
 }
 
-//pokud je drak zasazen pruhledovy displej na okamzik zrudne
+//vypis, ze uzivatel pouziva nezranitelnost
 void hud::draw_cheat() 
 {
 	beginning();
@@ -452,7 +454,7 @@ void hud::draw_cheat()
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glTranslatef(400, 100, 0);
+	glTranslatef(400 + (width - 800) / 2, 100, 0);
 	glScalef(1, -1, 1);
 	
 	white_font->draw(0, 0, "Cheating mode on.");
@@ -471,7 +473,7 @@ void hud::draw_tutorial()
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glTranslatef(400, 100, 0);
+	glTranslatef(400 + (width - 800) / 2, 100, 0);
 	glScalef(1, -1, 1);
 	
 	if ((counter >= 50) && (counter < x))

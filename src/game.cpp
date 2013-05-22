@@ -10,10 +10,13 @@ using namespace std;
 #include "game.h"
 #include "userlist.h"
 
-void game::init()
+void game::init(int Width, int Height)
 {
 	gamestatus = in_menu;
 	esc_hit = 0;
+
+	width = Width;
+	height = Height;
 
 	mapchosen = 0;
 	userchosen = 0;
@@ -56,8 +59,9 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 	//v menu
 	if (gamestatus == in_menu) {
 		//chytne a schova kurzor
-		SDL_WM_GrabInput(SDL_GRAB_OFF);
-		SDL_ShowCursor(SDL_ENABLE);
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+		SDL_ShowCursor(SDL_DISABLE);
+		glViewport((width - 800) / 2, (height - 600) / 2, 800, 600);
 		
 		w.snd.stop_game_sound();
 		if (!m.update(timediff, esc_down, left_mouse_down, 
@@ -71,6 +75,7 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 		//pusti a ukaze kurzor
 		SDL_WM_GrabInput(SDL_GRAB_OFF);
 		SDL_ShowCursor(SDL_ENABLE);
+		glViewport((width - 800) / 2, (height - 600) / 2, 800, 600);
 
 		if (!c.update(timediff, space_down, esc_down, left_mouse_down, 
 			right_mouse_down, mouse__x, mouse__y, *this)) 
@@ -82,8 +87,9 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 		//ve hre
 	} else {
 		//chytne a schova kurzor
-		SDL_WM_GrabInput(SDL_GRAB_OFF);
+		SDL_WM_GrabInput(SDL_GRAB_ON);
 		SDL_ShowCursor(SDL_DISABLE);
+		glViewport(0, 0, width, height);
 	
 		state = w.update(timediff, space_down, tab_down, cheat_down,
 			esc_down, left_mouse_down, right_mouse_down, 
@@ -95,8 +101,8 @@ bool game::update(float timediff, bool space_down, bool tab_down,
 			go_to_menu();
 			m.go_to_failscreen();
 		} else if (esc_just_pressed) {
-			m.go_to_menu_or_back();
 			go_to_menu();
+			m.go_to_menu_or_back();
 		}
 		return true;
 	}
@@ -329,5 +335,17 @@ void game::change_difficulty(int Difficulty)
 int game::get_difficulty()
 {
 	return difficulty;
+}
+
+//vrati sirku okna
+int game::get_width()
+{
+	return width;
+}
+
+//vrati vysku okna
+int game::get_height()
+{
+	return height;
 }
 

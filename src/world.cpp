@@ -30,6 +30,7 @@ void world::init(game &g)
 	ob.init();
 	ps.init();
 	ms.init();
+	h.init(*this);
 
 	cu = 8;
 	rad = 70;
@@ -37,10 +38,8 @@ void world::init(game &g)
 	hm.load(maplist_get_file_name(g.get_mapchosen()), g, *this);
 
 	//pokud je zvolen tutorial
-	if (maplist_get_name(g.get_mapchosen())[0] == 't') {
-		tutorial = true;
-		h.init();
-	} else tutorial = false;
+	if (maplist_get_name(g.get_mapchosen())[0] == 't') tutorial = true;
+	else tutorial = false;
 
 	tab_hit = 0;
 	cheat = false;
@@ -53,6 +52,9 @@ void world::init(game &g)
 
 	daytime = g.get_daytime();
 	difficulty = g.get_difficulty();
+
+	width = g.get_width();
+	height = g.get_height();
 
 	//inicialni nastaveni pro mlhu
 	glHint(GL_FOG_HINT, GL_NICEST);
@@ -293,5 +295,17 @@ bool world::cheating()
 {
 	if (cheat) return true;
 	return false;
+}
+
+//vrati sirku okna
+int world::get_width()
+{
+	return width;
+}
+
+//vrati vysku okna
+int world::get_height()
+{
+	return height;
 }
 

@@ -35,6 +35,7 @@ class creation
 	OGLFT::TranslucentTexture *title_font, *grey_font, *white_font,
 		*red_font;
 	int left_mouse_hit, esc_hit, status, type;
+	int width, height;
 	bool go_next;
 	vector<int> terrain, final_terrain, terrain_to_save, units;
 	int weather, daytime, difficulty, active_weather, active_daytime, 
@@ -42,7 +43,7 @@ class creation
 public:
 	int i, j, x, y, z, zz, scale, cursor_pos_x, cursor_pos_y;
 	vector<types> data;
-	void init();
+	void init(game& g);
 	void finish();
 	void set();
 	void prepare_map();

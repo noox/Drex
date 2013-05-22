@@ -26,20 +26,23 @@ class game
 	int campaign_status, maps_created;
 	int mapchosen, userchosen;
 	int esc_hit;
+	int width, height;
 public:
-	void init();
+	void init(int Width, int Height);
 	void finish();
 	bool update(float timediff, bool space_down, bool tab_down, 
 		bool cheat_down, bool esc_down, bool left_mouse_down, 
 		bool right_mouse_down, int mouse_x, int mouse_y, int mouse__x,
 		int mouse__y);
 	void render();
+	
 	void save_game();
 	void save_user();
 	void load_game();
 	void read_user_info();
 	string get_map_created();
 	void get_map_data();
+	
 	void change_userchosen(int Userchosen);
 	int get_userchosen();
 	void change_mapchosen(int Mapchosen);
@@ -54,8 +57,12 @@ public:
 	int get_weather();
 	void change_difficulty(int Difficulty);
 	int get_difficulty();
+	
+	int get_width();
+	int get_height();
 
 	float get_min_timediff();
+
 	void go_to_menu() {
 		gamestatus = in_menu;
 	}
@@ -72,7 +79,7 @@ public:
 	}
 	void create_map() {
 		gamestatus = in_creation;
-		c.init();
+		c.init(*this);
 	}
 };
 

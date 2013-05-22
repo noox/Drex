@@ -36,6 +36,7 @@ public:
 	bool help_on, tutorial;
 	int weather, daytime, difficulty;
 	int cu, rad, dragon_hit;
+	int width, height;
 
 	int texture;
 	void init(game& g);
@@ -49,6 +50,8 @@ public:
 	void remove_object(int c);
 	void dragon_damaged();
 	bool cheating();
+	int get_width();
+	int get_height();
 };
 
 #endif

@@ -9,12 +9,13 @@ class world;
 class hud
 {
 	int counter;
+	int width, height;
 	OGLFT::TranslucentTexture *white_font;
 	void beginning();
 	void ending();
 public:
-	void init();
-	void make_healthstatus(float dargon_hp);
+	void init(world& w);
+	void make_healthstatus(float dragon_hp);
 	void make_dragon_hit();
 	void draw_cheat();
 	void draw_tutorial();
