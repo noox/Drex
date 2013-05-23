@@ -477,37 +477,37 @@ void hud::draw_tutorial()
 	glScalef(1, -1, 1);
 	
 	if ((counter >= 50) && (counter < x))
-		white_font->draw(0, 0, "Welcome to the drex!");
+		white_font->draw(0, 0, "Welcome to drex!");
 
 	if ((counter >= x + 10) && (counter < 2 * x)) {
-		white_font->draw(0, 0, "Use your mouse to control the dragon.");
+		white_font->draw(0, 0, "Use the mouse to control the dragon.");
 		if (counter >= x + 100) {
 			glTranslatef(0, -20, 0);
-			white_font->draw(0, 0, "Use it as a pilot uses yoke.");
+			white_font->draw(0, 0, "Use it as a pilot uses a yoke.");
 			glTranslatef(0, 20, 0);
 		}
 	}
 
 	if ((counter >= 2 * x + 10) && (counter < 3 * x))
-		white_font->draw(0, 0, "Space bar will speed you up.");
+		white_font->draw(0, 0, "Spacebar will speed you up.");
 	
 	if ((counter >= 3 * x + 50) && (counter < 4 * x)) {
 		white_font->draw(0, 0, "What to do now?");
 		if (counter >= 3 * x + 150) {
 			glTranslatef(0, -20, 0);
-			white_font->draw(0, 0, "Better find the enemies!");
+			white_font->draw(0, 0, "Better to find the enemies!");
 			glTranslatef(0, 20, 0);
 		}
 	}	
 
 	if ((counter >= 4 * x + 10) && (counter < 5 * x))
-		white_font->draw(0, 0, "Hit the Tab key for some navigation.");
+		white_font->draw(0, 0, "Hit the Tab key to see the navigation.");
 	
 	if ((counter >= 5 * x + 10) && (counter < 7 * x)) {
 		white_font->draw(0, 0, "Use the left mouse button to shoot fire.");
 		if (counter >= 6 * x) {
 			glTranslatef(0, -20, 0);
-			white_font->draw(0, 0, "..or the right mouse button for a stronger fireball.");
+			white_font->draw(0, 0, "...or the right mouse button for a stronger fireball.");
 			glTranslatef(0, 20, 0);
 		}
 	}
@@ -516,10 +516,10 @@ void hud::draw_tutorial()
 		white_font->draw(0, 0, "To win, you only need to destroy the houses.");
 
 	if ((counter >= 9 * x) && (counter < 10 * x + 200)) {
-		white_font->draw(0, 0, "Beware of enemies' missiles.");
+		white_font->draw(0, 0, "Beware of missiles of the enemies.");
 		if (counter >= 9 * x + 200) {
 			glTranslatef(0, -20, 0);
-			white_font->draw(0, 0, "Monitor your health");
+			white_font->draw(0, 0, "Watch your health");
 			glTranslatef(0, -20, 0);
 			white_font->draw(0, 0, "by checking the little dragon up here.");
 			glTranslatef(0, 40, 0);

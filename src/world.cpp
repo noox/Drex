@@ -136,7 +136,7 @@ void world::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(90, 1.33333, 0.1, 1000);
+	gluPerspective(90, (float)width/height, 0.1, 1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
