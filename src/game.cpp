@@ -20,7 +20,7 @@ void game::init(int Width, int Height)
 
 	mapchosen = 0;
 	userchosen = 0;
-	sensitivity = 4;
+	sensitivity = 5;
 	daytime = day;
 	weather = sunny;
 	difficulty = easy;
