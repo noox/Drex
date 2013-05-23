@@ -473,7 +473,7 @@ void hud::draw_tutorial()
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glTranslatef(400 + (width - 800) / 2, 100, 0);
+	glTranslatef(400 + (width - 800) / 2, 120, 0);
 	glScalef(1, -1, 1);
 	
 	if ((counter >= 50) && (counter < x))
